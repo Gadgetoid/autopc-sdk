@@ -1,3 +1,5 @@
+/* AutoPC homebrew API: runtime-bound faceplate drawing and storage-card
+   helpers, resolved from the device coredll so they work under the stock OS. */
 #include "autopc.h"
 
 typedef HDC (WINAPI *CreateDCW_t)(const WCHAR *, const WCHAR *, const WCHAR *, const void *);
