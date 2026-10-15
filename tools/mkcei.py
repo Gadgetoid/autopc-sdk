@@ -25,6 +25,7 @@ def main():
     parser.add_argument("program")
     parser.add_argument("output")
     parser.add_argument("--minimal", action="store_true", help="drop the template's other files")
+    parser.add_argument("--name", help="rename the installed program (e.g. dump.exe)")
     arguments = parser.parse_args()
 
     header, items = cei.parse(open(arguments.template, "rb").read())
@@ -55,6 +56,23 @@ def main():
         else:
             keep.append(items[index])
         index += 1
+
+    if arguments.name:
+        stem = arguments.name[:-4] if arguments.name.lower().endswith(".exe") else arguments.name
+        old_stem = exe_name[:-4]
+        renamed = []
+        for it in keep:
+            if it[0] == "record":
+                rec = it[1].replace(exe_name.encode(), arguments.name.encode())
+                rec = rec.replace(old_stem.encode() + b" .\\", stem.encode() + b" .\\")
+                renamed.append(("record", rec))
+            elif it[0] == "blob" and it[1] == exe_name:
+                renamed.append(("blob", arguments.name, it[2]))
+            else:
+                renamed.append(it)
+        keep = renamed
+        rest = header.split(b" ", 1)[1] if b" " in header else b""
+        header = stem.capitalize().encode() + b" " + rest
 
     open(arguments.output, "wb").write(cei.build(header, keep))
     print(f"wrote {arguments.output}: program {exe_name} -> {len(program)} bytes")
