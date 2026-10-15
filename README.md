@@ -27,10 +27,29 @@ cmake -S . -B build \
 cmake --build build
 ```
 
-## Running on a device (safe)
-The demos only draw to the faceplate. Two ways to run one:
-1. `splice.py` it into a `BurnOS.bin` and load that the way the official
-   firmware update did (CF autorun or parallel-port PPFS). Proven in emulation.
-2. (coming) package it as a `.cei` the AutoPC shell installs from a card.
+## Running on a device
+The demos only draw to the faceplate - they read and change nothing.
+
+**Native install (the goal, how AutoPC homebrew shipped in 2000).** Put two
+files on the root of a CompactFlash card: `AUTORUN.INF` and `<app>.cei`. Insert
+the card; the AutoPC shell auto-runs the installer. `AUTORUN.INF` is:
+
+```
+[AutoPC.shx]
+Title=My App Install
+Item1=My App 1.0
+Open1=myapp.cei
+```
+
+A `.cei` is a custom AutoPC installer package (not a cab): a header line, then
+NUL-separated ASCII records describing a folder/file tree with install hooks,
+then the files embedded as size-framed blobs. Generating one is in progress
+(`tools/wip/cei.py`); it needs validation against the device's resident OS, so
+it is not shipped yet.
+
+**Proven today (safe, RAM-only).** `splice.py` wraps a built `.exe` into a
+`BurnOS.bin`; load that the way the official firmware update did (CF autorun via
+`osupnobr.exe`, or parallel-port PPFS). It runs from RAM and touches nothing on
+the device. Verified end to end in an SH3 Windows CE emulator.
 
 [velo-toolchain]: https://github.com/gadgetoid/velo-toolchain
