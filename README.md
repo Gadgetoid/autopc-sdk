@@ -43,9 +43,10 @@ Open1=myapp.cei
 
 A `.cei` is a custom AutoPC installer package (not a cab): a header line, then
 NUL-separated ASCII records describing a folder/file tree with install hooks,
-then the files embedded as size-framed blobs. Generating one is EXPERIMENTAL
-(`tools/wip/cei.py`); it needs validation against the device's resident OS, so
-it is not shipped yet.
+then the files embedded as size-framed blobs. `tools/cei.py` parses and rebuilds
+a `.cei` byte-for-byte; `tools/mkcei.py` swaps your program into a template
+`.cei`. This is EXPERIMENTAL: it has not been install-tested against the device's
+resident OS, so treat the output as a candidate to try on a spare unit.
 
 **Proven today (safe, RAM-only).** `splice.py` wraps a built `.exe` into a
 `BurnOS.bin`; load that the way the official firmware update did (CF autorun via
