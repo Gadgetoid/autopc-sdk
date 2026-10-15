@@ -43,7 +43,7 @@ Open1=myapp.cei
 
 A `.cei` is a custom AutoPC installer package (not a cab): a header line, then
 NUL-separated ASCII records describing a folder/file tree with install hooks,
-then the files embedded as size-framed blobs. Generating one is in progress
+then the files embedded as size-framed blobs. Generating one is EXPERIMENTAL
 (`tools/wip/cei.py`); it needs validation against the device's resident OS, so
 it is not shipped yet.
 
