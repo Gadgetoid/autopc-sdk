@@ -11,8 +11,11 @@ install-tested on hardware.
 --minimal also drops the template's other embedded files, leaving the folder
 tree and your program."""
 import argparse
+import os
 import re
+import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cei
 
 
