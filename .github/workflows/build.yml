@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      VELO_LLVM_RELEASE: v1
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake
+
+      - name: Download the SH3 LLVM
+        run: |
+          name=velo-llvm-$VELO_LLVM_RELEASE-linux-x86_64
+          url=https://github.com/Gadgetoid/velo-llvm-builds/releases/download/$VELO_LLVM_RELEASE
+          curl -fsSLO $url/$name.tar.xz
+          curl -fsSLO $url/$name.tar.xz.sha256
+          sha256sum -c $name.tar.xz.sha256
+          tar xf $name.tar.xz -C "$RUNNER_TEMP"
+          echo "VELO_LLVM_ROOT=$RUNNER_TEMP/$name" >> "$GITHUB_ENV"
+
+      - name: Build the demos (Windows CE 2.0, SH3)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=third_party/velo-toolchain/cmake/velo-ce.cmake \
+            -DVELO_CE_VERSION=2 -DVELO_ARCH=sh3 -DVELO_LLVM_ROOT="$VELO_LLVM_ROOT"
+          cmake --build build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: autopc-demos
+          path: build/**/*.exe
