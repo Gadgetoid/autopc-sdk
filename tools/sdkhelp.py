@@ -50,7 +50,8 @@ ASCII_REPLACEMENTS = {
 def ascii_text(text):
     for original, replacement in ASCII_REPLACEMENTS.items():
         text = text.replace(original, replacement)
-    return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    return text.replace("/*", "/ *").replace("*/", "* /")
 
 
 def plain(fragment):
