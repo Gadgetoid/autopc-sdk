@@ -45,10 +45,18 @@ A `.cei` is a custom AutoPC installer package (not a cab): a header line, then
 NUL-separated ASCII records describing a folder/file tree with install hooks,
 then the files embedded as size-framed blobs. `tools/cei.py` parses and rebuilds
 a `.cei` byte-for-byte; `tools/mkcei.py` swaps your program into a template
-`.cei`. This is EXPERIMENTAL: it has not been install-tested against the device's
-resident OS, so treat the output as a candidate to try on a spare unit.
+`.cei`. With `musicplayer.cei` as the template this is tested on a real unit:
 
-**Proven today (safe, RAM-only).** `splice.py` wraps a built `.exe` into a
+```sh
+python3 tools/mkcei.py musicplayer.cei build/hello.exe hello.cei \
+  --minimal --name hello.exe --package Hello
+```
+
+The installer asks you to voice-train the program's name, its shell voice
+command. A program needs icon resource 1 and string resource 1 (its shell name)
+for its shortcut: see `assets/autopc.ico` and `examples/hello/hello.rc`.
+
+**Alternative (RAM-only).** `splice.py` wraps a built `.exe` into a
 `BurnOS.bin`; load that the way the official firmware update did (CF autorun via
 `osupnobr.exe`, or parallel-port PPFS). It runs from RAM and touches nothing on
 the device. Verified end to end in an SH3 Windows CE emulator.
