@@ -5,19 +5,18 @@ Windows CE 2.0, Hitachi SH3). Built on [velo-toolchain]. Edit a demo, push, and
 CI builds a real SH3 `.exe` for the device - no Microsoft tools, no Wine.
 
 ## What's here
-- `include/autopc.h`, `src/autopc.c` - a small helper that binds to the device's
-  own `coredll` at runtime, so it reaches APIs velo-toolchain doesn't expose
-  (notably the faceplate display, drawn through the `FACEPLT` GDI driver).
-- `include/autopc_app.h`, `src/autopc_app.c` - app lifetime: registers with the
-  Forms Manager so the shell does not terminate the program after ~15 seconds,
-  with a relaunch fallback where there is no Forms Manager. See
+- `include/autopc_app.h`, `src/autopc_app.c` - the app itself: a Forms Manager
+  form that makes the program the foreground app, delivers the faceplate keys
+  (Esc quits) and gives it a device context to draw into. See
   [docs/apps.md](docs/apps.md).
-- `examples/hello` - the safe proof of concept: registers, draws a message to
-  the faceplate for a minute and exits. It only writes to the screen; it reads
-  and changes nothing.
+- `include/autopc.h`, `src/autopc.c` - drawing helpers for that device context
+  and storage card files, bound from the device's own `coredll` at runtime so
+  they reach APIs velo-toolchain doesn't expose.
+- `examples/hello` - the safe proof of concept: shows a message on the faceplate
+  until Esc. It only writes to the screen; it reads and changes nothing.
 - `examples/stonks` - a second screen-only demo.
 - `examples/visualiser` - a 32-bar spectrum analyser with peaks for the CD Player:
-  start a CD, leave the player (it keeps playing), run the visualiser. It reads
+  start a CD, leave the player (it keeps playing), open Visualiser. It reads
   the CD audio ring in the faceplate's memory; Esc exits. See
   [docs/apps.md](docs/apps.md#cd-audio).
 - `tools/splice.py` - wrap a built `.exe` into a `BurnOS.bin` to run it (below).
@@ -58,16 +57,19 @@ a `.cei` byte-for-byte; `tools/mkcei.py` swaps your program into a template
 
 ```sh
 python3 tools/mkcei.py musicplayer.cei build/hello.exe hello.cei \
-  --minimal --name hello.exe --package Hello
+  --minimal --name hello.exe --package Hello --menu Hello
 ```
 
-The installer asks you to voice-train the program's name, its shell voice
-command. A program needs icon resource 1 and string resource 1 (its shell name)
+`--menu` adds the program to the shell's app menu. The installer asks you to
+voice-train the program's name, its shell voice command (Esc skips it), then
+restarts the AutoPC. A program needs icon resource 1 and string resource 1 (its shell name)
 for its shortcut: see `assets/autopc.ico` and `examples/hello/hello.rc`.
 
 **Alternative (RAM-only).** `splice.py` wraps a built `.exe` into a
 `BurnOS.bin`; load that the way the official firmware update did (CF autorun via
 `osupnobr.exe`, or parallel-port PPFS). It runs from RAM and touches nothing on
-the device. Verified end to end in an SH3 Windows CE emulator.
+the device. Verified end to end in an SH3 Windows CE emulator. The update
+image has no Forms Manager, so `autopc_app_start` fails there; this suits
+programs that don't need the Forms Manager, such as the dumpers.
 
 [velo-toolchain]: https://github.com/gadgetoid/velo-toolchain

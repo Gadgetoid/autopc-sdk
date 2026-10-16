@@ -1,4 +1,4 @@
-"""Build an AutoPC .cei installer by swapping your program into a template .cei.
+r"""Build an AutoPC .cei installer by swapping your program into a template .cei.
 
 A .cei is a custom AutoPC installer package. This takes a known-good .cei as a
 template and replaces its single program with yours, keeping the proven
@@ -16,7 +16,13 @@ record, as Microsoft's CEIBuild does. The template's record asks for a shell
 shortcut, which needs icon resource 1 and string resource 1 in the program.
 
 --package renames the title, program folder, shell name and .CEU, so the
-package does not collide with another built from the same template."""
+package does not collide with another built from the same template.
+
+--menu NAME adds HKLM\SOFTWARE\FMAppConfiguration\NAME with AppName NAME and
+Order --order to the package's registry tree, which puts the program in the
+shell's app menu after the install's restart. The built-in apps use orders 4
+(Radio) to 32 (Voice Memo); the default, 100, puts it last. NAME should be the
+program's string resource 1, its shortcut name."""
 import argparse
 import os
 import re
@@ -35,6 +41,18 @@ def stamp_version(program, record):
     return program[:version] + major.to_bytes(2, "little") + minor.to_bytes(2, "little") + program[version + 4:]
 
 
+def add_menu_entry(items, name, order):
+    machine = [i for i, it in enumerate(items) if it[0] == "record" and it[1].split(b" ")[:2] == [b"6", b"HKEY_LOCAL_MACHINE"]]
+    if len(machine) != 1:
+        raise SystemExit("template has no HKEY_LOCAL_MACHINE registry node")
+    suffix = items[machine[0]][1][len(b"6 HKEY_LOCAL_MACHINE"):]
+    keys = [b"SOFTWARE", b"FMAppConfiguration", name.encode()]
+    records = [b"6 " + key + suffix for key in keys]
+    records += [b"7 AppName" + suffix, b"1 0", name.encode(), b"7 Order" + suffix, b"4 0", str(order).encode()]
+    records += [b""] * (2 * len(keys))
+    return items[:machine[0] + 1] + [("record", record) for record in records] + items[machine[0] + 1:]
+
+
 def main():
     parser = argparse.ArgumentParser(description="Swap a program into a template AutoPC .cei")
     parser.add_argument("template")
@@ -43,6 +61,8 @@ def main():
     parser.add_argument("--minimal", action="store_true", help="drop the template's other files")
     parser.add_argument("--name", help="rename the installed program (e.g. dump.exe)")
     parser.add_argument("--package", help="rename the package title, program folder, shell name and .CEU so it installs alongside others")
+    parser.add_argument("--menu", help="add the program to the shell's app menu under this name")
+    parser.add_argument("--order", type=int, default=100, help="its place in the menu: the built-in apps use 4 (Radio) to 32 (Voice Memo); default 100, the end")
     arguments = parser.parse_args()
 
     header, items = cei.parse(open(arguments.template, "rb").read())
@@ -114,6 +134,9 @@ def main():
         keep = renamed
         rest = header.split(b" ", 1)[1] if b" " in header else b""
         header = new_package + b" " + rest
+
+    if arguments.menu:
+        keep = add_menu_entry(keep, arguments.menu, arguments.order)
 
     open(arguments.output, "wb").write(cei.build(header, keep))
     print(f"wrote {arguments.output}: program {exe_name} -> {len(program)} bytes")

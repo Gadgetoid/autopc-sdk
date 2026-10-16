@@ -1,18 +1,18 @@
-/* Safe proof of concept: registers with the Forms Manager so the shell keeps
-   it running, draws a message to the AutoPC faceplate for a minute and exits.
-   It only writes to the screen; it reads and changes nothing on the device. */
+/* Safe proof of concept: a Forms Manager app that shows a message on the
+   AutoPC faceplate until Esc. It only draws; it reads and changes nothing on
+   the device. */
 #include "autopc.h"
 #include "autopc_app.h"
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR command_line, int show) {
-    BOOL registered = autopc_register_app(instance);
-    int i;
-    if (!registered && autopc_detach(instance, command_line)) return 0;
+    if (!autopc_app_start(instance, 0, 0)) return 1;
     autopc_init();
-    for (i = 0; i < 120; i++) {
-        autopc_print(registered ? L"Hello from homebrew!" : L"Hello (detached)");
-        Sleep(500);
+    while (autopc_app_running()) {
+        HDC dc = autopc_app_begin_draw();
+        autopc_print(dc, L"Hello from homebrew!");
+        autopc_app_end_draw(dc);
+        Sleep(200);
     }
-    autopc_unregister_app();
+    autopc_app_stop();
     return 0;
 }
