@@ -54,3 +54,22 @@ The `.cei` file record that asks for a shell shortcut needs icon resource 1 (32x
 | 4 | F6, F7, F23, F17 |
 
 Keys reach the shell through `APCDLL!SH_keybd_event`, or as messages `0xBD00` (down) and `0xBD01` (up) to a window registered with the keypad driver.
+
+## Running a program from a card or CD
+
+An `AUTORUN.INF` item can open an `.exe` as well as a `.cei`. The shell shows a Security Warning first; choose Yes to run it. Nothing is installed.
+
+```
+[AutoPC.shx]
+Title=Visualiser
+Item1=Visualiser
+Open1=visualiser.exe
+```
+
+## Faceplate hardware from an app
+
+`PCI.dll!GetPCIDevAddresses(vendor, device, count, windows, addresses)` maps windows of a PCI device into the calling process, as the drivers do. The faceplate is vendor `0x1398`, device `0x0003`. Each window is `{BAR config offset (0 for BAR0, 4 for BAR1), offset, size, type 0}`; the result is a virtual address per window. For BAR0 (I/O), byte, word and long accesses go to the address +0, +0x400 and +0x800. BAR1 is the faceplate's 64 KB memory.
+
+## CD audio
+
+When the CD Player plays, `atapipci.dll` reads each 2352-byte sector (44.1 kHz, 16-bit stereo, little-endian) into a three-sector ring in the faceplate's memory, and keeps playing when another program is in front (seen in sh3-emu, not yet on a unit). Faceplate register 0x2030 holds the ring's offset in the memory window and 0x2034 its length less 4 (both long reads of BAR0). `examples/visualiser` reads the ring this way, 256 samples at a time, for a fixed-point FFT.

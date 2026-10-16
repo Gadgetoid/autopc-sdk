@@ -16,6 +16,10 @@ CI builds a real SH3 `.exe` for the device - no Microsoft tools, no Wine.
   the faceplate for a minute and exits. It only writes to the screen; it reads
   and changes nothing.
 - `examples/stonks` - a second screen-only demo.
+- `examples/visualiser` - a 32-bar spectrum analyser with peaks for the CD Player:
+  start a CD, leave the player (it keeps playing), run the visualiser. It reads
+  the CD audio ring in the faceplate's memory; Esc exits. See
+  [docs/apps.md](docs/apps.md#cd-audio).
 - `tools/splice.py` - wrap a built `.exe` into a `BurnOS.bin` to run it (below).
 
 ## Build
