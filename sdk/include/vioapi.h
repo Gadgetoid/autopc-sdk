@@ -36,9 +36,30 @@
 #define __VIOAPI_H 1
 
 // VIO API Initialization function
+/**
+ * This function initializes the vehicle input/output (I/O) API for a process.
+ *
+ * @param pvReserved Reserved; set to NULL.
+ *
+ * @return One of the values described in the following table is returned. Value Description S_OK
+ *   API was initialized successfully. CLASS_E_CLASSNOTAVAILABLE Vehicle I/O device manager is not
+ *   registered. E_ABORT Startup of the API was aborted.
+ *
+ * VIOInitialize may be called multiple times by a process. However, if there are no corresponding
+ * calls to VIOUninitialize, resources in use by the process may not be freed when the process ends.
+ */
 STDAPI VIOInitialize(PVOID pReserved);
 
 // VIO API Uninitialize function
+/**
+ * This function uninitializes the vehicle input/output (I/O) API for a thread.
+ *
+ * @return None.
+ *
+ * A call to VIOUninitialize must be made for each call of VIOInitialize. If you do not call
+ * VIOUninitialize for every call to VIOInitialize, resources in use by the process may not be freed
+ * when the process ends.
+ */
 STDAPI_(VOID) VIOUninitialize(void);
 
 #include "vioguid.h"

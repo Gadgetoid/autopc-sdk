@@ -446,15 +446,55 @@ typedef enum tagVIOTROUBLECODESUBSYSTEM
 
 // Device metrics structure used to identify a device and determine how data from
 // the device is expressed device is expressed
+/**
+ * This structure provides details about a vehicle input/output (I/O) device.
+ */
 typedef struct tagVIODEVICEMETRICS
 {
+  /**
+   * Class identifier (CLSID) of this particular device.
+   */
   CLSID      clsidDevice;                     // The CLSID of this particular device
+  /**
+   * Null-terminated string that contains the name of the device.
+   */
   TCHAR      szDeviceName[VIODEVICENAMESIZE]; // The name of the device
+  /**
+   * Group of flags reflecting a device's possible access modes. It is one of the values shown in the
+   * following table. Access mode Value VIODEVICEMODE_READ 0x0001 VIODEVICEMODE_WRITE 0x0002
+   */
   DWORD      grfModes;                        // Group of flags reflecting devices possible access modes (read, write, sharable)
+  /**
+   * Lower bound of the data value. For specific values, see "CLSIDs for the Auto PC." For example,
+   * CLSID_VIO_VEHICLE_SPEED component's low value is 0.
+   */
   VARIANT    vRangeLow;                       // Data value's lower bound
+  /**
+   * Upper bound of the data value. For specific values, see "CLSIDs for the Auto PC." For example,
+   * the CLSID_VIO_VEHICLE_SPEED component's high value is 383.
+   */
   VARIANT    vRangeHigh;                      // Data value's upper bound
+  /**
+   * Specifies the type of data value, such as distance, current, and voltage. It is one of the
+   * following flags: Data value type Value VIOMEASUREMENT_STATE 0 VIOMEASUREMENT_ONOFF 1
+   * VIOMEASUREMENT_PERCENTAGE 2 VIOMEASUREMENT_ROTATIONALSPEED 3 VIOMEASUREMENT_SPEED 4
+   * VIOMEASUREMENT_TEMPERATURE 5 VIOMEASUREMENT_GAGEPESSURE 6 VIOMEASUREMENT_ROTATION 7
+   * VIOMEASUREMENT_VOLTAGE 8 VIOMEASUREMENT_ABSOLUTEPRESSURE 9 VIOMEASUREMENT_FLOWRATE 10
+   * VIOMEASUREMENT_DISCRETEMASK 11 VIOMEASUREMENT_DISTANCE 12 VIOMEASUREMENT_COLLECTION 13
+   */
   DWORD      dwValueType;                     // Type of data value (distance, current, voltage, etc.)
+  /**
+   * Specifies the units in which data value is expressed, such as kilometers, volts, degrees. It is
+   * one of the following flags: Units Value VIOUNITS_ENUM 0 VIOUNITS_BINARY 1 VIOUNITS_PERCENT 2
+   * VIOUNITS_RPM 3 VIOUNITS_KILOMETERSPERHOUR 4 VIOUNITS_CELSIUS 5 VIOUNITS_KILOPASCALSGAGE 6
+   * VIOUNITS_DEGREES 7 VIOUNITS_VOLTS 8 VIOUNITS_KILOPASCALSABSOLUTE 9 VIOUNITS_GRAMSPERSECOND 10
+   * VIOUNITS_BITMASK 11 VIOUNITS_KILOMETERS 12 VIOUNITS_DIAGNOSTICITEMS 13
+   */
   DWORD      dwValueUnits;                    // Units data value is expressed in
+  /**
+   * Long integer that contains the exponent used to determine number of digits to the right of the
+   * decimal place.
+   */
   LONG       lExponent;                       // Power of 10 to multiply data 
                                               // values by to get proper scale
                                               // (i.e. lPrecision = -3, then multiply by 0.001

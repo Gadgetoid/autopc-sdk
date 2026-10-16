@@ -52,12 +52,34 @@
 #define CPL_DISPLAY_FACEPLATE   0x4000
 #define CPL_DISPLAY_NOVGA       0x8000
 
+/**
+ * This message requests Auto PC specific data from a control panel application.
+ *
+ * @param lParam1 Unsigned integer that specifies the application number.
+ * @param lParam2 Pointer to an APCCPLINFO structure that contains Auto PC-specific information
+ *   about the control panel application.
+ */
 #define CPL_APCINQUIRE          0xFB01
 
+/**
+ * This structure provides information about a control panel application.
+ */
 typedef struct
 {
+    /**
+     * DWORD that specifies the size of the structure. The control panel application must set this
+     * value.
+     */
     DWORD   dwSize;         //Size of this structure. Must be filled in by the applet.
+    /**
+     * Null-terminated string that contains the text-to-speech name of the control panel application.
+     * The string must contain 32 characters or less.
+     */
     WCHAR   szTTSName[32];  //Text-to-speech name of this applet.
+    /**
+     * Null-terminated string that contains the alert name of the control panel application. The string
+     * must contain 32 characters or less.
+     */
     WCHAR   szAlertName[32];	//Alert name name of this applet.
 } APCCPLINFO;
 

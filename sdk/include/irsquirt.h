@@ -27,13 +27,31 @@ DEFINE_GUID(IID_IRSQUIRT,
 #undef  INTERFACE
 #define INTERFACE
 
+/**
+ * This interface enables applications to use infrared (IR).
+ */
 DECLARE_INTERFACE_(IIRSquirt, IUnknown)
 {
+    /**
+     * This method transfers data.
+     *
+     * @param pFrmMgr Pointer to the form manager.
+     * @param wNum WORD that contains the number of object identifiers to send. To receive data, set
+     *   wNum to 0.
+     * @param rgOID An array containing the object identifiers to send.
+     *
+     * @return NOERROR indicates success. STG_E_MEDIUMFULL indicates insufficient object store space.
+     */
     STDMETHOD(Transfer)             (THIS_ IfmManage *pFrmMgr,  // caller's forms manager interface
                                         WORD wNum,              // number of OIDs to send, zero to receive
                                         CEOID *rgOID,           // array of OIDs to send
                                         BSTR bstrCaption) PURE; // NULL to use calling app caption, valid BSTR otherwise
 
+    /**
+     * This method enables IR functionality.
+     *
+     * @return NOERROR indicates success.
+     */
     STDMETHOD(IRAvailable)          (THIS) PURE;
 };
 

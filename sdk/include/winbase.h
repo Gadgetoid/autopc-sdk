@@ -905,11 +905,31 @@ GetModuleFileNameW(
 //  File structures
 //
 
+/**
+ * This structure contains data used in asynchronous I/O.
+ */
 typedef struct _OVERLAPPED {
+    /**
+     * Reserved for operating system use
+     */
     DWORD   Internal;
+    /**
+     * Reserved for operating system use
+     */
     DWORD   InternalHigh;
+    /**
+     * Specifies a file position at which to start the transfer. The file position is a byte offset from
+     * the start of the file.
+     */
     DWORD   Offset;
+    /**
+     * Specifies the high word of the byte offset at which to start the transfer. This member is ignored
+     * when reading from or writing to named pipes and communications devices.
+     */
     DWORD   OffsetHigh;
+    /**
+     * Handle to an event set to the signaled state when the transfer has been completed.
+     */
     HANDLE  hEvent;
 } OVERLAPPED, *LPOVERLAPPED;
 

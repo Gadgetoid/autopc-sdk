@@ -68,12 +68,30 @@ Module Name:
 #define IOCTL_HAL_WRITE_LOG             5760    /* Write an entry to the exception log */
 
 // Use this data structure for the IOCTL_HAL_READ_LOG IOCtl.
+/**
+ * This structure contains information about events whose entries have been logged.
+ */
 typedef struct
 {
+    /**
+     * Control word used by log reading to maintain position information.
+     */
     DWORD       LogEntry;       // Control word used by log reading to maintain position info.
+    /**
+     * Specifies the sequence identifier.
+     */
     DWORD       dwSequenceId;   // Sequence identifier
+    /**
+     * Time entry was logged.
+     */
     FILETIME    EntryTime;      // Time entry was logged
+    /**
+     * Specifies subsystem and event class information.
+     */
     DWORD       dwEventClass;   // Subsystem and Event Class information
+    /**
+     * Boolean that is set to TRUE if there is more data to be entered, or to FALSE if none exists.
+     */
     BOOL        bFinalEntryData;// Indicates if there is more data for entry
 
 } LOGENTRYINFO, *PLOGENTRYINFO;

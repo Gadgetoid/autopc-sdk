@@ -39,7 +39,7 @@ function(autopc_add_sdk_executable target)
     target_sources(${target} PRIVATE "${PROJECT_SOURCE_DIR}/src/sdk_guids.cpp")
     target_include_directories(${target} SYSTEM BEFORE PRIVATE "${PROJECT_SOURCE_DIR}/sdk/compat" "${PROJECT_SOURCE_DIR}/sdk/include")
     target_compile_definitions(${target} PRIVATE UNDER_CE=200 UNICODE _UNICODE _WIN32 WIN32 _MSC_VER=1200 __asm=__velo_shx_asm)
-    target_compile_options(${target} PRIVATE -fms-extensions -fms-compatibility -fdeclspec)
+    target_compile_options(${target} PRIVATE -fms-extensions -fms-compatibility -fdeclspec -fretain-comments-from-system-headers)
     target_link_libraries(${target} PRIVATE velo::ole32 velo::oleaut32 autopc::coredll autopc::asfc autopc::apcdll)
 endfunction()
 

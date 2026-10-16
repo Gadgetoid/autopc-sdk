@@ -172,6 +172,20 @@ typedef PWNDCLASSA PWNDCLASS;
 #define WM_SHOWWINDOW                   0x0018
 #define WM_WININICHANGE                 0x001A
 #if(WINVER >= 0x0400)
+/**
+ * This message is sent when the Control Panel modifies an Auto PC setting that necessitates a
+ * notification be sent to running applications.
+ *
+ * @param wParam Specifies one of the Auto PC-specific SPI_SETAPC* values described in the following
+ *   table. Constant Value Description SPI_SETAPCSHELL 0x000100100 Shell setting changed
+ *   SPI_SETAPCSCREENSAVER 0x000100102 Screen saver changed SPI_SETAPCAUDIO 0x000100104 Audio changed
+ *   SPI_SETAPCLOCALE 0x000100106 Locale changed SPI_SETAPCFEEDBACK 0x000100108 Feedback changed
+ *   SPI_SETAPCGLOBALGRAMMAR 0x00010010a Global grammar changed
+ * @param lParam Set to NULL.
+ *
+ * It is not valid to pass these values to SystemParameterInfo. Instead, they must be explicitly
+ * queried for with the appropriate registry settings.
+ */
 #define WM_SETTINGCHANGE                WM_WININICHANGE
 #endif /* WINVER >= 0x0400 */
 

@@ -104,6 +104,18 @@ Purpose: Master message include for AutoPC specific messages
     =============================
 --*/
 
+/**
+ * This message is sent when the state of a media device changes.
+ *
+ * @param wParam The high-order word contains the media type. It is one of the following values:
+ *   Media type Value APC_MEDIATYPE_CD 1 The low-order word contains the notification flags. It may be
+ *   a combination of the following values: Notification flag Value APC_FLAG_MEDIAINSERT 0x0001
+ *   APC_FLAG_MEDIAHASAUDIO 0x0010 APC_FLAG_MEDIAHASDATA 0x0020
+ * @param lParam The high-order word contains the device generating the notification. It is one of
+ *   the following values: Device generating notification Value APC_MEDIADEVICE_DASHCD 0
+ *   APC_MEDIADEVICE_CHANGER1 1 APC_MEDIADEVICE_CHANGER2 2 APC_MEDIADEVICE_CHANGER3 3
+ *   APC_MEDIADEVICE_CHANGER4 4 The low-order word contains device-specific information.
+ */
 #define     WM_APCSYSMSG_MEDIASTATECHANGE           (APC_SYS_START + 4)
 
 // Media type - Passed in HIWORD of wParam
@@ -137,6 +149,11 @@ Purpose: Master message include for AutoPC specific messages
     volume changes.
 --*/
 
+/**
+ * This message is sent when the audio volume changes.
+ *
+ * This message does not currently take parameters.
+ */
 #define		WM_APCSYSMSG_VOLUMECHANGED				(APC_SYS_START + 5)
 
 /*++
@@ -147,6 +164,13 @@ Purpose: Master message include for AutoPC specific messages
     lParam - TRUE if the audio state is changed to be muted
 --*/
 
+/**
+ * This message is sent if the audio state is changed to muted or to non-muted.
+ *
+ * @param wParam Reserved.
+ * @param lParam Set to TRUE if the audio state is changed to muted. Set to FALSE if the audio state
+ *   is changed to non-muted.
+ */
 #define	    WM_APCSYSMSG_MUTE						(APC_SYS_START + 6)	
 
 /*++
@@ -162,6 +186,20 @@ Purpose: Master message include for AutoPC specific messages
            
 --*/
 
+/**
+ * This message is sent when the power is turned off or on.
+ *
+ * @param wParam Specifies the power notification type. It is one of the following values: Power
+ *   notification type Value APC_PWRNOTIFYTYPE_USER 1 APC_PWRNOTIFYTYPE_ELECTRICAL 2
+ *   APC_PWRNOTIFYTYPE_BACKUPBATTERY_LOW 3
+ * @param lParam For USER and ELECTRICAL, set to TRUE if the power state is changed to ON, or to
+ *   FALSE if the power state is changed to OFF. For BATTERY_LOW, HIWORD(lParam) is FALSE if the
+ *   battery is low, or TRUE if the battery is not low. LOWORD(lParam) gives the zero-based index of
+ *   the battery.
+ *
+ * An APC_PWRNOTIFYTYPE_ELECTRICAL notification is not sent when the electrical power is removed,
+ * only when it is restored.
+ */
 #define	    WM_APCSYSMSG_POWERSTATECHANGE			(APC_SYS_START + 7)
 
 // wParam
@@ -186,6 +224,25 @@ Purpose: Master message include for AutoPC specific messages
             more time in units of 5 seconds by posting the backup thread
             this message with the wParam=0, lParam=Backup transaction id.
 --*/
+/**
+ * This message notifies an application that it should flush all its data and prepare for backup of
+ * the file system, object store and registry.
+ *
+ * @param wParam Specifies the thread identifier of the Backup.exe received by an application, or 0
+ *   when posted by the application to Backup.exe.
+ * @param lParam Specifies the backup transaction identifier.
+ *
+ * The Backup.exe broadcasts this message at the beginning of the backup operation. Applications
+ * should flush their data to the registry, file system, or object store upon receiving this message
+ * to ensure that the data is preserved by the backup operation. Applications which have opened data
+ * files with the DENY_READ attribute set should close the files if the files should be backed up.
+ * Applications have five seconds after this message is sent to complete their save operations. Any
+ * application may request more time in units of five seconds by posting this message to the backup
+ * thread by setting wParam to 0.
+ *
+ * If an application has a data file open, it may wish to close the file on receiving this message
+ * so the file will be backed up.
+ */
 #define	    WM_APCSYSMSG_BACKUPNOTIFY    			(APC_SYS_START + 8)
 
 
@@ -202,6 +259,13 @@ Purpose: Master message include for AutoPC specific messages
             Applications have 5 seconds after the issuance of this message
             to complete their shutdown operations. 
 --*/
+/**
+ * This message is sent when an install operation begins.
+ *
+ * ApcLoad.exe broadcasts this message at the beginning of the install operation. An application
+ * should treat this message like WM_CLOSE and exit in response to this message. An application has
+ * 5 seconds after the issuance of this message to shutdown completely.
+ */
 #define	    WM_APCSYSMSG_INSTALLNOTIFY    			(APC_SYS_START + 9)
 
 
@@ -216,6 +280,15 @@ Purpose: Master message include for AutoPC specific messages
     lParam - Rsvd
 --*/
 
+/**
+ * This message is sent when an assist level event occurs.
+ *
+ * @param wParam The high-order word contains the severity level for the assist event. The low-order
+ *   word is reserved.
+ * @param lParam Reserved.
+ *
+ * This message is broadcast by a driver installed by an original equipment manufacturer (OEM).
+ */
 #define	    WM_APCSYSMSG_ASSISTEVENT    			(APC_SYS_START + 10)
 
 // Current defines for HIWORD( wParam)
@@ -236,6 +309,15 @@ Purpose: Master message include for AutoPC specific messages
     lParam - Previous state result
 --*/
 
+/**
+ * This message is sent internally to notify address book forms that the dialing state changed.
+ *
+ * @param wParam Specifies the new dialing state
+ * @param lParam Specifies the result obtained from the previous dialing state.
+ *
+ * This message is broadcast through the application sink to forms managed by the address book
+ * application programming interface (ABAPI) by the internal telephony API (TAPI) thread.
+ */
 #define	    WM_APCCOMM_DIALSTATECHANGED			(APC_COMM_START + 0)	
 
 
