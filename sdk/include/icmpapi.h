@@ -41,6 +41,13 @@ Abstract:
 //
 //--
 
+/**
+ * This function creates a handle on which Internet Control Message Protocol (ICMP) requests can be
+ * issued.
+ *
+ * @return An ICMP handle indicates success. INVALID_HANDLE_VALUE indicates failure. To get extended
+ *   error information, call GetLastError.
+ */
 HANDLE
 WINAPI
 IcmpCreateFile(
@@ -69,6 +76,13 @@ IcmpCreateFile(
 //
 //--
 
+/**
+ * This function closes an Internet Control Message Protocol (ICMP) handle opened by IcmpCreateFile.
+ *
+ * @param IcmpHandle [in] ICMP handle opened by IcmpCreateFile.
+ *
+ * @return TRUE indicates success. FALSE indicates failure.
+ */
 BOOL
 WINAPI
 IcmpCloseHandle(
@@ -125,6 +139,25 @@ IcmpCloseHandle(
 //
 //--
 
+/**
+ * This function sends an Internet Control Message Protocol (ICMP) echo request, and returns one or
+ * more replies.
+ *
+ * @param IcmpHandle [in] ICMP handle opened by IcmpCreateFile.
+ * @param DestinationAddress [in] Specifies the destination of the echo request.
+ * @param RequestData [in] Buffer that contains the data to be sent in the request.
+ * @param RequestSize [in] Number of bytes in the RequestData buffer.
+ * @param RequestOptions [in] Pointer to the IP header options for the request; may be NULL.
+ * @param ReplyBuffer [out] Buffer to hold any replies to the request. When the function returns,
+ *   the buffer will contain one or more ICMP_ECHO_REPLY structures, followed by options and data.
+ * @param ReplySize [out] Size, in bytes, of the reply buffer. The buffer must be large enough to
+ *   accommodate at least one ICMP_ECHO_REPLY structure plus eight additional bytes (the size of an
+ *   ICMP error message).
+ * @param Timeout [in] Time, in milliseconds, to wait for replies.
+ *
+ * @return The number of replies received and stored in the reply buffer indicates success. Zero
+ *   indicates failure. Extended error information is available through GetLastError.
+ */
 DWORD
 WINAPI
 IcmpSendEcho(

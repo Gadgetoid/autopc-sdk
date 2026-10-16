@@ -247,13 +247,54 @@ typedef /* [unique] */ struct  _wireSAFEARRAY
 typedef /* [unique] */ wireSAFEARRAY __RPC_FAR *wirePSAFEARRAY;
 
 #endif /* _OLEAUT32_ */
+/**
+ * This structure holds a safe array and its attributes.
+ *
+ * The array rgsabound is stored with the left-most dimension in rgsabound[0] and the right-most
+ * dimension in rgsabound[cDims - 1]. If an array was specified in a C-like syntax as a [2][5], it
+ * would have two elements in the rgsabound vector. Element 0 has an lLbound of 0 and a cElements of
+ * 2. Element 1 has an lLbound of 0 and a cElements of 5.
+ *
+ * The fFeatures flags describe attributes of an array that can affect how the array is released.
+ * This allows freeing the array without referencing its containing variant. The bits are accessed
+ * using the following constants:
+ *
+ *     #define FADF_AUTO 0x0001 // Array is allocated on the stack.
+ *     #define FADF_STATIC 0x0002 // Array is statically allocated.
+ *     #define FADF_EMBEDDED 0x0004 // Array is embedded in a structure.
+ *     #define FADF_FIXEDSIZE 0x0010 // Array may not be resized or
+ *      // reallocated.
+ *     #define FADF_BSTR 0x0100 // An array of BSTRs.
+ *     #define FADF_UNKNOWN 0x0200 // An array of IUnknown*.
+ *     #define FADF_DISPATCH 0x0400 // An array of IDispatch*.
+ *     #define FADF_VARIANT 0x0800 // An array of VARIANTs.
+ *     #define FADF_RESERVED 0xF0E8 // Bits reserved for future use.
+ */
 typedef struct  tagSAFEARRAY
     {
+    /**
+     * Count of dimensions in this array.
+     */
     USHORT cDims;
+    /**
+     * Flags used by the SafeArray routines.
+     */
     USHORT fFeatures;
+    /**
+     * Size of an element of the array. Does not include size of pointed-to data.
+     */
     ULONG cbElements;
+    /**
+     * Number of times the array has been locked without corresponding unlock. cbElements
+     */
     ULONG cLocks;
+    /**
+     * Void pointer to the data.
+     */
     PVOID pvData;
+    /**
+     * One bound for each dimension.
+     */
     SAFEARRAYBOUND rgsabound[ 1 ];
     }	SAFEARRAY;
 
@@ -476,11 +517,24 @@ enum tagTYPEKIND
 	TKIND_MAX	= TKIND_UNION + 1
     }	TYPEKIND;
 
+/**
+ * This structure is used to describe the type of a variable, the return type of a function, or the
+ * type of a function parameter.
+ *
+ * If the variable is VT_SAFEARRAY or VT_PTR, the union portion of the TYPEDESC contains a pointer
+ * to a TYPEDESC that specifies the element type.
+ */
 typedef struct  tagTYPEDESC
     {
     /* [switch_is][switch_type] */ union 
         {
+        /**
+         * VT_CARRAY.
+         */
         /* [case()] */ struct tagTYPEDESC __RPC_FAR *lptdesc;
+        /**
+         * VT_USERDEFINED is used to get type information for a user-defined type.
+         */
         /* [case()] */ struct tagARRAYDESC __RPC_FAR *lpadesc;
         /* [case()] */ HREFTYPE hreftype;
         /* [default] */  /* Empty union arm */ 
@@ -488,10 +542,23 @@ typedef struct  tagTYPEDESC
     VARTYPE vt;
     }	TYPEDESC;
 
+/**
+ * This structure is contained within the TYPEDESC structure and used to describe the types of the
+ * array elements and the dimensions of the array.
+ */
 typedef struct  tagARRAYDESC
     {
+    /**
+     * Element type.
+     */
     TYPEDESC tdescElem;
+    /**
+     * Dimension count.
+     */
     USHORT cDims;
+    /**
+     * Variable length array containing one element for each dimension.
+     */
     /* [size_is] */ SAFEARRAYBOUND rgbounds[ 1 ];
     }	ARRAYDESC;
 
@@ -525,9 +592,23 @@ typedef struct tagPARAMDESC __RPC_FAR *LPPARAMDESC;
 
 #define	PARAMFLAG_FHASDEFAULT	( 0x20 )
 
+/**
+ * This structure is used for holding information needed for transferring a structure element,
+ * parameter, or function return value between processes.
+ */
 typedef struct  tagIDLDESC
     {
+    /**
+     * Reserved; set to NULL.
+     */
     ULONG dwReserved;
+    /**
+     * Flag that is one of the following values: Value Description IDLFLAG_NONE Whether the parameter
+     * passes or receives information is unspecified. IDLFLAG_FIN Parameter passes information from the
+     * caller to the callee. IDLFLAG_FOUT Parameter returns information from the callee to the caller.
+     * IDLFLAG_FLCID Parameter is the local identifier of a client application. IDLFLAG_FRETVAL
+     * Parameter is the return value of the member.
+     */
     USHORT wIDLFlags;
     }	IDLDESC;
 
@@ -545,78 +626,266 @@ typedef struct tagIDLDESC __RPC_FAR *LPIDLDESC;
 
 #if 0
 /* the following is what MIDL knows how to remote */
+/**
+ * This structure is used for holding the type description and process transfer information for a
+ * variable, a function, or a function parameter.
+ */
 typedef struct  tagELEMDESC
     {
+    /**
+     * Type of the element.
+     */
     TYPEDESC tdesc;
+    /**
+     * Information about the parameter.
+     */
     PARAMDESC paramdesc;
     }	ELEMDESC;
 
 #else /* 0 */
+/**
+ * This structure is used for holding the type description and process transfer information for a
+ * variable, a function, or a function parameter.
+ */
 typedef struct tagELEMDESC {
+    /**
+     * Type of the element.
+     */
     TYPEDESC tdesc;             /* the type of the element */
     union {
+        /**
+         * Information for remoting the element; provides backward compatibility.
+         */
         IDLDESC idldesc;        /* info for remoting the element */
+        /**
+         * Information about the parameter.
+         */
         PARAMDESC paramdesc;    /* info about the parameter */
     };
 } ELEMDESC, * LPELEMDESC;
 #endif /* 0 */
+/**
+ * This structure is used to hold attributes of an ITypeInfo interface.
+ *
+ * The cbAlignment member indicates how addresses are aligned. A value of 0 indicates alignment on
+ * the 64 KB boundary; 1 indicates no special alignment. For other values, n indicates aligned on
+ * byte n.
+ */
 typedef struct  tagTYPEATTR
     {
+    /**
+     * Globally unique identifier (GUID) of the type information.
+     */
     GUID guid;
+    /**
+     * Locale of member names and doc strings.
+     */
     LCID lcid;
+    /**
+     * Reserved.
+     */
     DWORD dwReserved;
+    /**
+     * Identifier of constructor, or MEMBERID_NIL if none.
+     */
     MEMBERID memidConstructor;
+    /**
+     * Identifier of destructor, or MEMBERID_NIL if none.
+     */
     MEMBERID memidDestructor;
+    /**
+     * Reserved for future use.
+     */
     LPOLESTR lpstrSchema;
+    /**
+     * Size of an instance of this type.
+     */
     ULONG cbSizeInstance;
+    /**
+     * Kind of type this information describes.
+     */
     TYPEKIND typekind;
+    /**
+     * Number of functions.
+     */
     WORD cFuncs;
+    /**
+     * Number of variables/data members.
+     */
     WORD cVars;
+    /**
+     * Number of implemented interfaces.
+     */
     WORD cImplTypes;
+    /**
+     * The size of this type's VTBL.
+     */
     WORD cbSizeVft;
+    /**
+     * Byte alignment for an instance of this type.
+     */
     WORD cbAlignment;
     WORD wTypeFlags;
+    /**
+     * Major version number.
+     */
     WORD wMajorVerNum;
+    /**
+     * Minor version number.
+     */
     WORD wMinorVerNum;
     TYPEDESC tdescAlias;
+    /**
+     * IDL attributes of the described type.
+     */
     IDLDESC idldescType;
     }	TYPEATTR;
 
 typedef struct tagTYPEATTR __RPC_FAR *LPTYPEATTR;
 
+/**
+ * This structure is used by IDispatch::Invoke to contain the arguments passed to a method or
+ * property.
+ */
 typedef struct  tagDISPPARAMS
     {
+    /**
+     * Array of arguments.
+     */
     /* [size_is] */ VARIANTARG __RPC_FAR *rgvarg;
+    /**
+     * Dispatch identifiers of named arguments.
+     */
     /* [size_is] */ DISPID __RPC_FAR *rgdispidNamedArgs;
+    /**
+     * Number of arguments.
+     */
     UINT cArgs;
+    /**
+     * Number of named arguments.
+     */
     UINT cNamedArgs;
     }	DISPPARAMS;
 
 #if 0
 /* the following is what MIDL knows how to remote */
+/**
+ * This structure describes an exception that occurred during IDispatch::Invoke.
+ *
+ * Use the pfnDeferredFillIn member to allow an object to defer filling in the bstrDescription,
+ * bstrHelpFile, and dwHelpContext members until they are needed. This member might be used, for
+ * example, if loading the string for the error is a time-consuming operation. To use deferred
+ * fill-in, the object puts a function pointer in this slot and does not fill any of the other
+ * members except wCode, which is required.
+ *
+ * To get additional information, the caller passes the EXCEPINFO structure back to the pexcepinfo
+ * callback function, which fills in the additional information. When the ActiveX object and the
+ * ActiveX client are in different processes, the ActiveX object calls pfnDeferredFillIn before
+ * returning to the controller.
+ */
 typedef struct  tagEXCEPINFO
     {
+    /**
+     * Code that identifies the error. Error codes should be greater than 1000. Either this member or
+     * the return value member must be filled in; the other must be set to 0.
+     */
     WORD wCode;
+    /**
+     * Reserved; set to 0.
+     */
     WORD wReserved;
+    /**
+     * Unicode string that contains the textual, human-readable name of the source of the exception.
+     * Typically, this is an application name. This member should be filled in by the implementor of
+     * IDispatch.
+     */
     BSTR bstrSource;
+    /**
+     * Unicode string that contains the textual, human-readable description of the error intended for
+     * the customer. If no description is available, use NULL.
+     */
     BSTR bstrDescription;
+    /**
+     * Unicode string that contains the fully qualified drive, path, and file name of a Help file with
+     * more information about the error. If no Help is available, use NULL.
+     */
     BSTR bstrHelpFile;
+    /**
+     * Specifies the Help context identifier of the topic within the Help file. This member should be
+     * filled in if and only if the bstrHelpFile member is not NULL.
+     */
     DWORD dwHelpContext;
+    /**
+     * Reserved; set to NULL.
+     */
     ULONG pvReserved;
+    /**
+     * Pointer to a function that takes an EXCEPINFO structure as an argument and returns an HRESULT
+     * value. If deferred, fill-in is not desired, this member should be set to NULL.
+     */
     ULONG pfnDeferredFillIn;
+    /**
+     * Return value describing the error. Either this member or wCode (but not both) must be filled in;
+     * the other must be set to 0. For use with 16-bit versions only.
+     */
     SCODE scode;
     }	EXCEPINFO;
 
 #else /* 0 */
+/**
+ * This structure describes an exception that occurred during IDispatch::Invoke.
+ *
+ * Use the pfnDeferredFillIn member to allow an object to defer filling in the bstrDescription,
+ * bstrHelpFile, and dwHelpContext members until they are needed. This member might be used, for
+ * example, if loading the string for the error is a time-consuming operation. To use deferred
+ * fill-in, the object puts a function pointer in this slot and does not fill any of the other
+ * members except wCode, which is required.
+ *
+ * To get additional information, the caller passes the EXCEPINFO structure back to the pexcepinfo
+ * callback function, which fills in the additional information. When the ActiveX object and the
+ * ActiveX client are in different processes, the ActiveX object calls pfnDeferredFillIn before
+ * returning to the controller.
+ */
 typedef struct tagEXCEPINFO {
+    /**
+     * Code that identifies the error. Error codes should be greater than 1000. Either this member or
+     * the return value member must be filled in; the other must be set to 0.
+     */
     WORD  wCode;
+    /**
+     * Reserved; set to 0.
+     */
     WORD  wReserved;
+    /**
+     * Unicode string that contains the textual, human-readable name of the source of the exception.
+     * Typically, this is an application name. This member should be filled in by the implementor of
+     * IDispatch.
+     */
     BSTR  bstrSource;
+    /**
+     * Unicode string that contains the textual, human-readable description of the error intended for
+     * the customer. If no description is available, use NULL.
+     */
     BSTR  bstrDescription;
+    /**
+     * Unicode string that contains the fully qualified drive, path, and file name of a Help file with
+     * more information about the error. If no Help is available, use NULL.
+     */
     BSTR  bstrHelpFile;
+    /**
+     * Specifies the Help context identifier of the topic within the Help file. This member should be
+     * filled in if and only if the bstrHelpFile member is not NULL.
+     */
     DWORD dwHelpContext;
+    /**
+     * Reserved; set to NULL.
+     */
     PVOID pvReserved;
     HRESULT (__stdcall *pfnDeferredFillIn)(struct tagEXCEPINFO *);
+    /**
+     * Return value describing the error. Either this member or wCode (but not both) must be filled in;
+     * the other must be set to 0. For use with 16-bit versions only.
+     */
     SCODE scode;
 } EXCEPINFO, * LPEXCEPINFO;
 #endif /* 0 */
@@ -652,19 +921,68 @@ enum tagINVOKEKIND
 	INVOKE_PROPERTYPUTREF	= 8
     }	INVOKEKIND;
 
+/**
+ * This structure is used to define a function description.
+ *
+ * The cParamsOpt member specifies the form of optional parameters accepted by the function, as
+ * follows:
+ *
+ * A value of 0 specifies that no optional arguments are supported.
+ *
+ * A value of -1 specifies that the method's last parameter is a pointer to a safe array of
+ * variants. Any number of variant arguments greater than cParams -1 must be packaged by the caller
+ * into a safe array and passed as the final parameter. This array of optional parameters must be
+ * freed by the caller after control is returned from the call.
+ *
+ * Any other number indicates that the last n parameters of the function are variants and do not
+ * need to be specified by the caller explicitly. The parameters left unspecified should be filled
+ * in by the compiler or interpreter as variants of type VT_ERROR with the value
+ * DISP_E_PARAMNOTFOUND.
+ *
+ * For 16-bit systems (Macintosh), the members cScodes and lprgscode store the count and the set of
+ * errors that a function can return. If cScodes = -1, then the set of errors is unknown. If cScodes
+ * = -1, or if cScodes = 0, then lprgscodeis undefined.
+ */
 typedef struct  tagFUNCDESC
     {
+    /**
+     * Function member identifier.
+     */
     MEMBERID memid;
     /* [size_is] */ SCODE __RPC_FAR *lprgscode;
     /* [size_is] */ ELEMDESC __RPC_FAR *lprgelemdescParam;
+    /**
+     * Specifies whether the function is virtual, static, or dispatch-only.
+     */
     FUNCKIND funckind;
+    /**
+     * Invocation kind. Indicates if this is a property function, and if so, what kind.
+     */
     INVOKEKIND invkind;
+    /**
+     * Specifies the function's calling convention.
+     */
     CALLCONV callconv;
+    /**
+     * Count of total number of parameters, both required and optional.
+     */
     SHORT cParams;
+    /**
+     * Count of optional parameters.
+     */
     SHORT cParamsOpt;
     SHORT oVft;
+    /**
+     * Count of permitted return values.
+     */
     SHORT cScodes;
+    /**
+     * Contains the return type of the function.
+     */
     ELEMDESC elemdescFunc;
+    /**
+     * Definition of flags follows.
+     */
     WORD wFuncFlags;
     }	FUNCDESC;
 
@@ -686,12 +1004,21 @@ enum tagVARKIND
 
 #define	IMPLTYPEFLAG_FDEFAULTVTABLE	( 0x8 )
 
+/**
+ * This structure describes a variable, constant, or data member.
+ */
 typedef struct  tagVARDESC
     {
     MEMBERID memid;
+    /**
+     * Reserved for future use.
+     */
     LPOLESTR lpstrSchema;
     /* [switch_is][switch_type] */ union 
         {
+        /**
+         * VAR_CONST, the value of the constant.
+         */
         /* [case()] */ ULONG oInst;
         /* [case()] */ VARIANT __RPC_FAR *lpvarValue;
         }	;
@@ -761,17 +1088,35 @@ typedef /* [wire_marshal] */ struct  tagCLEANLOCALSTORAGE
     DWORD flags;
     }	CLEANLOCALSTORAGE;
 
+/**
+ * This structure is used for holding custom data.
+ */
 typedef struct  tagCUSTDATAITEM
     {
+    /**
+     * Globally unique identifier (GUID) for this data item.
+     */
     GUID guid;
+    /**
+     * Value of this data item.
+     */
     VARIANTARG varValue;
     }	CUSTDATAITEM;
 
 typedef struct tagCUSTDATAITEM __RPC_FAR *LPCUSTDATAITEM;
 
+/**
+ * This structure is used for retrieving custom data.
+ */
 typedef struct  tagCUSTDATA
     {
+    /**
+     * Number of custom data items in prgCustData.
+     */
     DWORD cCustData;
+    /**
+     * Pointer to an array of custom data items.
+     */
     /* [size_is] */ LPCUSTDATAITEM prgCustData;
     }	CUSTDATA;
 

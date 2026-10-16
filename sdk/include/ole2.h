@@ -84,9 +84,73 @@ WINOLEAPI CreateDataAdviseHolder(LPDATAADVISEHOLDER FAR* ppDAHolder);
 WINOLEAPI_(DWORD) OleBuildVersion( VOID );
 
 /* helper functions */
+/**
+ * This function reads the CLSID previously written to a storage object with the WriteClassStg.
+ *
+ * @param pStg [in] Pointer to the IStorage interface on the storage object containing the CLSID to
+ *   be retrieved.
+ * @param pclsid [out] Pointer to where the CLSID is written. Can return CLSID_NULL.
+ *
+ * @return This function supports the standard return value E_OUTOFMEMORY, as well as the following:
+ *   - S_OK: The CLSID was returned successfully. This function also returns any of the error values
+ *   returned by the IStorage::Stat method.
+ *
+ * This function is simply a helper function that calls the IStorage::Stat method and retrieves the
+ * CLSID previously written to the storage object with a call to WriteClassStg from the STATSTG
+ * structure.
+ */
 WINOLEAPI ReadClassStg(LPSTORAGE pStg, CLSID FAR* pclsid);
+/**
+ * This function stores the specified CLSID in a storage object.
+ *
+ * @param pStg [in] IStorage pointer to the storage object that gets a new CLSID.
+ * @param rclsid [in] CLSID to be stored with the object.
+ *
+ * @return - S_OK: Indicates the CLSID was successfully written to the file. - STG_E_MEDIUMFULL:
+ *   Indicates the CLSID could not be written due to lack of memory. IStorage::SetClass method error
+ *   return values.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application.
+ *
+ * The WriteClassStg function writes a CLSID to the specified storage object so it can be read by
+ * the ReadClassStg function. Container applications typically call this function before calling the
+ * IPersistStorage::Save method.
+ */
 WINOLEAPI WriteClassStg(LPSTORAGE pStg, REFCLSID rclsid);
+/**
+ * This function reads the CLSID previously written to a stream object with the WriteClassStm
+ * method.
+ *
+ * @param pStm [in] Pointer to the IStream interface on the stream object containing the CLSID to be
+ *   read. This CLSID must have been previously written to the stream object using WriteClassStm.
+ * @param pclsid [out] Pointer to where the CLSID is to be written.
+ *
+ * @return - S_OK: The CLSID was successfully retrieved. - STG_E_READFAULT: End of file was reached.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application.
+ *
+ * Most applications do not call the ReadClassStm method directly.
+ */
 WINOLEAPI ReadClassStm(LPSTREAM pStm, CLSID FAR* pclsid);
+/**
+ * This function writes a CLSID to the specified stream object so it can be read by the ReadClassStm
+ * function. Most applications do not call WriteClassStm directly.
+ *
+ * @param pStm [in] IStream pointer to the stream into which the CLSID is to be written.
+ * @param rclsid [in] CLSID to write to the stream.
+ *
+ * @return - S_OK: Indicates the CLSID was successfully written. - STG_E_MEDIUMFULL: The CLSID could
+ *   not be written because there is no space left on device. IStorage::SetClass method error return
+ *   values.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application.
+ *
+ * The WriteClassStm function writes a CLSID to the specified stream object so it can be read by the
+ * ReadClassStm function. Most applications do not call WriteClassStm directly.
+ */
 WINOLEAPI WriteClassStm(LPSTREAM pStm, REFCLSID rclsid);
 WINOLEAPI WriteFmtUserTypeStg (LPSTORAGE pstg, CLIPFORMAT cf, LPOLESTR lpszUserType);
 WINOLEAPI ReadFmtUserTypeStg (LPSTORAGE pstg, CLIPFORMAT FAR* pcf, LPOLESTR FAR* lplpszUserType);
@@ -107,6 +171,66 @@ WINOLEAPI  OleQueryCreateFromData(LPDATAOBJECT pSrcDataObject);
 
 /* Object creation APIs */
 
+/**
+ * This function creates an embedded object identified by a CLSID. It is typically used to implement
+ * a menu item that allows the end user to insert a new object.
+ *
+ * @param rclsid [in] CLSID of the embedded object that is to be created.
+ * @param riid [in] Reference to the identifier of the interface, usually IID_IOleObject (defined in
+ *   the OLE headers as the interface identifier for IOleObject), through which the caller will
+ *   communicate with the new object.
+ * @param renderopt [in] Value from the enumeration OLERENDER, indicating the locally cached drawing
+ *   capabilities the newly created object is to have. The OLERENDER value chosen affects the possible
+ *   values for the pFormatEtc parameter.
+ * @param pFormatEtc [in] Depending on which of the OLERENDER flags is used as the value of
+ *   renderopt, pointer to one of the FORMATETC enumeration values. Refer to the OLERENDER enumeration
+ *   for restrictions. This parameter, along with the renderopt parameter, specifies what the new
+ *   object can cache initially.
+ * @param pClientSite [in] If you want OleCreate to call IOleObject::SetClientSite, pClientSite is
+ *   the pointer to the IOleClientSite interface on the container. The value can be NULL, in which
+ *   case you must specifically call IOleClientSite::SetClientSite before attempting operations.
+ * @param pStg [in] Pointer to an instance of the IStorage interface on the storage object. This
+ *   parameter cannot be NULL.
+ * @param ppvObject [out] Pointer to the pointer variable that receives the interface pointer
+ *   requested in riid. Upon successful return, *ppvObject contains the requested interface pointer.
+ *
+ * @return This function supports the standard return value E_OUTOFMEMORY, as well as the following:
+ *   Value Description S_OK Embedded object created successfully.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * The OleCreate function creates a new embedded object, and is typically called to implement the
+ * menu item Insert New Object. When OleCreate returns, the object it has created is blank (contains
+ * no data), unless renderopt is OLERENDER_DRAW or OLERENDER_FORMAT, and is loaded. Containers
+ * typically then call the OleRun function or IOleObject::DoVerb to show the object for initial
+ * editing.
+ *
+ * The rclsid parameter specifies the CLSID of the requested object. CLSIDs of registered objects
+ * are stored in the system registry. When an application user selects Insert Object, a selection
+ * box allows the user to select the type of object desired from those in the registry. When
+ * OleCreate is used to implement the Insert Object menu item, the CLSID associated with the
+ * selected item is assigned to the rclsid parameter of OleCreate.
+ *
+ * The riid parameter specifies the interface the client will use to communicate with the new
+ * object. Upon successful return, the ppvObject parameter holds a pointer to the requested
+ * interface.
+ *
+ * The created object's cache contains information that allows a presentation of a contained object
+ * when the container is opened. Information about what should be cached is passed in the renderopt
+ * and pFormatetc values. When OleCreate returns, the created object's cache is not necessarily
+ * filled. Instead, the cache is filled the first time the object enters the running state. The
+ * caller can add additional cache control with a call to IOleCache::Cache after the return of
+ * OleCreate and before the object is run. If renderopt is OLERENDER_DRAW or OLERENDER_FORMAT,
+ * OleCreate requires that the object support the IOleCache interface. There is no such requirement
+ * for any other value of renderopt.
+ *
+ * If pClientSite is non-NULL, OleCreate calls IOleObject::SetClientSite through the pClientSite
+ * pointer. IOleClientSite is the primary interface by which an object requests services from its
+ * container. If pClientSite is NULL, you must make a specific call to IOleObject::SetClientSite
+ * before attempting any operations.
+ */
 WINOLEAPI  OleCreate(REFCLSID rclsid, REFIID riid, DWORD renderopt,
                 LPFORMATETC pFormatEtc, LPOLECLIENTSITE pClientSite,
                 LPSTORAGE pStg, LPVOID FAR* ppvObj);
@@ -178,12 +302,77 @@ WINOLEAPI  OleCreateFromFileEx(REFCLSID rclsid, LPCOLESTR lpszFileName, REFIID r
 WINOLEAPI  OleLoad(LPSTORAGE pStg, REFIID riid, LPOLECLIENTSITE pClientSite,
             LPVOID FAR* ppvObj);
 
+/**
+ * This function saves an object opened in transacted mode into the specified storage object.
+ *
+ * @param pPS [in] Pointer to the IPersistStorage interface on the object to be saved.
+ * @param pStg [in] Pointer to the IStorage interface on the destination storage object to which the
+ *   object indicated in pPS is to be saved.
+ * @param fSameAsLoad [in] Boolean that is set to TRUE if pStg is the same storage object from which
+ *   the object was loaded or created, or to FALSE if pstg was loaded or created from a different
+ *   storage object.
+ *
+ * @return - S_OK: The object was successfully saved. - STG_E_MEDIUMFULL: The object could not be
+ *   saved due to lack of disk space. This function can also return any of the error values returned
+ *   by the IPersistStorage::Save method.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * The OleSave helper function handles the common situation in which an object is open in transacted
+ * mode and is then to be saved into the specified storage object which uses the OLE-provided
+ * compound file implementation. Transacted mode means that changes to the object are buffered until
+ * either of the IStorage methods Commit or Revert is called. Callers can handle other situations by
+ * calling the IPersistStorage and IStorage interfaces directly.
+ *
+ * OleSave does the following:
+ *
+ * Calls the IPersistStorage::GetClassID method to get the CLSID of the object.
+ *
+ * Writes the CLSID to the storage object using the WriteClassStg function.
+ *
+ * Calls the IPersistStorage::Save method to save the object.
+ *
+ * If there were no errors on the save; calls the IStorage::Commit method to commit the changes.
+ *
+ * Note Static objects are saved into a stream called CONTENTS. Static metafile objects get saved in
+ * "placeable metafile format" and static DIB data gets saved in "DIB file format." These formats
+ * are defined to be the OLE standards for metafile and DIB. All data transferred using an IStream
+ * interface or a file transferred using IDataObject::GetDataHere must be in these formats. Also,
+ * all objects whose default file format is a metafile or DIB must write their data into a CONTENTS
+ * stream using these standard formats.
+ */
 WINOLEAPI  OleSave(LPPERSISTSTORAGE pPS, LPSTORAGE pStg, BOOL fSameAsLoad);
 
 WINOLEAPI  OleLoadFromStream( LPSTREAM pStm, REFIID iidInterface, LPVOID FAR* ppvObj);
 WINOLEAPI  OleSaveToStream( LPPERSISTSTREAM pPStm, LPSTREAM pStm );
 
 
+/**
+ * This function notifies an object embedded in an OLE container to ensure correct reference.
+ *
+ * @param pUnk [in] Pointer to the IUnknown interface of the object.
+ * @param fContained [in] Boolean that is set to TRUE if the object is an embedded object, or to
+ *   FALSE otherwise.
+ *
+ * @return This function supports the standard return values E_INVALIDARG, E_OUTOFMEMORY and
+ *   E_UNEXPECTED, as well as the following: - S_OK: The object was notified successfully.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * The OleSetContainedObject function notifies an object that it is embedded in an OLE container.
+ * The implementation of OleSetContainedObject was changed in OLE 2.01 to coincide with the
+ * publication of the IRunnableObject interface. You can use OleSetContainedObject and the
+ * IRunnableObject::SetContainedObject method interchangeably. The OleSetContainedObject function
+ * queries the object for a pointer to the IRunnableObject interface. If successful, the function
+ * returns the results of calling IRunnableObject::SetContainedObject.
+ *
+ * Note The implementation of OleSetContainedObject in earlier versions of OLE differs from that
+ * described here.
+ */
 WINOLEAPI  OleSetContainedObject(LPUNKNOWN pUnknown, BOOL fContained);
 WINOLEAPI  OleNoteObjectVisible(LPUNKNOWN pUnknown, BOOL fVisible);
 
@@ -207,6 +396,33 @@ WINOLEAPI  OleIsCurrentClipboard(LPDATAOBJECT pDataObj);
 
 WINOLEAPI_(HOLEMENU)   OleCreateMenuDescriptor (HMENU hmenuCombined,
                                 LPOLEMENUGROUPWIDTHS lpMenuWidths);
+/**
+ * This function installs or removes OLE dispatching code from the container's frame window.
+ *
+ * @param holemenu [in] Handle to the composite menu descriptor returned by the
+ *   OleCreateMenuDescriptor function. If NULL, the dispatching code is unhooked.
+ * @param hwndFrame [in] Handle to the container's frame window where the in-place composite menu is
+ *   to be installed.
+ * @param hwndActiveObject [in] Handle to the object's in-place activation window. OLE dispatches
+ *   menu messages and commands to this window.
+ * @param lpFrame [in] Long pointer to the IOleInPlaceFrame interface on the container's frame
+ *   window.
+ * @param lpActiveObj [in] Long pointer to the IOleInPlaceActiveObject interface on the active
+ *   in-place object.
+ *
+ * @return This function supports the standard return values E_FAIL, E_INVALIDARG and E_UNEXPECTED,
+ *   as well as the following: - S_OK: The menu was installed correctly.
+ *
+ * The hwndActiveObject and the lpActiveObj parameters are not supported. Set to NULL.
+ *
+ * The container should call OleSetMenuDescriptor to install the dispatching code on hwndFrame when
+ * the object calls the IOleInPlaceFrame::SetMenu method, or to remove the dispatching code by
+ * passing NULL as the value for holemenu to OleSetMenuDescriptor.
+ *
+ * If both the lpFrame and lpActiveObj parameters are non-NULL, OLE installs the context-sensitive
+ * help F1 message filter for the application. Otherwise, the application must supply its own
+ * message filter.
+ */
 WINOLEAPI              OleSetMenuDescriptor (HOLEMENU holemenu, HWND hwndFrame,
                                 HWND hwndActiveObject,
                                 LPOLEINPLACEFRAME lpFrame,
@@ -221,13 +437,141 @@ WINOLEAPI              OleTranslateAccelerator (LPOLEINPLACEFRAME lpFrame,
 WINOLEAPI_(HANDLE) OleDuplicateData (HANDLE hSrc, CLIPFORMAT cfFormat,
                         UINT uiFlags);
 
+/**
+ * This helper function provides a convenient way to draw objects by encapsulating the
+ * IViewObject::Draw method and other related maintenance functions for the drawing rectangle.
+ *
+ * @param pUnk [in] Pointer to the IUnknown interface on the view object that is to be drawn.
+ * @param dwAspect [in] Specifies how the object is to be represented. Representations include
+ *   content, an icon, a thumbnail, or a printed document. Valid values are taken from the enumeration
+ *   DVASPECT. See DVASPECT for more information.
+ * @param hdcDraw [in] Handle to the device context (DC) on which to draw. Cannot be a metafile
+ *   device context.
+ * @param lprcBounds [in] Long pointer to a RECT structure specifying the rectangle in which the
+ *   object should be drawn. This parameter is converted to a RECTL structure and passed to
+ *   IViewObject::Draw.
+ *
+ * @return This function supports the standard return values E_INVALIDARG and E_OUTOFMEMORY, as well
+ *   as the following: Value Description S_OK Object was successfully drawn. OLE_E_BLANK No data to
+ *   draw from. E_ABORT The draw operation was aborted. VIEW_E_DRAW An error occurred in drawing.
+ *   OLE_E_INVALIDRECT The rectangle is invalid. DV_E_NOIVIEWOBJECT The object does not support the
+ *   IViewObject interface.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * The OleDraw helper function calls the QueryInterface method for the object specified (pUnk),
+ * asking for an IViewObject interface on that object. Then, OleDraw converts the RECT structure to
+ * a RECTL structure, and calls IViewObject::Draw as follows:
+ *
+ *     lpViewObj->Draw(dwAspect,-1,0,0,0,hdcDraw,&rectl,0,0,0);
+ *
+ * Do not use OleDraw to draw into a metafile because it does not specify the lprcWBounds parameter
+ * required for drawing into metafiles.
+ */
 WINOLEAPI          OleDraw (LPUNKNOWN pUnknown, DWORD dwAspect, HDC hdcDraw,
                     LPCRECT lprcBounds);
 
+/**
+ * This function puts an OLE compound document object into the running state.
+ *
+ * @return This function supports the standard return values E_INVALIDARG and E_UNEXPECTED, as well
+ *   as the following: - S_OK: The object was successfully placed in the running state. -
+ *   OLE_E_CLASSDIFF: The source of an OLE link has been converted to a different class.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * The OleRun function puts an object in the running state. The implementation of OleRun was changed
+ * in OLE 2.01 to coincide with the publication of the IRunnableObject interface. You can use OleRun
+ * and IRunnableObject::Run interchangeably. OleRun queries the object for a pointer to
+ * IRunnableObject. If successful, the function returns the results of calling the
+ * IRunnableObject::Run method.
+ *
+ * Note The implementation of OleRun in earlier versions of OLE differs from that described here.
+ */
 WINOLEAPI          OleRun(LPUNKNOWN pUnknown);
+/**
+ * This function determines whether a compound document object is currently in the running state.
+ *
+ * @return The return value is TRUE if the object is running; otherwise, it is FALSE.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application. For more information about handling exceptions, see
+ * Programming Considerations.
+ *
+ * You can use OleIsRunning and IRunnableObject::IsRunning interchangeably. OleIsRunning queries the
+ * object for a pointer to the IRunnableObject interface and calls its IsRunning method. If
+ * successful, the function returns the results of the call to IRunnableObject::IsRunning.
+ *
+ * Note The implementation of OleIsRunning in earlier versions of OLE differs from that described
+ * here.
+ */
 WINOLEAPI_(BOOL)   OleIsRunning(LPOLEOBJECT pObject);
 WINOLEAPI          OleLockRunning(LPUNKNOWN pUnknown, BOOL fLock, BOOL fLastUnlockCloses);
+/**
+ * This function frees the specified storage medium.
+ *
+ * @return None.
+ *
+ * The ReleaseStgMedium function calls the appropriate method or function to release the specified
+ * storage medium. Use this function during data transfer operations where storage medium structures
+ * are parameters. In addition to identifying the type of the storage medium, this structure
+ * specifies the appropriate IUnknown::Release method for releasing the storage medium when it is no
+ * longer needed.
+ *
+ * It is common to pass a STGMEDIUM from one body of code to another, in which the one called can
+ * allocate a medium and return it to the caller. ReleaseStgMedium permits flexibility in whether
+ * the receiving body of code owns the medium, or whether the original provider of the medium still
+ * owns it, in which case the receiving code needs to inform the provider that it can free the
+ * medium.
+ *
+ * When the original provider of the medium is responsible for freeing the medium, the provider
+ * calls ReleaseStgMedium, specifying the medium and the appropriate IUnknown pointer as the
+ * punkForRelease structure member. Depending on the type of storage medium being freed, one of the
+ * following actions is taken, followed by a call to the Release method on the specified IUnknown
+ * pointer:
+ *
+ * Medium ReleaseStgMedium Action TYMED_HGLOBAL None. TYMED_GDI None. TYMED_ENHMF None. TYMED_MFPICT
+ * None. TYMED_FILE Frees the file name string using standard memory management mechanisms.
+ * TYMED_ISTREAM Calls IStream::Release. TYMED_ISTORAGE Calls IStorage::Release.
+ *
+ * The provider indicates that the receiver of the medium is responsible for freeing the medium by
+ * specifying NULL for the punkForRelease structure member. Then the receiver calls
+ * ReleaseStgMedium, which makes a call as described in the following table depending on the type of
+ * storage medium being freed:
+ *
+ * Medium ReleaseStgMedium Action TYMED_HGLOBAL Calls the LocalFree function on the handle.
+ * TYMED_GDI Calls the Win32 DeleteObject function on the handle. TYMED_ENHMF Deletes the enhanced
+ * metafile. TYMED_FILE Frees the disk file by deleting it. Frees the file name string by using the
+ * standard memory management paradigm. TYMED_ISTREAM Calls IStream::Release. TYMED_ISTORAGE Calls
+ * IStorage::Release.
+ *
+ * In either case, after the call to ReleaseStgMedium, the specified storage medium is invalid and
+ * can no longer be used.
+ */
 WINOLEAPI_(void)   ReleaseStgMedium(LPSTGMEDIUM);
+/**
+ * This function instantiates an advise holder object for managing compound document notifications.
+ * It passes out a pointer to the object's OLE implementation of the IOleAdviseHolder interface.
+ *
+ * @return This function supports the standard return value E_OUTOFMEMORY, as well as the following:
+ *   - S_OK: The new OLE advise holder returned successfully.
+ *
+ * The function CreateOleAdviseHolder creates an instance of an advise holder, which supports the
+ * OLE implementation of the IOleAdviseHolder interface. The methods of this interface are intended
+ * to be used to implement the advisory methods of IOleObject, and, when advisory connections have
+ * been set up with objects supporting an advisory sink, to send notifications of changes in the
+ * object to the advisory sink. The advise holder returned by CreateOleAdviseHolder will suffice for
+ * the great majority of applications. The OLE-provided implementation does not, however, support
+ * IOleAdviseHolder::EnumAdvise, so if you need to use this method, you will need to implement your
+ * own advise holder.
+ *
+ * Passing into this function any invalid and, under some circumstances, NULL pointers will result
+ * in unexpected termination of the application.
+ */
 WINOLEAPI          CreateOleAdviseHolder(LPOLEADVISEHOLDER FAR* ppOAHolder);
 
 WINOLEAPI          OleCreateDefaultHandler(REFCLSID clsid, LPUNKNOWN pUnkOuter,

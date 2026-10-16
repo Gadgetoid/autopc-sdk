@@ -3805,18 +3805,63 @@ void __RPC_STUB ISequentialStream_RemoteWrite_Stub(
 
 typedef /* [unique] */ IStream __RPC_FAR *LPSTREAM;
 
+/**
+ * The STATSTG structure contains statistical information about an open storage, stream, or byte
+ * array object. This structure is used in the IEnumSTATSTG, ILockBytes, IStorage, and IStream
+ * interfaces.
+ */
 typedef struct  tagSTATSTG
     {
+    /**
+     * Points to a NULL-terminated string containing the name. Space for this string is allocated by the
+     * method called and freed by the caller (refer to CoTaskMemFree). You can specify not to return
+     * this member by specifying the STATFLAG_NONAME value when you call a method that returns a STATSTG
+     * structure, except for calls to IEnumSTATSTG::Next, which provides no way to specify this value.
+     */
     LPOLESTR pwcsName;
+    /**
+     * Indicates the type of storage object. This is one of the values from the STGTY enumeration.
+     */
     DWORD type;
+    /**
+     * Specifies the size in bytes of the stream or byte array.
+     */
     ULARGE_INTEGER cbSize;
+    /**
+     * Indicates the last modification time for this storage, stream, or byte array.
+     */
     FILETIME mtime;
+    /**
+     * Indicates the creation time for this storage, stream, or byte array.
+     */
     FILETIME ctime;
+    /**
+     * Indicates the last access time for this storage, stream or byte array.
+     */
     FILETIME atime;
+    /**
+     * Indicates the access mode specified when the object was opened. This member is only valid in
+     * calls to Stat methods.
+     */
     DWORD grfMode;
+    /**
+     * Indicates the types of region locking supported by the stream or byte array. See the LOCKTYPES
+     * enumeration for the values available. This member is not used for storage objects.
+     */
     DWORD grfLocksSupported;
+    /**
+     * Indicates the class identifier for the storage object; set to CLSID_NULL for new storage objects.
+     * This member is not used for streams or byte arrays.
+     */
     CLSID clsid;
+    /**
+     * Indicates the current state bits of the storage object, that is, the value most recently set by
+     * the IStorage::SetStateBits method. This member is not valid for streams or byte arrays.
+     */
     DWORD grfStateBits;
+    /**
+     * Reserved for future use.
+     */
     DWORD reserved;
     }	STATSTG;
 
@@ -5499,24 +5544,108 @@ void __RPC_STUB ILockBytes_Stat_Stub(
 
 typedef /* [unique] */ IEnumFORMATETC __RPC_FAR *LPENUMFORMATETC;
 
+/**
+ * This structure is used to specify information about the target device for which data is being
+ * composed.
+ *
+ * Some OLE 1 client applications incorrectly construct target devices by allocating too few bytes
+ * in the DEVMODE structure for the OLETARGETDEVICE. They typically only supply the number of bytes
+ * in the DEVMODE.dmSize member. The number of bytes to be allocated should be the sum of
+ * DEVMODE.dmSize + DEVMODE.dmDriverExtra. When a call is made to the CreateDC function with an
+ * incorrect target device, the printer driver tries to access the additional bytes and
+ * unpredictable results can occur. To protect against a crash and make the additional bytes
+ * available, OLE pads the size of OLE 2 target devices created from OLE 1 target devices.
+ */
 typedef struct  tagDVTARGETDEVICE
     {
+    /**
+     * Size, in bytes, of the DVTARGETDEVICE structure. The initial size is included so the structure
+     * can be copied more easily.
+     */
     DWORD tdSize;
+    /**
+     * Offset, in bytes, from the beginning of the structure to the device driver name, which is stored
+     * as a null-terminated string in the tdData buffer.
+     */
     WORD tdDriverNameOffset;
+    /**
+     * Offset, in bytes, from the beginning of the structure to the device name, which is stored as a
+     * null-terminated string in the tdData buffer. This value can be zero to indicate no device name.
+     */
     WORD tdDeviceNameOffset;
+    /**
+     * Offset, in bytes, from the beginning of the structure to the port name, which is stored as a
+     * null-terminated string in the tdData buffer. This value can be zero to indicate no port name.
+     */
     WORD tdPortNameOffset;
+    /**
+     * Offset, in bytes, from the beginning of the structure to the DEVMODE structure retrieved by
+     * calling ExtDeviceMode.
+     */
     WORD tdExtDevmodeOffset;
+    /**
+     * Array of bytes containing data for the target device. It is not necessary to include empty
+     * strings in tdData (for names where the offset value is zero).
+     */
     /* [size_is] */ BYTE tdData[ 1 ];
     }	DVTARGETDEVICE;
 
 typedef CLIPFORMAT __RPC_FAR *LPCLIPFORMAT;
 
+/**
+ * This structure is a generalized clipboard format, enhanced to encompass a target device, the
+ * aspect, or view of the data, and a storage medium.
+ *
+ * The FORMATETC structure is used by methods in the data transfer and presentation interfaces as a
+ * parameter specifying the data being transferred.
+ *
+ * Windows CE does not support the CF_ENHMETAFILE or CF_METAFILEPICT values in the cfFormat member.
+ */
 typedef struct  tagFORMATETC
     {
+    /**
+     * Particular clipboard format of interest. There are three types of formats recognized by OLE:
+     *
+     * Standard interchange formats, such as CF_TEXT.
+     *
+     * Private application formats understood only by the application offering the format, or by other
+     * applications offering similar features.
+     *
+     * OLE formats, which are used to create linked or embedded objects.
+     */
     CLIPFORMAT cfFormat;
+    /**
+     * Pointer to a DVTARGETDEVICE structure containing information about the target device for which
+     * the data is being composed. A NULL value is used whenever the specified data format is
+     * independent of the target device or when the caller doesn't care what device is used. In the
+     * latter case, if the data requires a target device, the object should pick an appropriate default
+     * device (often the display for visual components). Data obtained from an object with a NULL target
+     * device, such as most metafiles, is independent of the target device. The resulting data is
+     * usually the same as it would be if the user chose the Save As command from the File menu and
+     * selected an interchange format.
+     */
     /* [unique] */ DVTARGETDEVICE __RPC_FAR *ptd;
+    /**
+     * Specifies one of the DVASPECT enumeration constants that indicate how much detail should be
+     * contained in the rendering. A single clipboard format can support multiple aspects or views of
+     * the object. Most data and presentation transfer and caching methods pass aspect information. For
+     * example, a caller might request an object's iconic picture, using the metafile clipboard format
+     * to retrieve it. Note that only one DVASPECT value can be used in dwAspect. That is, dwAspect
+     * cannot be the result of a BOOLEAN OR operation on several DVASPECT values.
+     */
     DWORD dwAspect;
+    /**
+     * Part of the aspect when the data must be split across page boundaries. The most common value is
+     * -1, which identifies all of the data. For the aspects DVASPECT_THUMBNAIL and DVASPECT_ICON,
+     * lindex is ignored.
+     */
     LONG lindex;
+    /**
+     * One of the TYMED enumeration constants which indicate the type of storage medium used to transfer
+     * the object's data. Data can be transferred using whatever medium makes sense for the object. For
+     * example, data can be passed using global memory, a disk file, or structured storage objects. For
+     * more information, see the TYMED enumeration.
+     */
     DWORD tymed;
     }	FORMATETC;
 

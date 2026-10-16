@@ -546,6 +546,22 @@ typedef struct {
 // prototypes
 //
 
+/**
+ * This function formats a date and time according to the specified RFC format - as specified in the
+ * Hypertext Transfer Protocol (HTTP) Specification 1.0.
+ *
+ * @param pst Pointer to a SYSTEMTIME structure that contains the date and time to format.
+ * @param dwRFC Specifies the RFC format used. Currently, the only valid format is
+ *   INTERNET_RFC1123_FORMAT.
+ * @param lpszTime Long pointer to a buffer that receives the null-terminated string that contains
+ *   the formatted date and time. The buffer should be of size INTERNET_RFC1123_BUFSIZE.
+ * @param cbTime Size, in bytes, of the lpszTime buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * The cbTime parameter refers to the count of characters.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -555,6 +571,22 @@ InternetTimeFromSystemTimeA(
     OUT LPSTR lpszTime,         // output string buffer
     IN  DWORD cbTime            // output buffer size
     );
+/**
+ * This function formats a date and time according to the specified RFC format - as specified in the
+ * Hypertext Transfer Protocol (HTTP) Specification 1.0.
+ *
+ * @param pst Pointer to a SYSTEMTIME structure that contains the date and time to format.
+ * @param dwRFC Specifies the RFC format used. Currently, the only valid format is
+ *   INTERNET_RFC1123_FORMAT.
+ * @param lpszTime Long pointer to a buffer that receives the null-terminated string that contains
+ *   the formatted date and time. The buffer should be of size INTERNET_RFC1123_BUFSIZE.
+ * @param cbTime Size, in bytes, of the lpszTime buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * The cbTime parameter refers to the count of characters.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -565,8 +597,40 @@ InternetTimeFromSystemTimeW(
     IN  DWORD cbTime            // output buffer size
     );
 #ifdef UNICODE
+/**
+ * This function formats a date and time according to the specified RFC format - as specified in the
+ * Hypertext Transfer Protocol (HTTP) Specification 1.0.
+ *
+ * @param pst Pointer to a SYSTEMTIME structure that contains the date and time to format.
+ * @param dwRFC Specifies the RFC format used. Currently, the only valid format is
+ *   INTERNET_RFC1123_FORMAT.
+ * @param lpszTime Long pointer to a buffer that receives the null-terminated string that contains
+ *   the formatted date and time. The buffer should be of size INTERNET_RFC1123_BUFSIZE.
+ * @param cbTime Size, in bytes, of the lpszTime buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * The cbTime parameter refers to the count of characters.
+ */
 #define InternetTimeFromSystemTime	InternetTimeFromSystemTimeW
 #else
+/**
+ * This function formats a date and time according to the specified RFC format - as specified in the
+ * Hypertext Transfer Protocol (HTTP) Specification 1.0.
+ *
+ * @param pst Pointer to a SYSTEMTIME structure that contains the date and time to format.
+ * @param dwRFC Specifies the RFC format used. Currently, the only valid format is
+ *   INTERNET_RFC1123_FORMAT.
+ * @param lpszTime Long pointer to a buffer that receives the null-terminated string that contains
+ *   the formatted date and time. The buffer should be of size INTERNET_RFC1123_BUFSIZE.
+ * @param cbTime Size, in bytes, of the lpszTime buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * The cbTime parameter refers to the count of characters.
+ */
 #define InternetTimeFromSystemTime	InternetTimeFromSystemTimeA
 #endif // !UNICODE
 
@@ -578,6 +642,16 @@ InternetTimeFromSystemTimeW(
 #define INTERNET_RFC1123_FORMAT     0
 #define INTERNET_RFC1123_BUFSIZE   30
 
+/**
+ * This function takes an HTTP time/date string and converts it to a SYSTEMTIME structure.
+ *
+ * @param lpszTime Long pointer to a null-terminated date/time string to convert.
+ * @param pst Pointer to the converted time.
+ * @param dwReserved Reserved; set to zero.
+ *
+ * @return TRUE indicates that the string was converted. FALSE indicates failure. To get extended
+ *   error information, call GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -587,6 +661,16 @@ InternetTimeToSystemTimeA(
     IN  DWORD dwReserved
     );
 
+/**
+ * This function takes an HTTP time/date string and converts it to a SYSTEMTIME structure.
+ *
+ * @param lpszTime Long pointer to a null-terminated date/time string to convert.
+ * @param pst Pointer to the converted time.
+ * @param dwReserved Reserved; set to zero.
+ *
+ * @return TRUE indicates that the string was converted. FALSE indicates failure. To get extended
+ *   error information, call GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -597,8 +681,28 @@ InternetTimeToSystemTimeW(
     );
 
 #ifdef UNICODE
+/**
+ * This function takes an HTTP time/date string and converts it to a SYSTEMTIME structure.
+ *
+ * @param lpszTime Long pointer to a null-terminated date/time string to convert.
+ * @param pst Pointer to the converted time.
+ * @param dwReserved Reserved; set to zero.
+ *
+ * @return TRUE indicates that the string was converted. FALSE indicates failure. To get extended
+ *   error information, call GetLastError.
+ */
 #define InternetTimeToSystemTime	InternetTimeToSystemTimeW
 #else
+/**
+ * This function takes an HTTP time/date string and converts it to a SYSTEMTIME structure.
+ *
+ * @param lpszTime Long pointer to a null-terminated date/time string to convert.
+ * @param pst Pointer to the converted time.
+ * @param dwReserved Reserved; set to zero.
+ *
+ * @return TRUE indicates that the string was converted. FALSE indicates failure. To get extended
+ *   error information, call GetLastError.
+ */
 #define InternetTimeToSystemTime	InternetTimeToSystemTimeA
 #endif // !UNICODE
 
@@ -610,6 +714,40 @@ InternetDebugGetLocalTime(
     OUT DWORD      * pdwReserved
 );
 
+/**
+ * This function cracks a URL into its component parts.
+ *
+ * @param lpszUrl Long pointer to a null-terminated string that contains the canonical URL to crack.
+ * @param dwUrlLength Specifies the length of the lpszUrl string, or zero if lpszUrl is an ASCIIZ
+ *   string.
+ * @param dwFlags Specifies the operation. It is one of the following values: Value Description
+ *   ICU_DECODE Converts encoded characters back to their normal form. This can be used only if the
+ *   user provides buffers in the URL_COMPONENTS structure to copy the components into. ICU_ESCAPE
+ *   Converts all escape sequences (%xx) to their corresponding characters. This can be used only if
+ *   the user provides buffers in the URL_COMPONENTS structure to copy the components into.
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that receives the URL
+ *   components.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * Always directly call the ANSI version of this function, InternetCrackUrlA.
+ *
+ * The required components are indicated by members of the URL_COMPONENTS structure. Each component
+ * has a pointer to the value and has a member that stores the length of the stored value. If both
+ * the value and the length for a component are equal to zero, that component is not returned. If
+ * the pointer to the value of the component is NULL and the value of its corresponding length
+ * member is nonzero, the address of the first character of the corresponding component in the
+ * lpszUrl string is stored in the pointer, and the length of the component is stored in the length
+ * member.
+ *
+ * If the pointer contains the address of the user-supplied buffer, the length member must contain
+ * the size of the buffer. InternetCrackUrl copies the component into the buffer, and the length
+ * member is set to the length of the copied component, minus 1 for the trailing string terminator.
+ *
+ * For InternetCrackUrl to work properly, the size of the URL_COMPONENTS structure must be stored in
+ * the dwStructSize member.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -619,6 +757,40 @@ InternetCrackUrlA(
     IN DWORD dwFlags,
     IN OUT LPURL_COMPONENTSA lpUrlComponents
     );
+/**
+ * This function cracks a URL into its component parts.
+ *
+ * @param lpszUrl Long pointer to a null-terminated string that contains the canonical URL to crack.
+ * @param dwUrlLength Specifies the length of the lpszUrl string, or zero if lpszUrl is an ASCIIZ
+ *   string.
+ * @param dwFlags Specifies the operation. It is one of the following values: Value Description
+ *   ICU_DECODE Converts encoded characters back to their normal form. This can be used only if the
+ *   user provides buffers in the URL_COMPONENTS structure to copy the components into. ICU_ESCAPE
+ *   Converts all escape sequences (%xx) to their corresponding characters. This can be used only if
+ *   the user provides buffers in the URL_COMPONENTS structure to copy the components into.
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that receives the URL
+ *   components.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * Always directly call the ANSI version of this function, InternetCrackUrlA.
+ *
+ * The required components are indicated by members of the URL_COMPONENTS structure. Each component
+ * has a pointer to the value and has a member that stores the length of the stored value. If both
+ * the value and the length for a component are equal to zero, that component is not returned. If
+ * the pointer to the value of the component is NULL and the value of its corresponding length
+ * member is nonzero, the address of the first character of the corresponding component in the
+ * lpszUrl string is stored in the pointer, and the length of the component is stored in the length
+ * member.
+ *
+ * If the pointer contains the address of the user-supplied buffer, the length member must contain
+ * the size of the buffer. InternetCrackUrl copies the component into the buffer, and the length
+ * member is set to the length of the copied component, minus 1 for the trailing string terminator.
+ *
+ * For InternetCrackUrl to work properly, the size of the URL_COMPONENTS structure must be stored in
+ * the dwStructSize member.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -629,11 +801,98 @@ InternetCrackUrlW(
     IN OUT LPURL_COMPONENTSW lpUrlComponents
     );
 #ifdef UNICODE
+/**
+ * This function cracks a URL into its component parts.
+ *
+ * @param lpszUrl Long pointer to a null-terminated string that contains the canonical URL to crack.
+ * @param dwUrlLength Specifies the length of the lpszUrl string, or zero if lpszUrl is an ASCIIZ
+ *   string.
+ * @param dwFlags Specifies the operation. It is one of the following values: Value Description
+ *   ICU_DECODE Converts encoded characters back to their normal form. This can be used only if the
+ *   user provides buffers in the URL_COMPONENTS structure to copy the components into. ICU_ESCAPE
+ *   Converts all escape sequences (%xx) to their corresponding characters. This can be used only if
+ *   the user provides buffers in the URL_COMPONENTS structure to copy the components into.
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that receives the URL
+ *   components.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * Always directly call the ANSI version of this function, InternetCrackUrlA.
+ *
+ * The required components are indicated by members of the URL_COMPONENTS structure. Each component
+ * has a pointer to the value and has a member that stores the length of the stored value. If both
+ * the value and the length for a component are equal to zero, that component is not returned. If
+ * the pointer to the value of the component is NULL and the value of its corresponding length
+ * member is nonzero, the address of the first character of the corresponding component in the
+ * lpszUrl string is stored in the pointer, and the length of the component is stored in the length
+ * member.
+ *
+ * If the pointer contains the address of the user-supplied buffer, the length member must contain
+ * the size of the buffer. InternetCrackUrl copies the component into the buffer, and the length
+ * member is set to the length of the copied component, minus 1 for the trailing string terminator.
+ *
+ * For InternetCrackUrl to work properly, the size of the URL_COMPONENTS structure must be stored in
+ * the dwStructSize member.
+ */
 #define InternetCrackUrl  InternetCrackUrlW
 #else
+/**
+ * This function cracks a URL into its component parts.
+ *
+ * @param lpszUrl Long pointer to a null-terminated string that contains the canonical URL to crack.
+ * @param dwUrlLength Specifies the length of the lpszUrl string, or zero if lpszUrl is an ASCIIZ
+ *   string.
+ * @param dwFlags Specifies the operation. It is one of the following values: Value Description
+ *   ICU_DECODE Converts encoded characters back to their normal form. This can be used only if the
+ *   user provides buffers in the URL_COMPONENTS structure to copy the components into. ICU_ESCAPE
+ *   Converts all escape sequences (%xx) to their corresponding characters. This can be used only if
+ *   the user provides buffers in the URL_COMPONENTS structure to copy the components into.
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that receives the URL
+ *   components.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * Always directly call the ANSI version of this function, InternetCrackUrlA.
+ *
+ * The required components are indicated by members of the URL_COMPONENTS structure. Each component
+ * has a pointer to the value and has a member that stores the length of the stored value. If both
+ * the value and the length for a component are equal to zero, that component is not returned. If
+ * the pointer to the value of the component is NULL and the value of its corresponding length
+ * member is nonzero, the address of the first character of the corresponding component in the
+ * lpszUrl string is stored in the pointer, and the length of the component is stored in the length
+ * member.
+ *
+ * If the pointer contains the address of the user-supplied buffer, the length member must contain
+ * the size of the buffer. InternetCrackUrl copies the component into the buffer, and the length
+ * member is set to the length of the copied component, minus 1 for the trailing string terminator.
+ *
+ * For InternetCrackUrl to work properly, the size of the URL_COMPONENTS structure must be stored in
+ * the dwStructSize member.
+ */
 #define InternetCrackUrl  InternetCrackUrlA
 #endif // !UNICODE
 
+/**
+ * This function creates a URL from its component parts.
+ *
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that contains the components
+ *   from which to create the URL.
+ * @param dwFlags Specifies the operation of this function. It can be a combination of these values:
+ *   Value Description ICU_ESCAPE Converts all escape sequences (%xx) to their corresponding
+ *   characters. ICU_USERNAME When adding the user name, uses the name that was specified at logon
+ *   time.
+ * @param lpszUrl Long pointer to a buffer that receives the null-terminated string that contains
+ *   the URL.
+ * @param lpdwUrlLength Long pointer to the length, in bytes, of the lpszUrl buffer. When the
+ *   function returns, this parameter receives the length, in bytes, of the URL string, minus 1 for
+ *   the terminating character. If GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter
+ *   receives the number of bytes required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -643,6 +902,25 @@ InternetCreateUrlA(
     OUT LPSTR lpszUrl,
     IN OUT LPDWORD lpdwUrlLength
     );
+/**
+ * This function creates a URL from its component parts.
+ *
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that contains the components
+ *   from which to create the URL.
+ * @param dwFlags Specifies the operation of this function. It can be a combination of these values:
+ *   Value Description ICU_ESCAPE Converts all escape sequences (%xx) to their corresponding
+ *   characters. ICU_USERNAME When adding the user name, uses the name that was specified at logon
+ *   time.
+ * @param lpszUrl Long pointer to a buffer that receives the null-terminated string that contains
+ *   the URL.
+ * @param lpdwUrlLength Long pointer to the length, in bytes, of the lpszUrl buffer. When the
+ *   function returns, this parameter receives the length, in bytes, of the URL string, minus 1 for
+ *   the terminating character. If GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter
+ *   receives the number of bytes required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -653,11 +931,94 @@ InternetCreateUrlW(
     IN OUT LPDWORD lpdwUrlLength
     );
 #ifdef UNICODE
+/**
+ * This function creates a URL from its component parts.
+ *
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that contains the components
+ *   from which to create the URL.
+ * @param dwFlags Specifies the operation of this function. It can be a combination of these values:
+ *   Value Description ICU_ESCAPE Converts all escape sequences (%xx) to their corresponding
+ *   characters. ICU_USERNAME When adding the user name, uses the name that was specified at logon
+ *   time.
+ * @param lpszUrl Long pointer to a buffer that receives the null-terminated string that contains
+ *   the URL.
+ * @param lpdwUrlLength Long pointer to the length, in bytes, of the lpszUrl buffer. When the
+ *   function returns, this parameter receives the length, in bytes, of the URL string, minus 1 for
+ *   the terminating character. If GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter
+ *   receives the number of bytes required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetCreateUrl  InternetCreateUrlW
 #else
+/**
+ * This function creates a URL from its component parts.
+ *
+ * @param lpUrlComponents Long pointer to a URL_COMPONENTS structure that contains the components
+ *   from which to create the URL.
+ * @param dwFlags Specifies the operation of this function. It can be a combination of these values:
+ *   Value Description ICU_ESCAPE Converts all escape sequences (%xx) to their corresponding
+ *   characters. ICU_USERNAME When adding the user name, uses the name that was specified at logon
+ *   time.
+ * @param lpszUrl Long pointer to a buffer that receives the null-terminated string that contains
+ *   the URL.
+ * @param lpdwUrlLength Long pointer to the length, in bytes, of the lpszUrl buffer. When the
+ *   function returns, this parameter receives the length, in bytes, of the URL string, minus 1 for
+ *   the terminating character. If GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter
+ *   receives the number of bytes required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetCreateUrl  InternetCreateUrlA
 #endif // !UNICODE
 
+/**
+ * This function converts a URL to a canonical form, including conversion of unsafe characters into
+ * escape sequences.
+ *
+ * @param lpszUrl Long pointer to the null-terminated string that contains the input URL to
+ *   canonicalize.
+ * @param lpszBuffer Long pointer to the buffer that receives the null-terminated string that
+ *   contains the resulting canonicalized URL.
+ * @param lpdwBufferLength Long pointer to the length, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length of the lpszBuffer buffer-the length does
+ *   not include the terminating null. If the function fails, this parameter receives the required
+ *   length, in bytes, of the lpszBuffer buffer-the required length includes the terminating null.
+ * @param dwFlags Specifies control canonicalization. Can be one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded,
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL. If no flags are specified (dwFlags = 0), the
+ *   function converts all unsafe characters and meta sequences (such as \.,\ .., and \...) to escape
+ *   sequences.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Meaning ERROR_BAD_PATHNAME The URL could not be canonicalized. ERROR_INSUFFICIENT_BUFFER
+ *   Canonicalized URL is too large to fit in the buffer provided. The *lpdwBufferLength parameter is
+ *   set to the size, in bytes, of the buffer required to hold the resultant, canonicalized URL.
+ *   ERROR_INTERNET_INVALID_URL The format of the URL is invalid. ERROR_INVALID_PARAMETER Bad string,
+ *   buffer, buffer size, or flags parameter.
+ *
+ * InternetCanonicalizeUrl always encodes by default, even if the ICU_DECODE flag has been
+ * specified. To decode without re-encoding, use ICU_DECODE | ICU_NO_ENCODE. If the ICU_DECODE flag
+ * is used without ICU_NO_ENCODE, the URL is decoded before being parsed; unsafe characters then are
+ * re-encoded after parsing. This function will handle arbitrary protocol schemes, but to do so it
+ * must make inferences from the unsafe character set.
+ *
+ * The application calling InternetCanonicalizeUrl should track the usage of this function on a
+ * particular URL. If unsafe characters in a URL have been converted to escape sequences, using
+ * InternetCanonicalizeUrl again on the URL (with no flags) will cause the escape sequences to be
+ * converted to another escape sequence. For example, a blank space in a URL would be converted to
+ * the escape sequence "%20". Calling InternetCanonicalizeUrl again on the URL would cause the
+ * escape sequence "%20" to be converted to the escape sequence "%2520", because the "%" sign is an
+ * unsafe character that is reserved for escape sequences and is replaced by the function with the
+ * escape sequence "%25".
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -667,6 +1028,51 @@ InternetCanonicalizeUrlA(
     IN OUT LPDWORD lpdwBufferLength,
     IN DWORD dwFlags
     );
+/**
+ * This function converts a URL to a canonical form, including conversion of unsafe characters into
+ * escape sequences.
+ *
+ * @param lpszUrl Long pointer to the null-terminated string that contains the input URL to
+ *   canonicalize.
+ * @param lpszBuffer Long pointer to the buffer that receives the null-terminated string that
+ *   contains the resulting canonicalized URL.
+ * @param lpdwBufferLength Long pointer to the length, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length of the lpszBuffer buffer-the length does
+ *   not include the terminating null. If the function fails, this parameter receives the required
+ *   length, in bytes, of the lpszBuffer buffer-the required length includes the terminating null.
+ * @param dwFlags Specifies control canonicalization. Can be one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded,
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL. If no flags are specified (dwFlags = 0), the
+ *   function converts all unsafe characters and meta sequences (such as \.,\ .., and \...) to escape
+ *   sequences.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Meaning ERROR_BAD_PATHNAME The URL could not be canonicalized. ERROR_INSUFFICIENT_BUFFER
+ *   Canonicalized URL is too large to fit in the buffer provided. The *lpdwBufferLength parameter is
+ *   set to the size, in bytes, of the buffer required to hold the resultant, canonicalized URL.
+ *   ERROR_INTERNET_INVALID_URL The format of the URL is invalid. ERROR_INVALID_PARAMETER Bad string,
+ *   buffer, buffer size, or flags parameter.
+ *
+ * InternetCanonicalizeUrl always encodes by default, even if the ICU_DECODE flag has been
+ * specified. To decode without re-encoding, use ICU_DECODE | ICU_NO_ENCODE. If the ICU_DECODE flag
+ * is used without ICU_NO_ENCODE, the URL is decoded before being parsed; unsafe characters then are
+ * re-encoded after parsing. This function will handle arbitrary protocol schemes, but to do so it
+ * must make inferences from the unsafe character set.
+ *
+ * The application calling InternetCanonicalizeUrl should track the usage of this function on a
+ * particular URL. If unsafe characters in a URL have been converted to escape sequences, using
+ * InternetCanonicalizeUrl again on the URL (with no flags) will cause the escape sequences to be
+ * converted to another escape sequence. For example, a blank space in a URL would be converted to
+ * the escape sequence "%20". Calling InternetCanonicalizeUrl again on the URL would cause the
+ * escape sequence "%20" to be converted to the escape sequence "%2520", because the "%" sign is an
+ * unsafe character that is reserved for escape sequences and is replaced by the function with the
+ * escape sequence "%25".
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -677,11 +1083,132 @@ InternetCanonicalizeUrlW(
     IN DWORD dwFlags
     );
 #ifdef UNICODE
+/**
+ * This function converts a URL to a canonical form, including conversion of unsafe characters into
+ * escape sequences.
+ *
+ * @param lpszUrl Long pointer to the null-terminated string that contains the input URL to
+ *   canonicalize.
+ * @param lpszBuffer Long pointer to the buffer that receives the null-terminated string that
+ *   contains the resulting canonicalized URL.
+ * @param lpdwBufferLength Long pointer to the length, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length of the lpszBuffer buffer-the length does
+ *   not include the terminating null. If the function fails, this parameter receives the required
+ *   length, in bytes, of the lpszBuffer buffer-the required length includes the terminating null.
+ * @param dwFlags Specifies control canonicalization. Can be one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded,
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL. If no flags are specified (dwFlags = 0), the
+ *   function converts all unsafe characters and meta sequences (such as \.,\ .., and \...) to escape
+ *   sequences.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Meaning ERROR_BAD_PATHNAME The URL could not be canonicalized. ERROR_INSUFFICIENT_BUFFER
+ *   Canonicalized URL is too large to fit in the buffer provided. The *lpdwBufferLength parameter is
+ *   set to the size, in bytes, of the buffer required to hold the resultant, canonicalized URL.
+ *   ERROR_INTERNET_INVALID_URL The format of the URL is invalid. ERROR_INVALID_PARAMETER Bad string,
+ *   buffer, buffer size, or flags parameter.
+ *
+ * InternetCanonicalizeUrl always encodes by default, even if the ICU_DECODE flag has been
+ * specified. To decode without re-encoding, use ICU_DECODE | ICU_NO_ENCODE. If the ICU_DECODE flag
+ * is used without ICU_NO_ENCODE, the URL is decoded before being parsed; unsafe characters then are
+ * re-encoded after parsing. This function will handle arbitrary protocol schemes, but to do so it
+ * must make inferences from the unsafe character set.
+ *
+ * The application calling InternetCanonicalizeUrl should track the usage of this function on a
+ * particular URL. If unsafe characters in a URL have been converted to escape sequences, using
+ * InternetCanonicalizeUrl again on the URL (with no flags) will cause the escape sequences to be
+ * converted to another escape sequence. For example, a blank space in a URL would be converted to
+ * the escape sequence "%20". Calling InternetCanonicalizeUrl again on the URL would cause the
+ * escape sequence "%20" to be converted to the escape sequence "%2520", because the "%" sign is an
+ * unsafe character that is reserved for escape sequences and is replaced by the function with the
+ * escape sequence "%25".
+ */
 #define InternetCanonicalizeUrl  InternetCanonicalizeUrlW
 #else
+/**
+ * This function converts a URL to a canonical form, including conversion of unsafe characters into
+ * escape sequences.
+ *
+ * @param lpszUrl Long pointer to the null-terminated string that contains the input URL to
+ *   canonicalize.
+ * @param lpszBuffer Long pointer to the buffer that receives the null-terminated string that
+ *   contains the resulting canonicalized URL.
+ * @param lpdwBufferLength Long pointer to the length, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length of the lpszBuffer buffer-the length does
+ *   not include the terminating null. If the function fails, this parameter receives the required
+ *   length, in bytes, of the lpszBuffer buffer-the required length includes the terminating null.
+ * @param dwFlags Specifies control canonicalization. Can be one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded,
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL. If no flags are specified (dwFlags = 0), the
+ *   function converts all unsafe characters and meta sequences (such as \.,\ .., and \...) to escape
+ *   sequences.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Meaning ERROR_BAD_PATHNAME The URL could not be canonicalized. ERROR_INSUFFICIENT_BUFFER
+ *   Canonicalized URL is too large to fit in the buffer provided. The *lpdwBufferLength parameter is
+ *   set to the size, in bytes, of the buffer required to hold the resultant, canonicalized URL.
+ *   ERROR_INTERNET_INVALID_URL The format of the URL is invalid. ERROR_INVALID_PARAMETER Bad string,
+ *   buffer, buffer size, or flags parameter.
+ *
+ * InternetCanonicalizeUrl always encodes by default, even if the ICU_DECODE flag has been
+ * specified. To decode without re-encoding, use ICU_DECODE | ICU_NO_ENCODE. If the ICU_DECODE flag
+ * is used without ICU_NO_ENCODE, the URL is decoded before being parsed; unsafe characters then are
+ * re-encoded after parsing. This function will handle arbitrary protocol schemes, but to do so it
+ * must make inferences from the unsafe character set.
+ *
+ * The application calling InternetCanonicalizeUrl should track the usage of this function on a
+ * particular URL. If unsafe characters in a URL have been converted to escape sequences, using
+ * InternetCanonicalizeUrl again on the URL (with no flags) will cause the escape sequences to be
+ * converted to another escape sequence. For example, a blank space in a URL would be converted to
+ * the escape sequence "%20". Calling InternetCanonicalizeUrl again on the URL would cause the
+ * escape sequence "%20" to be converted to the escape sequence "%2520", because the "%" sign is an
+ * unsafe character that is reserved for escape sequences and is replaced by the function with the
+ * escape sequence "%25".
+ */
 #define InternetCanonicalizeUrl  InternetCanonicalizeUrlA
 #endif // !UNICODE
 
+/**
+ * This function combines a base and relative URL into a single URL. The resultant URL is
+ * canonicalized.
+ *
+ * @param lpszBaseUrl Long pointer to the null-terminated string that contains the base URL to be
+ *   combined.
+ * @param lpszRelativeUrl Long pointer to the null-terminated string that contains the relative URL
+ *   to be combined.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the resulting URL.
+ * @param lpdwBufferLength Long pointer to the size, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length, in characters, of the resultant combined
+ *   URL-the length does not include the terminating null character. If the function fails, this
+ *   parameter receives the length, in bytes, of the required buffer-the length includes the
+ *   terminating null character.
+ * @param dwFlags Specifies the operation of the function. It is one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Description ERROR_BAD_PATHNAME The URLs could not be combined. ERROR_INSUFFICIENT_BUFFER The
+ *   buffer supplied to the function was insufficient or NULL. The DWORD indicated by the
+ *   lpdwBufferLength parameter will contain the number of bytes required to hold the resultant,
+ *   combined URL. ERROR_INTERNET_INVALID_URL The format of the URL is invalid.
+ *   ERROR_INVALID_PARAMETER Bad string, buffer, buffer size, or flags parameter.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -692,6 +1219,37 @@ InternetCombineUrlA(
     IN OUT LPDWORD lpdwBufferLength,
     IN DWORD dwFlags
     );
+/**
+ * This function combines a base and relative URL into a single URL. The resultant URL is
+ * canonicalized.
+ *
+ * @param lpszBaseUrl Long pointer to the null-terminated string that contains the base URL to be
+ *   combined.
+ * @param lpszRelativeUrl Long pointer to the null-terminated string that contains the relative URL
+ *   to be combined.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the resulting URL.
+ * @param lpdwBufferLength Long pointer to the size, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length, in characters, of the resultant combined
+ *   URL-the length does not include the terminating null character. If the function fails, this
+ *   parameter receives the length, in bytes, of the required buffer-the length includes the
+ *   terminating null character.
+ * @param dwFlags Specifies the operation of the function. It is one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Description ERROR_BAD_PATHNAME The URLs could not be combined. ERROR_INSUFFICIENT_BUFFER The
+ *   buffer supplied to the function was insufficient or NULL. The DWORD indicated by the
+ *   lpdwBufferLength parameter will contain the number of bytes required to hold the resultant,
+ *   combined URL. ERROR_INTERNET_INVALID_URL The format of the URL is invalid.
+ *   ERROR_INVALID_PARAMETER Bad string, buffer, buffer size, or flags parameter.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -703,8 +1261,70 @@ InternetCombineUrlW(
     IN DWORD dwFlags
     );
 #ifdef UNICODE
+/**
+ * This function combines a base and relative URL into a single URL. The resultant URL is
+ * canonicalized.
+ *
+ * @param lpszBaseUrl Long pointer to the null-terminated string that contains the base URL to be
+ *   combined.
+ * @param lpszRelativeUrl Long pointer to the null-terminated string that contains the relative URL
+ *   to be combined.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the resulting URL.
+ * @param lpdwBufferLength Long pointer to the size, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length, in characters, of the resultant combined
+ *   URL-the length does not include the terminating null character. If the function fails, this
+ *   parameter receives the length, in bytes, of the required buffer-the length includes the
+ *   terminating null character.
+ * @param dwFlags Specifies the operation of the function. It is one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Description ERROR_BAD_PATHNAME The URLs could not be combined. ERROR_INSUFFICIENT_BUFFER The
+ *   buffer supplied to the function was insufficient or NULL. The DWORD indicated by the
+ *   lpdwBufferLength parameter will contain the number of bytes required to hold the resultant,
+ *   combined URL. ERROR_INTERNET_INVALID_URL The format of the URL is invalid.
+ *   ERROR_INVALID_PARAMETER Bad string, buffer, buffer size, or flags parameter.
+ */
 #define InternetCombineUrl  InternetCombineUrlW
 #else
+/**
+ * This function combines a base and relative URL into a single URL. The resultant URL is
+ * canonicalized.
+ *
+ * @param lpszBaseUrl Long pointer to the null-terminated string that contains the base URL to be
+ *   combined.
+ * @param lpszRelativeUrl Long pointer to the null-terminated string that contains the relative URL
+ *   to be combined.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the resulting URL.
+ * @param lpdwBufferLength Long pointer to the size, in bytes, of the lpszBuffer buffer. If the
+ *   function succeeds, this parameter receives the length, in characters, of the resultant combined
+ *   URL-the length does not include the terminating null character. If the function fails, this
+ *   parameter receives the length, in bytes, of the required buffer-the length includes the
+ *   terminating null character.
+ * @param dwFlags Specifies the operation of the function. It is one of the following values: Value
+ *   Description ICU_BROWSER_MODE Does not encode or decode characters after "#" or "?", and does not
+ *   remove trailing white space after "?". If this value is not specified, the entire URL is encoded
+ *   and trailing white space is removed. ICU_DECODE Converts all %XX sequences to characters,
+ *   including escape sequences, before the URL is parsed. ICU_ENCODE_SPACES_ONLY Encodes spaces only.
+ *   ICU_NO_ENCODE Does not convert unsafe characters to escape sequences. ICU_NO_META Does not remove
+ *   meta sequences (such as "." and "..") from the URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. Possible error values for GetLastError are described in the following table. Value
+ *   Description ERROR_BAD_PATHNAME The URLs could not be combined. ERROR_INSUFFICIENT_BUFFER The
+ *   buffer supplied to the function was insufficient or NULL. The DWORD indicated by the
+ *   lpdwBufferLength parameter will contain the number of bytes required to hold the resultant,
+ *   combined URL. ERROR_INTERNET_INVALID_URL The format of the URL is invalid.
+ *   ERROR_INVALID_PARAMETER Bad string, buffer, buffer size, or flags parameter.
+ */
 #define InternetCombineUrl  InternetCombineUrlA
 #endif // !UNICODE
 
@@ -725,6 +1345,48 @@ InternetCombineUrlW(
 #define ICU_ENCODE_SPACES_ONLY 0x04000000  // Encode spaces only
 #define ICU_BROWSER_MODE 0x02000000 // Special encode/decode rules for browser
 
+/**
+ * This function initializes an application's use of the Windows CE Internet functions.
+ *
+ * @param lpszAgent Long pointer to a null-terminated string that contains the name of the
+ *   application or entity calling the Internet functions (for example, Microsoft Internet Explorer).
+ *   This name is used as the user agent in the HTTP protocol.
+ * @param dwAccessType Specifies the type of access required. It is one of the following values:
+ *   Value Description INTERNET_OPEN_TYPE_DIRECT Resolves all host names locally.
+ *   INTERNET_OPEN_TYPE_PRECONFIG Retrieves the proxy or direct configuration from the registry.
+ *   INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY Retrieves the proxy or direct configuration from
+ *   the registry and prevents the use of a startup JScript or Internet Setup (INS) file.
+ *   INTERNET_OPEN_TYPE_PROXY Passes requests to the proxy unless a proxy bypass list is supplied and
+ *   the name to be resolved bypasses the proxy. In this case, the function uses
+ *   INTERNET_OPEN_TYPE_DIRECT.
+ * @param lpszProxyName Long pointer to a null-terminated string that contains the name of the proxy
+ *   server (or servers) to use if proxy access was specified. If this parameter is NULL, the function
+ *   reads proxy information from the registry. Do not use an empty string, because InternetOpen will
+ *   use it as the proxy name. The Win32 Internet functions only recognize CERN type proxies (HTTP
+ *   only) and the TIS FTP gateway (FTP only). If Microsoft Internet Explorer is installed, the Win32
+ *   Internet functions also support SOCKS proxies. FTP requests can be made through a CERN type proxy
+ *   either by changing them to an HTTP request or by using InternetOpenUrl.
+ * @param lpszProxyBypass Long pointer to a null-terminated string that contains an optional list of
+ *   host names or IP addresses, or both, that should not be routed through the proxy. The list can
+ *   contain wildcards. Do not use an empty string, because InternetOpen will use it as the proxy
+ *   bypass list. If this parameter specifies the "<local>" macro as the only entry, the function
+ *   bypasses any host name that does not contain a period. If this parameter is NULL, the function
+ *   reads the bypass list from the registry.
+ * @param dwFlags Specifies various options affecting the behavior of the function. It can be a
+ *   combination of these values: INTERNET_FLAG_ASYNC INTERNET_FLAG_FROM_CACHE INTERNET_FLAG_OFFLINE
+ *
+ * @return A valid handle, which the application passes on to subsequent Win32 Internet functions,
+ *   indicates success. NULL indicates failure. To get extended error information, call GetLastError.
+ *
+ * InternetOpen is the first Win32 Internet function called by an application. It tells the Internet
+ * DLL to initialize internal data structures and prepare for future calls from the application.
+ * When the application finishes using the Internet functions, it should call InternetCloseHandle to
+ * free the handle and any associated resources.
+ *
+ * The application can make any number of calls to InternetOpen, although a single call is normally
+ * sufficient. The application might need to have separate behaviors defined for each InternetOpen
+ * instance, such as different proxy servers configured for each.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -735,6 +1397,48 @@ InternetOpenA(
     IN LPCSTR lpszProxyBypass OPTIONAL,
     IN DWORD dwFlags
     );
+/**
+ * This function initializes an application's use of the Windows CE Internet functions.
+ *
+ * @param lpszAgent Long pointer to a null-terminated string that contains the name of the
+ *   application or entity calling the Internet functions (for example, Microsoft Internet Explorer).
+ *   This name is used as the user agent in the HTTP protocol.
+ * @param dwAccessType Specifies the type of access required. It is one of the following values:
+ *   Value Description INTERNET_OPEN_TYPE_DIRECT Resolves all host names locally.
+ *   INTERNET_OPEN_TYPE_PRECONFIG Retrieves the proxy or direct configuration from the registry.
+ *   INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY Retrieves the proxy or direct configuration from
+ *   the registry and prevents the use of a startup JScript or Internet Setup (INS) file.
+ *   INTERNET_OPEN_TYPE_PROXY Passes requests to the proxy unless a proxy bypass list is supplied and
+ *   the name to be resolved bypasses the proxy. In this case, the function uses
+ *   INTERNET_OPEN_TYPE_DIRECT.
+ * @param lpszProxyName Long pointer to a null-terminated string that contains the name of the proxy
+ *   server (or servers) to use if proxy access was specified. If this parameter is NULL, the function
+ *   reads proxy information from the registry. Do not use an empty string, because InternetOpen will
+ *   use it as the proxy name. The Win32 Internet functions only recognize CERN type proxies (HTTP
+ *   only) and the TIS FTP gateway (FTP only). If Microsoft Internet Explorer is installed, the Win32
+ *   Internet functions also support SOCKS proxies. FTP requests can be made through a CERN type proxy
+ *   either by changing them to an HTTP request or by using InternetOpenUrl.
+ * @param lpszProxyBypass Long pointer to a null-terminated string that contains an optional list of
+ *   host names or IP addresses, or both, that should not be routed through the proxy. The list can
+ *   contain wildcards. Do not use an empty string, because InternetOpen will use it as the proxy
+ *   bypass list. If this parameter specifies the "<local>" macro as the only entry, the function
+ *   bypasses any host name that does not contain a period. If this parameter is NULL, the function
+ *   reads the bypass list from the registry.
+ * @param dwFlags Specifies various options affecting the behavior of the function. It can be a
+ *   combination of these values: INTERNET_FLAG_ASYNC INTERNET_FLAG_FROM_CACHE INTERNET_FLAG_OFFLINE
+ *
+ * @return A valid handle, which the application passes on to subsequent Win32 Internet functions,
+ *   indicates success. NULL indicates failure. To get extended error information, call GetLastError.
+ *
+ * InternetOpen is the first Win32 Internet function called by an application. It tells the Internet
+ * DLL to initialize internal data structures and prepare for future calls from the application.
+ * When the application finishes using the Internet functions, it should call InternetCloseHandle to
+ * free the handle and any associated resources.
+ *
+ * The application can make any number of calls to InternetOpen, although a single call is normally
+ * sufficient. The application might need to have separate behaviors defined for each InternetOpen
+ * instance, such as different proxy servers configured for each.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -746,8 +1450,92 @@ InternetOpenW(
     IN DWORD dwFlags
     );
 #ifdef UNICODE
+/**
+ * This function initializes an application's use of the Windows CE Internet functions.
+ *
+ * @param lpszAgent Long pointer to a null-terminated string that contains the name of the
+ *   application or entity calling the Internet functions (for example, Microsoft Internet Explorer).
+ *   This name is used as the user agent in the HTTP protocol.
+ * @param dwAccessType Specifies the type of access required. It is one of the following values:
+ *   Value Description INTERNET_OPEN_TYPE_DIRECT Resolves all host names locally.
+ *   INTERNET_OPEN_TYPE_PRECONFIG Retrieves the proxy or direct configuration from the registry.
+ *   INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY Retrieves the proxy or direct configuration from
+ *   the registry and prevents the use of a startup JScript or Internet Setup (INS) file.
+ *   INTERNET_OPEN_TYPE_PROXY Passes requests to the proxy unless a proxy bypass list is supplied and
+ *   the name to be resolved bypasses the proxy. In this case, the function uses
+ *   INTERNET_OPEN_TYPE_DIRECT.
+ * @param lpszProxyName Long pointer to a null-terminated string that contains the name of the proxy
+ *   server (or servers) to use if proxy access was specified. If this parameter is NULL, the function
+ *   reads proxy information from the registry. Do not use an empty string, because InternetOpen will
+ *   use it as the proxy name. The Win32 Internet functions only recognize CERN type proxies (HTTP
+ *   only) and the TIS FTP gateway (FTP only). If Microsoft Internet Explorer is installed, the Win32
+ *   Internet functions also support SOCKS proxies. FTP requests can be made through a CERN type proxy
+ *   either by changing them to an HTTP request or by using InternetOpenUrl.
+ * @param lpszProxyBypass Long pointer to a null-terminated string that contains an optional list of
+ *   host names or IP addresses, or both, that should not be routed through the proxy. The list can
+ *   contain wildcards. Do not use an empty string, because InternetOpen will use it as the proxy
+ *   bypass list. If this parameter specifies the "<local>" macro as the only entry, the function
+ *   bypasses any host name that does not contain a period. If this parameter is NULL, the function
+ *   reads the bypass list from the registry.
+ * @param dwFlags Specifies various options affecting the behavior of the function. It can be a
+ *   combination of these values: INTERNET_FLAG_ASYNC INTERNET_FLAG_FROM_CACHE INTERNET_FLAG_OFFLINE
+ *
+ * @return A valid handle, which the application passes on to subsequent Win32 Internet functions,
+ *   indicates success. NULL indicates failure. To get extended error information, call GetLastError.
+ *
+ * InternetOpen is the first Win32 Internet function called by an application. It tells the Internet
+ * DLL to initialize internal data structures and prepare for future calls from the application.
+ * When the application finishes using the Internet functions, it should call InternetCloseHandle to
+ * free the handle and any associated resources.
+ *
+ * The application can make any number of calls to InternetOpen, although a single call is normally
+ * sufficient. The application might need to have separate behaviors defined for each InternetOpen
+ * instance, such as different proxy servers configured for each.
+ */
 #define InternetOpen  InternetOpenW
 #else
+/**
+ * This function initializes an application's use of the Windows CE Internet functions.
+ *
+ * @param lpszAgent Long pointer to a null-terminated string that contains the name of the
+ *   application or entity calling the Internet functions (for example, Microsoft Internet Explorer).
+ *   This name is used as the user agent in the HTTP protocol.
+ * @param dwAccessType Specifies the type of access required. It is one of the following values:
+ *   Value Description INTERNET_OPEN_TYPE_DIRECT Resolves all host names locally.
+ *   INTERNET_OPEN_TYPE_PRECONFIG Retrieves the proxy or direct configuration from the registry.
+ *   INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY Retrieves the proxy or direct configuration from
+ *   the registry and prevents the use of a startup JScript or Internet Setup (INS) file.
+ *   INTERNET_OPEN_TYPE_PROXY Passes requests to the proxy unless a proxy bypass list is supplied and
+ *   the name to be resolved bypasses the proxy. In this case, the function uses
+ *   INTERNET_OPEN_TYPE_DIRECT.
+ * @param lpszProxyName Long pointer to a null-terminated string that contains the name of the proxy
+ *   server (or servers) to use if proxy access was specified. If this parameter is NULL, the function
+ *   reads proxy information from the registry. Do not use an empty string, because InternetOpen will
+ *   use it as the proxy name. The Win32 Internet functions only recognize CERN type proxies (HTTP
+ *   only) and the TIS FTP gateway (FTP only). If Microsoft Internet Explorer is installed, the Win32
+ *   Internet functions also support SOCKS proxies. FTP requests can be made through a CERN type proxy
+ *   either by changing them to an HTTP request or by using InternetOpenUrl.
+ * @param lpszProxyBypass Long pointer to a null-terminated string that contains an optional list of
+ *   host names or IP addresses, or both, that should not be routed through the proxy. The list can
+ *   contain wildcards. Do not use an empty string, because InternetOpen will use it as the proxy
+ *   bypass list. If this parameter specifies the "<local>" macro as the only entry, the function
+ *   bypasses any host name that does not contain a period. If this parameter is NULL, the function
+ *   reads the bypass list from the registry.
+ * @param dwFlags Specifies various options affecting the behavior of the function. It can be a
+ *   combination of these values: INTERNET_FLAG_ASYNC INTERNET_FLAG_FROM_CACHE INTERNET_FLAG_OFFLINE
+ *
+ * @return A valid handle, which the application passes on to subsequent Win32 Internet functions,
+ *   indicates success. NULL indicates failure. To get extended error information, call GetLastError.
+ *
+ * InternetOpen is the first Win32 Internet function called by an application. It tells the Internet
+ * DLL to initialize internal data structures and prepare for future calls from the application.
+ * When the application finishes using the Internet functions, it should call InternetCloseHandle to
+ * free the handle and any associated resources.
+ *
+ * The application can make any number of calls to InternetOpen, although a single call is normally
+ * sufficient. The application might need to have separate behaviors defined for each InternetOpen
+ * instance, such as different proxy servers configured for each.
+ */
 #define InternetOpen  InternetOpenA
 #endif // !UNICODE
 
@@ -764,6 +1552,35 @@ InternetOpenW(
 #define GATEWAY_INTERNET_ACCESS     2   // Internet via gateway
 #define CERN_PROXY_INTERNET_ACCESS  INTERNET_OPEN_TYPE_PROXY
 
+/**
+ * This function closes a single Internet handle or a subtree of Internet handles.
+ *
+ * @param hInternet Valid Internet handle to be closed.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * The function terminates any pending operations on the handle and discards any outstanding data.
+ * If a thread is blocking a call to Wininet.dll, another thread in the application can call
+ * InternetCloseHandle on the Internet handle being used by the first thread to cancel the operation
+ * and unblock the first thread.
+ *
+ * If there is a status callback registered for the handle being closed and the handle was created
+ * with a non-NULL context value, an INTERNET_STATUS_HANDLE_CLOSING callback will be made. This
+ * indication will be the last callback made from a handle and indicates that the handle is being
+ * destroyed.
+ *
+ * If asynchronous requests are pending for the handle or any of its child handles, the handle
+ * cannot be closed immediately, but it will be invalidated. Any new requests attempted using the
+ * handle will return with an ERROR_INVALID_HANDLE notification. The asynchronous requests will
+ * complete with INTERNET_STATUS_REQUEST_COMPLETE. Applications must be prepared to receive any
+ * INTERNET_STATUS_REQUEST_COMPLETE indications on the handle before the final
+ * INTERNET_STATUS_HANDLE_CLOSING indication is made, which indicates that the handle is completely
+ * closed.
+ *
+ * An application can call GetLastError to determine if requests are pending. If GetLastError
+ * returns ERROR_IO_PENDING, there were outstanding requests when the handle was closed.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -771,6 +1588,69 @@ InternetCloseHandle(
     IN HINTERNET hInternet
     );
 
+/**
+ * This function opens an FTP or HTTP session for a specified site.
+ *
+ * @param hInternet Handle to the current Internet session. The handle must have been returned by a
+ *   previous call to InternetOpen.
+ * @param lpszServerName Long pointer to a null-terminated string that contains the host name of an
+ *   Internet server. Alternately, the string can contain the IP number of the site in ASCII
+ *   dotted-decimal format (for example, 11.0.1.45).
+ * @param nServerPort Number of the TCP/IP port on the server to connect to. It is one of the
+ *   following values. These flags set only the port that will be used. The service is set by the
+ *   value of dwService. Value Description INTERNET_DEFAULT_FTP_PORT Uses the default port for FTP
+ *   servers (port 21). INTERNET_DEFAULT_HTTP_PORT Uses the default port for HTTP servers (port 80).
+ *   INTERNET_DEFAULT_HTTPS_PORT Uses the default port for HTTPS servers (port 443).
+ *   INTERNET_DEFAULT_SOCKS_PORT Uses the default port for SOCKS firewall servers (port 1080).
+ *   INTERNET_INVALID_PORT_NUMBER Uses the default port for the service specified by dwService.
+ * @param lpszUserName Long pointer to a null-terminated string that contains the name of the user
+ *   to log on. If this parameter is NULL, the function uses an appropriate default, except for HTTP;
+ *   a NULL parameter in HTTP causes the server to return an error. For the FTP protocol, the default
+ *   is "anonymous".
+ * @param lpszPassword Long pointer to a null-terminated string that contains the password to use to
+ *   log on. If both lpszPassword and lpszUserName are NULL, the function uses the default "anonymous"
+ *   password. In the case of FTP, the default password is the user's e-mail name. If lpszPassword is
+ *   NULL, but lpszUserName is not NULL, the function uses a blank password. The behavior for the four
+ *   possible settings of lpszUserName and lpszPassword is described in the following table.
+ *   lpszUserName lpszPassword User name sent to FTP server Password sent to FTP server NULL NULL
+ *   "anonymous" User's e-mail name Non-NULL string NULL lpszUserName "" NULL Non-NULL string ERROR
+ *   ERROR Non-NULL string Non-NULL string lpszUserName lpszPassword
+ * @param dwService Specifies the type of service to access. It is one of the following values:
+ *   Value Description INTERNET_SERVICE_FTP FTP service. INTERNET_SERVICE_HTTP HTTP service.
+ * @param dwFlags Flags specific to the service used. When the value of dwService is
+ *   INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE causes the application to use passive FTP semantics.
+ * @param dwContext Specifies the application-defined value that is used to identify the application
+ *   context for the returned handle in callbacks.
+ *
+ * @return A valid handle to the FTP or HTTP session if the connection indicates success. NULL
+ *   indicates failure. To get extended error information, call GetLastError. An application can also
+ *   use InternetGetLastResponseInfo to determine why access to the service was denied.
+ *
+ * The InternetConnect function is required before communicating with any Internet service.
+ *
+ * Having a connect function for all protocols, even those that do not use persistent connections,
+ * lets an application communicate common information about several requests by using a single
+ * function call. In addition, this allows for future versions of Internet protocols that do not
+ * require a connection to be established for every client request.
+ *
+ * For FTP sites, InternetConnect actually establishes a connection with the server.
+ *
+ * For maximum efficiency, applications using the HTTP protocols should try to minimize calls to
+ * InternetConnect and avoid calling this function for every transaction requested by the user. One
+ * way to accomplish this is to keep a small cache of handles returned from InternetConnect; when
+ * the user makes a request to a previously accessed server, that session handle is still available.
+ *
+ * An application that needs to display multiline text information sent by an FTP server can use
+ * InternetGetLastResponseInfo to retrieve the text.
+ *
+ * For FTP connections, if lpszUsername is NULL, InternetConnect sends the string "anonymous" as the
+ * user name. If lpszPassword is NULL, InternetConnect attempts to use the user's e-mail name as the
+ * password.
+ *
+ * To close the handle returned from InternetConnect, the application should call
+ * InternetCloseHandle. This function disconnects the client from the server and frees all resources
+ * associated with the connection.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -784,6 +1664,69 @@ InternetConnectA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function opens an FTP or HTTP session for a specified site.
+ *
+ * @param hInternet Handle to the current Internet session. The handle must have been returned by a
+ *   previous call to InternetOpen.
+ * @param lpszServerName Long pointer to a null-terminated string that contains the host name of an
+ *   Internet server. Alternately, the string can contain the IP number of the site in ASCII
+ *   dotted-decimal format (for example, 11.0.1.45).
+ * @param nServerPort Number of the TCP/IP port on the server to connect to. It is one of the
+ *   following values. These flags set only the port that will be used. The service is set by the
+ *   value of dwService. Value Description INTERNET_DEFAULT_FTP_PORT Uses the default port for FTP
+ *   servers (port 21). INTERNET_DEFAULT_HTTP_PORT Uses the default port for HTTP servers (port 80).
+ *   INTERNET_DEFAULT_HTTPS_PORT Uses the default port for HTTPS servers (port 443).
+ *   INTERNET_DEFAULT_SOCKS_PORT Uses the default port for SOCKS firewall servers (port 1080).
+ *   INTERNET_INVALID_PORT_NUMBER Uses the default port for the service specified by dwService.
+ * @param lpszUserName Long pointer to a null-terminated string that contains the name of the user
+ *   to log on. If this parameter is NULL, the function uses an appropriate default, except for HTTP;
+ *   a NULL parameter in HTTP causes the server to return an error. For the FTP protocol, the default
+ *   is "anonymous".
+ * @param lpszPassword Long pointer to a null-terminated string that contains the password to use to
+ *   log on. If both lpszPassword and lpszUserName are NULL, the function uses the default "anonymous"
+ *   password. In the case of FTP, the default password is the user's e-mail name. If lpszPassword is
+ *   NULL, but lpszUserName is not NULL, the function uses a blank password. The behavior for the four
+ *   possible settings of lpszUserName and lpszPassword is described in the following table.
+ *   lpszUserName lpszPassword User name sent to FTP server Password sent to FTP server NULL NULL
+ *   "anonymous" User's e-mail name Non-NULL string NULL lpszUserName "" NULL Non-NULL string ERROR
+ *   ERROR Non-NULL string Non-NULL string lpszUserName lpszPassword
+ * @param dwService Specifies the type of service to access. It is one of the following values:
+ *   Value Description INTERNET_SERVICE_FTP FTP service. INTERNET_SERVICE_HTTP HTTP service.
+ * @param dwFlags Flags specific to the service used. When the value of dwService is
+ *   INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE causes the application to use passive FTP semantics.
+ * @param dwContext Specifies the application-defined value that is used to identify the application
+ *   context for the returned handle in callbacks.
+ *
+ * @return A valid handle to the FTP or HTTP session if the connection indicates success. NULL
+ *   indicates failure. To get extended error information, call GetLastError. An application can also
+ *   use InternetGetLastResponseInfo to determine why access to the service was denied.
+ *
+ * The InternetConnect function is required before communicating with any Internet service.
+ *
+ * Having a connect function for all protocols, even those that do not use persistent connections,
+ * lets an application communicate common information about several requests by using a single
+ * function call. In addition, this allows for future versions of Internet protocols that do not
+ * require a connection to be established for every client request.
+ *
+ * For FTP sites, InternetConnect actually establishes a connection with the server.
+ *
+ * For maximum efficiency, applications using the HTTP protocols should try to minimize calls to
+ * InternetConnect and avoid calling this function for every transaction requested by the user. One
+ * way to accomplish this is to keep a small cache of handles returned from InternetConnect; when
+ * the user makes a request to a previously accessed server, that session handle is still available.
+ *
+ * An application that needs to display multiline text information sent by an FTP server can use
+ * InternetGetLastResponseInfo to retrieve the text.
+ *
+ * For FTP connections, if lpszUsername is NULL, InternetConnect sends the string "anonymous" as the
+ * user name. If lpszPassword is NULL, InternetConnect attempts to use the user's e-mail name as the
+ * password.
+ *
+ * To close the handle returned from InternetConnect, the application should call
+ * InternetCloseHandle. This function disconnects the client from the server and frees all resources
+ * associated with the connection.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -798,8 +1741,134 @@ InternetConnectW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function opens an FTP or HTTP session for a specified site.
+ *
+ * @param hInternet Handle to the current Internet session. The handle must have been returned by a
+ *   previous call to InternetOpen.
+ * @param lpszServerName Long pointer to a null-terminated string that contains the host name of an
+ *   Internet server. Alternately, the string can contain the IP number of the site in ASCII
+ *   dotted-decimal format (for example, 11.0.1.45).
+ * @param nServerPort Number of the TCP/IP port on the server to connect to. It is one of the
+ *   following values. These flags set only the port that will be used. The service is set by the
+ *   value of dwService. Value Description INTERNET_DEFAULT_FTP_PORT Uses the default port for FTP
+ *   servers (port 21). INTERNET_DEFAULT_HTTP_PORT Uses the default port for HTTP servers (port 80).
+ *   INTERNET_DEFAULT_HTTPS_PORT Uses the default port for HTTPS servers (port 443).
+ *   INTERNET_DEFAULT_SOCKS_PORT Uses the default port for SOCKS firewall servers (port 1080).
+ *   INTERNET_INVALID_PORT_NUMBER Uses the default port for the service specified by dwService.
+ * @param lpszUserName Long pointer to a null-terminated string that contains the name of the user
+ *   to log on. If this parameter is NULL, the function uses an appropriate default, except for HTTP;
+ *   a NULL parameter in HTTP causes the server to return an error. For the FTP protocol, the default
+ *   is "anonymous".
+ * @param lpszPassword Long pointer to a null-terminated string that contains the password to use to
+ *   log on. If both lpszPassword and lpszUserName are NULL, the function uses the default "anonymous"
+ *   password. In the case of FTP, the default password is the user's e-mail name. If lpszPassword is
+ *   NULL, but lpszUserName is not NULL, the function uses a blank password. The behavior for the four
+ *   possible settings of lpszUserName and lpszPassword is described in the following table.
+ *   lpszUserName lpszPassword User name sent to FTP server Password sent to FTP server NULL NULL
+ *   "anonymous" User's e-mail name Non-NULL string NULL lpszUserName "" NULL Non-NULL string ERROR
+ *   ERROR Non-NULL string Non-NULL string lpszUserName lpszPassword
+ * @param dwService Specifies the type of service to access. It is one of the following values:
+ *   Value Description INTERNET_SERVICE_FTP FTP service. INTERNET_SERVICE_HTTP HTTP service.
+ * @param dwFlags Flags specific to the service used. When the value of dwService is
+ *   INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE causes the application to use passive FTP semantics.
+ * @param dwContext Specifies the application-defined value that is used to identify the application
+ *   context for the returned handle in callbacks.
+ *
+ * @return A valid handle to the FTP or HTTP session if the connection indicates success. NULL
+ *   indicates failure. To get extended error information, call GetLastError. An application can also
+ *   use InternetGetLastResponseInfo to determine why access to the service was denied.
+ *
+ * The InternetConnect function is required before communicating with any Internet service.
+ *
+ * Having a connect function for all protocols, even those that do not use persistent connections,
+ * lets an application communicate common information about several requests by using a single
+ * function call. In addition, this allows for future versions of Internet protocols that do not
+ * require a connection to be established for every client request.
+ *
+ * For FTP sites, InternetConnect actually establishes a connection with the server.
+ *
+ * For maximum efficiency, applications using the HTTP protocols should try to minimize calls to
+ * InternetConnect and avoid calling this function for every transaction requested by the user. One
+ * way to accomplish this is to keep a small cache of handles returned from InternetConnect; when
+ * the user makes a request to a previously accessed server, that session handle is still available.
+ *
+ * An application that needs to display multiline text information sent by an FTP server can use
+ * InternetGetLastResponseInfo to retrieve the text.
+ *
+ * For FTP connections, if lpszUsername is NULL, InternetConnect sends the string "anonymous" as the
+ * user name. If lpszPassword is NULL, InternetConnect attempts to use the user's e-mail name as the
+ * password.
+ *
+ * To close the handle returned from InternetConnect, the application should call
+ * InternetCloseHandle. This function disconnects the client from the server and frees all resources
+ * associated with the connection.
+ */
 #define InternetConnect  InternetConnectW
 #else
+/**
+ * This function opens an FTP or HTTP session for a specified site.
+ *
+ * @param hInternet Handle to the current Internet session. The handle must have been returned by a
+ *   previous call to InternetOpen.
+ * @param lpszServerName Long pointer to a null-terminated string that contains the host name of an
+ *   Internet server. Alternately, the string can contain the IP number of the site in ASCII
+ *   dotted-decimal format (for example, 11.0.1.45).
+ * @param nServerPort Number of the TCP/IP port on the server to connect to. It is one of the
+ *   following values. These flags set only the port that will be used. The service is set by the
+ *   value of dwService. Value Description INTERNET_DEFAULT_FTP_PORT Uses the default port for FTP
+ *   servers (port 21). INTERNET_DEFAULT_HTTP_PORT Uses the default port for HTTP servers (port 80).
+ *   INTERNET_DEFAULT_HTTPS_PORT Uses the default port for HTTPS servers (port 443).
+ *   INTERNET_DEFAULT_SOCKS_PORT Uses the default port for SOCKS firewall servers (port 1080).
+ *   INTERNET_INVALID_PORT_NUMBER Uses the default port for the service specified by dwService.
+ * @param lpszUserName Long pointer to a null-terminated string that contains the name of the user
+ *   to log on. If this parameter is NULL, the function uses an appropriate default, except for HTTP;
+ *   a NULL parameter in HTTP causes the server to return an error. For the FTP protocol, the default
+ *   is "anonymous".
+ * @param lpszPassword Long pointer to a null-terminated string that contains the password to use to
+ *   log on. If both lpszPassword and lpszUserName are NULL, the function uses the default "anonymous"
+ *   password. In the case of FTP, the default password is the user's e-mail name. If lpszPassword is
+ *   NULL, but lpszUserName is not NULL, the function uses a blank password. The behavior for the four
+ *   possible settings of lpszUserName and lpszPassword is described in the following table.
+ *   lpszUserName lpszPassword User name sent to FTP server Password sent to FTP server NULL NULL
+ *   "anonymous" User's e-mail name Non-NULL string NULL lpszUserName "" NULL Non-NULL string ERROR
+ *   ERROR Non-NULL string Non-NULL string lpszUserName lpszPassword
+ * @param dwService Specifies the type of service to access. It is one of the following values:
+ *   Value Description INTERNET_SERVICE_FTP FTP service. INTERNET_SERVICE_HTTP HTTP service.
+ * @param dwFlags Flags specific to the service used. When the value of dwService is
+ *   INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE causes the application to use passive FTP semantics.
+ * @param dwContext Specifies the application-defined value that is used to identify the application
+ *   context for the returned handle in callbacks.
+ *
+ * @return A valid handle to the FTP or HTTP session if the connection indicates success. NULL
+ *   indicates failure. To get extended error information, call GetLastError. An application can also
+ *   use InternetGetLastResponseInfo to determine why access to the service was denied.
+ *
+ * The InternetConnect function is required before communicating with any Internet service.
+ *
+ * Having a connect function for all protocols, even those that do not use persistent connections,
+ * lets an application communicate common information about several requests by using a single
+ * function call. In addition, this allows for future versions of Internet protocols that do not
+ * require a connection to be established for every client request.
+ *
+ * For FTP sites, InternetConnect actually establishes a connection with the server.
+ *
+ * For maximum efficiency, applications using the HTTP protocols should try to minimize calls to
+ * InternetConnect and avoid calling this function for every transaction requested by the user. One
+ * way to accomplish this is to keep a small cache of handles returned from InternetConnect; when
+ * the user makes a request to a previously accessed server, that session handle is still available.
+ *
+ * An application that needs to display multiline text information sent by an FTP server can use
+ * InternetGetLastResponseInfo to retrieve the text.
+ *
+ * For FTP connections, if lpszUsername is NULL, InternetConnect sends the string "anonymous" as the
+ * user name. If lpszPassword is NULL, InternetConnect attempts to use the user's e-mail name as the
+ * password.
+ *
+ * To close the handle returned from InternetConnect, the application should call
+ * InternetCloseHandle. This function disconnects the client from the server and frees all resources
+ * associated with the connection.
+ */
 #define InternetConnect  InternetConnectA
 #endif // !UNICODE
 
@@ -810,6 +1879,82 @@ InternetConnectW(
 #define INTERNET_SERVICE_FTP    1
 #define INTERNET_SERVICE_HTTP   3
 
+/**
+ * This function begins reading a complete FTP or HTTP Universal Resource Locator (URL). For a
+ * relative URL and a base URL separated by blank spaces, InternetCanonicalizeUrl must be invoked
+ * first.
+ *
+ * @param hInternetSession Handle to the current Internet session. The handle must have been
+ *   returned by a previous call to InternetOpen.
+ * @param lpszUrl Long pointer to a null-terminated string that contains the URL to begin reading.
+ *   Only URLs beginning with ftp:, http:, or https: are supported.
+ * @param lpszHeaders Long pointer to a null-terminated string that contains the headers to be sent
+ *   to the HTTP server. (For more information, see the description of the lpszHeaders parameter in
+ *   the HttpSendRequest function.)
+ * @param dwHeadersLength Specifies the length, in characters, of the additional headers. If this
+ *   parameter is -1L and lpszHeaders is not NULL, lpszHeaders is assumed to be zero-terminated
+ *   (ASCIIZ) and the length is calculated.
+ * @param dwFlags Specifies a bitmask of action flags. It is one of the following values: Value
+ *   Description INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in any gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_EXISTING_CONNECT If
+ *   possible, reuses the existing connections to the server for new requests generated by
+ *   InternetOpenUrl instead of creating a new session for each request. This flag is useful only for
+ *   FTP connections, since FTP is the only protocol that typically performs multiple operations
+ *   during the same session. The Win32 Internet API caches a single connection handle for each
+ *   HINTERNET handle generated by InternetOpen. INTERNET_FLAG-HYPERLINK Forces a reload if there was
+ *   no Expires time and no Last-Modified time returned from the server when determining whether to
+ *   reload the item from the network. INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates that are returned from the server against the
+ *   host name given in the request. Win32 Internet functions use a simple check against certificates
+ *   by comparing for matching host names and simple wildcarding rules for HTTP requests.
+ *   INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates for proper validity dates for HTTP requests. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTPS to HTTP
+ *   URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS Disables the ability of the Win32 Internet functions
+ *   to detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTP to HTTPS URLs. INTERNET_FLAG_KEEP_CONNECTION Uses
+ *   keep-alive semantics, if available, for the connection for HTTP requests. This flag is required
+ *   for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of authentication.
+ *   INTERNET_FLAG_MAKE_PERSISTENT No longer supported. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a
+ *   temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically for
+ *   HTTP requests. INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection for HTTP
+ *   requests only. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in any
+ *   gateways. INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and
+ *   does not automatically add returned cookies to the cookie database for HTTP requests.
+ *   INTERNET_FLAG_NO_UI Disables the cookie dialog box. INTERNET_FLAG_PASSIVE Uses passive FTP
+ *   semantics for FTP files and directories. INTERNET_FLAG_RAW_DATA Returns the data as a
+ *   WIN32_FIND_DATA structure when retrieving FTP directory information. If this flag is not
+ *   specified or if the call was made through a CERN proxy, InternetOpenUrl returns an HTML version
+ *   of the directory. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Gets the data from the wire even if it is locally
+ *   cached. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been modified
+ *   since the last time it was downloaded. All FTP resources are reloaded. INTERNET_FLAG_SECURE
+ *   Requests secure transactions on the wire with SSL or PCT. This flag applies to HTTP requests
+ *   only.
+ * @param dwContext Application-defined value that is passed, along with the returned handle, to any
+ *   callback functions.
+ *
+ * @return A valid handle to the FTP or HTTP URL indicates that the connection is successfully
+ *   established. NULL indicates that the connection fails. To get extended error information, call
+ *   GetLastError. To determine why access to the service was denied, call
+ *   InternetGetLastResponseInfo.
+ *
+ * This is a general function that an application can use to retrieve data over any of the protocols
+ * that the Win32 Internet functions support. This function is particularly useful when the
+ * application does not need to access the particulars of a protocol, but only requires the data
+ * corresponding to a URL. The InternetOpenUrl function parses the URL string, establishes a
+ * connection to the server, and prepares to download the data identified by the URL. The
+ * application can then use InternetReadFile (for files) or InternetFindNextFile (for directories)
+ * to retrieve the URL data. It is not necessary to call InternetConnect before InternetOpenUrl.
+ *
+ * Use InternetCloseHandle to close the handle returned from InternetOpenUrl. However, note that
+ * closing the handle before all the URL data has been read results in the connection being
+ * terminated.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -821,6 +1966,82 @@ InternetOpenUrlA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function begins reading a complete FTP or HTTP Universal Resource Locator (URL). For a
+ * relative URL and a base URL separated by blank spaces, InternetCanonicalizeUrl must be invoked
+ * first.
+ *
+ * @param hInternetSession Handle to the current Internet session. The handle must have been
+ *   returned by a previous call to InternetOpen.
+ * @param lpszUrl Long pointer to a null-terminated string that contains the URL to begin reading.
+ *   Only URLs beginning with ftp:, http:, or https: are supported.
+ * @param lpszHeaders Long pointer to a null-terminated string that contains the headers to be sent
+ *   to the HTTP server. (For more information, see the description of the lpszHeaders parameter in
+ *   the HttpSendRequest function.)
+ * @param dwHeadersLength Specifies the length, in characters, of the additional headers. If this
+ *   parameter is -1L and lpszHeaders is not NULL, lpszHeaders is assumed to be zero-terminated
+ *   (ASCIIZ) and the length is calculated.
+ * @param dwFlags Specifies a bitmask of action flags. It is one of the following values: Value
+ *   Description INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in any gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_EXISTING_CONNECT If
+ *   possible, reuses the existing connections to the server for new requests generated by
+ *   InternetOpenUrl instead of creating a new session for each request. This flag is useful only for
+ *   FTP connections, since FTP is the only protocol that typically performs multiple operations
+ *   during the same session. The Win32 Internet API caches a single connection handle for each
+ *   HINTERNET handle generated by InternetOpen. INTERNET_FLAG-HYPERLINK Forces a reload if there was
+ *   no Expires time and no Last-Modified time returned from the server when determining whether to
+ *   reload the item from the network. INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates that are returned from the server against the
+ *   host name given in the request. Win32 Internet functions use a simple check against certificates
+ *   by comparing for matching host names and simple wildcarding rules for HTTP requests.
+ *   INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates for proper validity dates for HTTP requests. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTPS to HTTP
+ *   URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS Disables the ability of the Win32 Internet functions
+ *   to detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTP to HTTPS URLs. INTERNET_FLAG_KEEP_CONNECTION Uses
+ *   keep-alive semantics, if available, for the connection for HTTP requests. This flag is required
+ *   for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of authentication.
+ *   INTERNET_FLAG_MAKE_PERSISTENT No longer supported. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a
+ *   temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically for
+ *   HTTP requests. INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection for HTTP
+ *   requests only. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in any
+ *   gateways. INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and
+ *   does not automatically add returned cookies to the cookie database for HTTP requests.
+ *   INTERNET_FLAG_NO_UI Disables the cookie dialog box. INTERNET_FLAG_PASSIVE Uses passive FTP
+ *   semantics for FTP files and directories. INTERNET_FLAG_RAW_DATA Returns the data as a
+ *   WIN32_FIND_DATA structure when retrieving FTP directory information. If this flag is not
+ *   specified or if the call was made through a CERN proxy, InternetOpenUrl returns an HTML version
+ *   of the directory. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Gets the data from the wire even if it is locally
+ *   cached. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been modified
+ *   since the last time it was downloaded. All FTP resources are reloaded. INTERNET_FLAG_SECURE
+ *   Requests secure transactions on the wire with SSL or PCT. This flag applies to HTTP requests
+ *   only.
+ * @param dwContext Application-defined value that is passed, along with the returned handle, to any
+ *   callback functions.
+ *
+ * @return A valid handle to the FTP or HTTP URL indicates that the connection is successfully
+ *   established. NULL indicates that the connection fails. To get extended error information, call
+ *   GetLastError. To determine why access to the service was denied, call
+ *   InternetGetLastResponseInfo.
+ *
+ * This is a general function that an application can use to retrieve data over any of the protocols
+ * that the Win32 Internet functions support. This function is particularly useful when the
+ * application does not need to access the particulars of a protocol, but only requires the data
+ * corresponding to a URL. The InternetOpenUrl function parses the URL string, establishes a
+ * connection to the server, and prepares to download the data identified by the URL. The
+ * application can then use InternetReadFile (for files) or InternetFindNextFile (for directories)
+ * to retrieve the URL data. It is not necessary to call InternetConnect before InternetOpenUrl.
+ *
+ * Use InternetCloseHandle to close the handle returned from InternetOpenUrl. However, note that
+ * closing the handle before all the URL data has been read results in the connection being
+ * terminated.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -833,11 +2054,201 @@ InternetOpenUrlW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function begins reading a complete FTP or HTTP Universal Resource Locator (URL). For a
+ * relative URL and a base URL separated by blank spaces, InternetCanonicalizeUrl must be invoked
+ * first.
+ *
+ * @param hInternetSession Handle to the current Internet session. The handle must have been
+ *   returned by a previous call to InternetOpen.
+ * @param lpszUrl Long pointer to a null-terminated string that contains the URL to begin reading.
+ *   Only URLs beginning with ftp:, http:, or https: are supported.
+ * @param lpszHeaders Long pointer to a null-terminated string that contains the headers to be sent
+ *   to the HTTP server. (For more information, see the description of the lpszHeaders parameter in
+ *   the HttpSendRequest function.)
+ * @param dwHeadersLength Specifies the length, in characters, of the additional headers. If this
+ *   parameter is -1L and lpszHeaders is not NULL, lpszHeaders is assumed to be zero-terminated
+ *   (ASCIIZ) and the length is calculated.
+ * @param dwFlags Specifies a bitmask of action flags. It is one of the following values: Value
+ *   Description INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in any gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_EXISTING_CONNECT If
+ *   possible, reuses the existing connections to the server for new requests generated by
+ *   InternetOpenUrl instead of creating a new session for each request. This flag is useful only for
+ *   FTP connections, since FTP is the only protocol that typically performs multiple operations
+ *   during the same session. The Win32 Internet API caches a single connection handle for each
+ *   HINTERNET handle generated by InternetOpen. INTERNET_FLAG-HYPERLINK Forces a reload if there was
+ *   no Expires time and no Last-Modified time returned from the server when determining whether to
+ *   reload the item from the network. INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates that are returned from the server against the
+ *   host name given in the request. Win32 Internet functions use a simple check against certificates
+ *   by comparing for matching host names and simple wildcarding rules for HTTP requests.
+ *   INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates for proper validity dates for HTTP requests. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTPS to HTTP
+ *   URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS Disables the ability of the Win32 Internet functions
+ *   to detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTP to HTTPS URLs. INTERNET_FLAG_KEEP_CONNECTION Uses
+ *   keep-alive semantics, if available, for the connection for HTTP requests. This flag is required
+ *   for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of authentication.
+ *   INTERNET_FLAG_MAKE_PERSISTENT No longer supported. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a
+ *   temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically for
+ *   HTTP requests. INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection for HTTP
+ *   requests only. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in any
+ *   gateways. INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and
+ *   does not automatically add returned cookies to the cookie database for HTTP requests.
+ *   INTERNET_FLAG_NO_UI Disables the cookie dialog box. INTERNET_FLAG_PASSIVE Uses passive FTP
+ *   semantics for FTP files and directories. INTERNET_FLAG_RAW_DATA Returns the data as a
+ *   WIN32_FIND_DATA structure when retrieving FTP directory information. If this flag is not
+ *   specified or if the call was made through a CERN proxy, InternetOpenUrl returns an HTML version
+ *   of the directory. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Gets the data from the wire even if it is locally
+ *   cached. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been modified
+ *   since the last time it was downloaded. All FTP resources are reloaded. INTERNET_FLAG_SECURE
+ *   Requests secure transactions on the wire with SSL or PCT. This flag applies to HTTP requests
+ *   only.
+ * @param dwContext Application-defined value that is passed, along with the returned handle, to any
+ *   callback functions.
+ *
+ * @return A valid handle to the FTP or HTTP URL indicates that the connection is successfully
+ *   established. NULL indicates that the connection fails. To get extended error information, call
+ *   GetLastError. To determine why access to the service was denied, call
+ *   InternetGetLastResponseInfo.
+ *
+ * This is a general function that an application can use to retrieve data over any of the protocols
+ * that the Win32 Internet functions support. This function is particularly useful when the
+ * application does not need to access the particulars of a protocol, but only requires the data
+ * corresponding to a URL. The InternetOpenUrl function parses the URL string, establishes a
+ * connection to the server, and prepares to download the data identified by the URL. The
+ * application can then use InternetReadFile (for files) or InternetFindNextFile (for directories)
+ * to retrieve the URL data. It is not necessary to call InternetConnect before InternetOpenUrl.
+ *
+ * Use InternetCloseHandle to close the handle returned from InternetOpenUrl. However, note that
+ * closing the handle before all the URL data has been read results in the connection being
+ * terminated.
+ */
 #define InternetOpenUrl  InternetOpenUrlW
 #else
+/**
+ * This function begins reading a complete FTP or HTTP Universal Resource Locator (URL). For a
+ * relative URL and a base URL separated by blank spaces, InternetCanonicalizeUrl must be invoked
+ * first.
+ *
+ * @param hInternetSession Handle to the current Internet session. The handle must have been
+ *   returned by a previous call to InternetOpen.
+ * @param lpszUrl Long pointer to a null-terminated string that contains the URL to begin reading.
+ *   Only URLs beginning with ftp:, http:, or https: are supported.
+ * @param lpszHeaders Long pointer to a null-terminated string that contains the headers to be sent
+ *   to the HTTP server. (For more information, see the description of the lpszHeaders parameter in
+ *   the HttpSendRequest function.)
+ * @param dwHeadersLength Specifies the length, in characters, of the additional headers. If this
+ *   parameter is -1L and lpszHeaders is not NULL, lpszHeaders is assumed to be zero-terminated
+ *   (ASCIIZ) and the length is calculated.
+ * @param dwFlags Specifies a bitmask of action flags. It is one of the following values: Value
+ *   Description INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in any gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_EXISTING_CONNECT If
+ *   possible, reuses the existing connections to the server for new requests generated by
+ *   InternetOpenUrl instead of creating a new session for each request. This flag is useful only for
+ *   FTP connections, since FTP is the only protocol that typically performs multiple operations
+ *   during the same session. The Win32 Internet API caches a single connection handle for each
+ *   HINTERNET handle generated by InternetOpen. INTERNET_FLAG-HYPERLINK Forces a reload if there was
+ *   no Expires time and no Last-Modified time returned from the server when determining whether to
+ *   reload the item from the network. INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates that are returned from the server against the
+ *   host name given in the request. Win32 Internet functions use a simple check against certificates
+ *   by comparing for matching host names and simple wildcarding rules for HTTP requests.
+ *   INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates for proper validity dates for HTTP requests. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTPS to HTTP
+ *   URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS Disables the ability of the Win32 Internet functions
+ *   to detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTP to HTTPS URLs. INTERNET_FLAG_KEEP_CONNECTION Uses
+ *   keep-alive semantics, if available, for the connection for HTTP requests. This flag is required
+ *   for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of authentication.
+ *   INTERNET_FLAG_MAKE_PERSISTENT No longer supported. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a
+ *   temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically for
+ *   HTTP requests. INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection for HTTP
+ *   requests only. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in any
+ *   gateways. INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and
+ *   does not automatically add returned cookies to the cookie database for HTTP requests.
+ *   INTERNET_FLAG_NO_UI Disables the cookie dialog box. INTERNET_FLAG_PASSIVE Uses passive FTP
+ *   semantics for FTP files and directories. INTERNET_FLAG_RAW_DATA Returns the data as a
+ *   WIN32_FIND_DATA structure when retrieving FTP directory information. If this flag is not
+ *   specified or if the call was made through a CERN proxy, InternetOpenUrl returns an HTML version
+ *   of the directory. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Gets the data from the wire even if it is locally
+ *   cached. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been modified
+ *   since the last time it was downloaded. All FTP resources are reloaded. INTERNET_FLAG_SECURE
+ *   Requests secure transactions on the wire with SSL or PCT. This flag applies to HTTP requests
+ *   only.
+ * @param dwContext Application-defined value that is passed, along with the returned handle, to any
+ *   callback functions.
+ *
+ * @return A valid handle to the FTP or HTTP URL indicates that the connection is successfully
+ *   established. NULL indicates that the connection fails. To get extended error information, call
+ *   GetLastError. To determine why access to the service was denied, call
+ *   InternetGetLastResponseInfo.
+ *
+ * This is a general function that an application can use to retrieve data over any of the protocols
+ * that the Win32 Internet functions support. This function is particularly useful when the
+ * application does not need to access the particulars of a protocol, but only requires the data
+ * corresponding to a URL. The InternetOpenUrl function parses the URL string, establishes a
+ * connection to the server, and prepares to download the data identified by the URL. The
+ * application can then use InternetReadFile (for files) or InternetFindNextFile (for directories)
+ * to retrieve the URL data. It is not necessary to call InternetConnect before InternetOpenUrl.
+ *
+ * Use InternetCloseHandle to close the handle returned from InternetOpenUrl. However, note that
+ * closing the handle before all the URL data has been read results in the connection being
+ * terminated.
+ */
 #define InternetOpenUrl  InternetOpenUrlA
 #endif // !UNICODE
 
+/**
+ * This function reads data from a handle opened by the FtpOpenFile, FtpFindFirstFile, or
+ * HttpOpenRequest function.
+ *
+ * @param hFile Valid handle returned from a previous call to InternetOpenUrl, FtpOpenFile, r
+ *   HttpOpenRequest.
+ * @param lpBuffer Long pointer to a buffer that receives the data read.
+ * @param dwNumberOfBytesToRead Specifies the number of bytes to read.
+ * @param lpNumberOfBytesRead Long pointer to a variable that receives the number of bytes read.
+ *   InternetReadFile sets this value to zero before doing any work or error checking.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. An application can also use InternetGetLastResponseInfo when necessary.
+ *
+ * If the return value is TRUE and the number of bytes read is zero, the transfer has been completed
+ * and there are no more bytes to read on the handle. This is analogous to reaching EOF in a local
+ * file. Call InternetCloseHandle to free the connection to the server.
+ *
+ * The buffer pointed to by lpBuffer is not always filled by calls to InternetReadFile (sufficient
+ * data might not have arrived from the server). When reading HTML data, for the first read posted,
+ * the buffer must be large enough to hold the HTML headers. When reading HTML-encoded directory
+ * entries, the buffer must be large enough to hold at least one complete entry.
+ *
+ * When the item being read is also being cached by a Win32 Internet function, the application must
+ * ensure that a read is made for end-of-file so the cache file is committed correctly.
+ *
+ * This function always fulfills the user's request. If more data is requested than is available,
+ * the function waits until enough data to complete the request is available. The only time that
+ * less data is returned than requested is when the end of the file has been reached.
+ *
+ * This function can also be used to retrieve FTP directory listings as an HTML document on a handle
+ * opened by InternetOpenUrl. The INTERNET_FLAG_RAW_DATA value must not have been specified in the
+ * call to InternetOpenUrl.
+ *
+ * If the HINTERNET handle stored in hFile was created by HttpOpenRequest and sent by
+ * HttpSendRequestEx, a call to HttpEndRequest must be made on the handle before InternetReadFile is
+ * used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -848,6 +2259,37 @@ InternetReadFile(
     OUT LPDWORD lpdwNumberOfBytesRead
     );
 
+/**
+ * This function sets a file position for InternetReadFile. This is a synchronous call; however,
+ * subsequent calls to InternetReadFile might block or return pending if the data is not available
+ * from the cache and the server does not support random access.
+ *
+ * @param hFile [in] Valid HINTERNET handle returned from a previous call to InternetOpenUrl (on an
+ *   HTTP or HTTPS URL) or HttpOpenRequest (using the GET or HEAD method and passed to HttpSendRequest
+ *   or HttpSendRequestEx). This handle must not have been created with the INTERNET_FLAG_DONT_CACHE
+ *   or INTERNET_FLAG_NO_CACHE_WRITE value set.
+ * @param lDistanceToMove [in] Long integer value that contains the number of bytes to move the file
+ *   pointer. A positive value moves the pointer forward in the file; a negative value moves it
+ *   backward.
+ * @param pReserved [in] Reserved. Must be set to NULL.
+ * @param dwMoveMethod [in] Unsigned long integer value that indicates the starting point for the
+ *   file pointer move. Can be one of the following values: Value Description FILE_BEGIN Starting
+ *   point is zero or the beginning of the file. If FILE_BEGIN is specified, lDistanceToMove is
+ *   interpreted as an unsigned location for the new file pointer. FILE_CURRENT Current value of the
+ *   file pointer is the starting point. FILE_END Current end-of-file position is the starting point.
+ *   This method fails if the content length is unknown.
+ * @param dwContext Reserved. Must be set to zero.
+ *
+ * @return Returns the current file position if the function succeeds, or -1 otherwise.
+ *
+ * This function cannot be used once the end of file has been reached by InternetReadFile.
+ *
+ * For HINTERNET handles created by HttpOpenRequest and sent by HttpSendRequestEx, a call to
+ * HttpEndRequest must be made on the handle before this function is used.
+ *
+ * This function cannot be used reliably if the content length is unknown, and with chunked
+ * transfers.
+ */
 INTERNETAPI
 DWORD
 WINAPI
@@ -859,6 +2301,22 @@ InternetSetFilePointer(
     IN DWORD dwContext
     );
 
+/**
+ * This function writes data to an open Internet file.
+ *
+ * @param hFile [in] Valid HINTERNET handle returned from a previous call to FtpOpenFile or an
+ *   HINTERNET handle sent by HttpSendRequestEx.
+ * @param lpBuffer [in] Address of a buffer that contains the data to be written to the file.
+ * @param dwNumberOfBytesToWrite [in] Unsigned long integer value that contains the number of bytes
+ *   to write to the file.
+ * @param lpdwNumberOfBytesWritten [out] Address of an unsigned long integer variable that receives
+ *   the number of bytes written to the buffer. This function sets this value to zero before doing any
+ *   work or error checking.
+ *
+ * @return Returns TRUE if successful, or FALSE otherwise.
+ *
+ * When the application is sending data, it must call InternetCloseHandle to end the data transfer.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -869,6 +2327,28 @@ InternetWriteFile(
     OUT LPDWORD lpdwNumberOfBytesWritten
     );
 
+/**
+ * This function queries the amount of data available.
+ *
+ * @param hFile Valid Internet file handle, as returned by InternetOpenUrl, FtpOpenFile, or
+ *   HttpOpenRequest.
+ * @param lpdwNumberOfBytesAvailable Optional. Long pointer to a variable that receives the number
+ *   of available bytes.
+ * @param dwFlags Reserved; set to zero.
+ * @param dwContext Reserved; set to zero.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. If the function finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * This function returns the number of bytes of data that are available to be read immediately by a
+ * subsequent call to InternetReadFile. If there is currently no data available and the end of the
+ * file has not been reached, the request waits until data becomes available. The amount of data
+ * remaining will not be recalculated until all available data indicated by the call to
+ * InternetQueryDataAvailable is read.
+ *
+ * For HINTERNET handles created by HttpOpenRequest and sent by HttpSendRequestEx, a call to
+ * HttpEndRequest must be made on the handle before InternetQueryDataAvailable can be used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -879,6 +2359,20 @@ InternetQueryDataAvailable(
     IN DWORD dwContext
     );
 
+/**
+ * This function continues a file search from a previous call to FtpFindFirstFile.
+ *
+ * @param hFind Valid handle returned from FtpFindFirstFile or InternetOpenUrl (directories only).
+ * @param lpvFindData Long void pointer to the buffer that receives information about the found file
+ *   or directory. The format of the information placed in the buffer depends on the protocol in use.
+ *   The FTP protocol returns a WIN32_FIND_DATA structure.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. If the function finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * This Windows CE Internet API supports the full features of the corresponding Win32 Internet
+ * function for an internet handle returned by FtpFindFirstFile.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -886,6 +2380,20 @@ InternetFindNextFileA(
     IN HINTERNET hFind,
     OUT LPVOID lpvFindData
     );
+/**
+ * This function continues a file search from a previous call to FtpFindFirstFile.
+ *
+ * @param hFind Valid handle returned from FtpFindFirstFile or InternetOpenUrl (directories only).
+ * @param lpvFindData Long void pointer to the buffer that receives information about the found file
+ *   or directory. The format of the information placed in the buffer depends on the protocol in use.
+ *   The FTP protocol returns a WIN32_FIND_DATA structure.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. If the function finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * This Windows CE Internet API supports the full features of the corresponding Win32 Internet
+ * function for an internet handle returned by FtpFindFirstFile.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -894,11 +2402,53 @@ InternetFindNextFileW(
     OUT LPVOID lpvFindData
     );
 #ifdef UNICODE
+/**
+ * This function continues a file search from a previous call to FtpFindFirstFile.
+ *
+ * @param hFind Valid handle returned from FtpFindFirstFile or InternetOpenUrl (directories only).
+ * @param lpvFindData Long void pointer to the buffer that receives information about the found file
+ *   or directory. The format of the information placed in the buffer depends on the protocol in use.
+ *   The FTP protocol returns a WIN32_FIND_DATA structure.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. If the function finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * This Windows CE Internet API supports the full features of the corresponding Win32 Internet
+ * function for an internet handle returned by FtpFindFirstFile.
+ */
 #define InternetFindNextFile  InternetFindNextFileW
 #else
+/**
+ * This function continues a file search from a previous call to FtpFindFirstFile.
+ *
+ * @param hFind Valid handle returned from FtpFindFirstFile or InternetOpenUrl (directories only).
+ * @param lpvFindData Long void pointer to the buffer that receives information about the found file
+ *   or directory. The format of the information placed in the buffer depends on the protocol in use.
+ *   The FTP protocol returns a WIN32_FIND_DATA structure.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError. If the function finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * This Windows CE Internet API supports the full features of the corresponding Win32 Internet
+ * function for an internet handle returned by FtpFindFirstFile.
+ */
 #define InternetFindNextFile  InternetFindNextFileA
 #endif // !UNICODE
 
+/**
+ * This function queries an Internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to query information.
+ * @param dwOption Specifies the Internet option to query. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that receives the option setting.
+ * @param lpdwBufferLength Long pointer to a variable that contains the length of lpBuffer. When the
+ *   function returns, the variable receives the length of the data placed into lpBuffer. If
+ *   GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter receives the number of bytes
+ *   required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -908,6 +2458,20 @@ InternetQueryOptionA(
     OUT LPVOID lpBuffer OPTIONAL,
     IN OUT LPDWORD lpdwBufferLength
     );
+/**
+ * This function queries an Internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to query information.
+ * @param dwOption Specifies the Internet option to query. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that receives the option setting.
+ * @param lpdwBufferLength Long pointer to a variable that contains the length of lpBuffer. When the
+ *   function returns, the variable receives the length of the data placed into lpBuffer. If
+ *   GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter receives the number of bytes
+ *   required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -918,11 +2482,50 @@ InternetQueryOptionW(
     IN OUT LPDWORD lpdwBufferLength
     );
 #ifdef UNICODE
+/**
+ * This function queries an Internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to query information.
+ * @param dwOption Specifies the Internet option to query. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that receives the option setting.
+ * @param lpdwBufferLength Long pointer to a variable that contains the length of lpBuffer. When the
+ *   function returns, the variable receives the length of the data placed into lpBuffer. If
+ *   GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter receives the number of bytes
+ *   required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetQueryOption  InternetQueryOptionW
 #else
+/**
+ * This function queries an Internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to query information.
+ * @param dwOption Specifies the Internet option to query. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that receives the option setting.
+ * @param lpdwBufferLength Long pointer to a variable that contains the length of lpBuffer. When the
+ *   function returns, the variable receives the length of the data placed into lpBuffer. If
+ *   GetLastError returns ERROR_INSUFFICIENT_BUFFER, this parameter receives the number of bytes
+ *   required to hold the created URL.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetQueryOption  InternetQueryOptionA
 #endif // !UNICODE
 
+/**
+ * This function sets an internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to set information.
+ * @param dwOption Specifies the Internet option to set. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that contains the option setting.
+ * @param dwBufferLength Specifies the length of the lpBuffer buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -932,6 +2535,17 @@ InternetSetOptionA(
     IN LPVOID lpBuffer,
     IN DWORD dwBufferLength
     );
+/**
+ * This function sets an internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to set information.
+ * @param dwOption Specifies the Internet option to set. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that contains the option setting.
+ * @param dwBufferLength Specifies the length of the lpBuffer buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -942,8 +2556,30 @@ InternetSetOptionW(
     IN DWORD dwBufferLength
     );
 #ifdef UNICODE
+/**
+ * This function sets an internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to set information.
+ * @param dwOption Specifies the Internet option to set. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that contains the option setting.
+ * @param dwBufferLength Specifies the length of the lpBuffer buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetSetOption  InternetSetOptionW
 #else
+/**
+ * This function sets an internet option on the specified handle.
+ *
+ * @param hInternet Internet handle on which to set information.
+ * @param dwOption Specifies the Internet option to set. Can be one of the Option Flags values.
+ * @param lpBuffer Long pointer to a buffer that contains the option setting.
+ * @param dwBufferLength Specifies the length of the lpBuffer buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define InternetSetOption  InternetSetOptionA
 #endif // !UNICODE
 
@@ -1071,6 +2707,36 @@ InternetSetOptionExW(
 #define SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTPS  INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
 #define SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTP   INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
 
+/**
+ * This function retrieves the last Windows CE Internet function error description or server
+ * response on the thread calling this function.
+ *
+ * @param lpdwError Long pointer to a variable that receives an error message pertaining to the
+ *   operation that failed.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the error text.
+ * @param lpdwBufferLength Long pointer to the size of the lpszBuffer buffer. When the function
+ *   returns, this parameter contains the size of the string written to the buffer.
+ *
+ * @return TRUE indicates that the error text was successfully written to the buffer. FALSE
+ *   indicates failure. To get extended error information, call GetLastError. If the buffer is too
+ *   small to hold all the error text, GetLastError returns ERROR_INSUFFICIENT_BUFFER, and the
+ *   lpdwBufferLength parameter contains the minimum buffer size required to return all the error
+ *   text.
+ *
+ * The FTP protocol can return additional text information along with most errors. This extended
+ * error information can be retrieved by using the InternetGetLastResponseInfo function whenever
+ * GetLastError returns ERROR_INTERNET_EXTENDED_ERROR (occurring after an unsuccessful function
+ * call).
+ *
+ * The buffer pointed to by lpszBuffer must be large enough to hold both the error string and a zero
+ * terminator at the end of the string. However, note that the value returned in lpdwBufferLength
+ * does not include the terminating zero.
+ *
+ * InternetGetLastResponseInfo can be called multiple times until another Win32 Internet function is
+ * called on this thread. When another function is called, the internal buffer that is storing the
+ * last response information is cleared.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1079,6 +2745,36 @@ InternetGetLastResponseInfoA(
     OUT LPSTR lpszBuffer OPTIONAL,
     IN OUT LPDWORD lpdwBufferLength
     );
+/**
+ * This function retrieves the last Windows CE Internet function error description or server
+ * response on the thread calling this function.
+ *
+ * @param lpdwError Long pointer to a variable that receives an error message pertaining to the
+ *   operation that failed.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the error text.
+ * @param lpdwBufferLength Long pointer to the size of the lpszBuffer buffer. When the function
+ *   returns, this parameter contains the size of the string written to the buffer.
+ *
+ * @return TRUE indicates that the error text was successfully written to the buffer. FALSE
+ *   indicates failure. To get extended error information, call GetLastError. If the buffer is too
+ *   small to hold all the error text, GetLastError returns ERROR_INSUFFICIENT_BUFFER, and the
+ *   lpdwBufferLength parameter contains the minimum buffer size required to return all the error
+ *   text.
+ *
+ * The FTP protocol can return additional text information along with most errors. This extended
+ * error information can be retrieved by using the InternetGetLastResponseInfo function whenever
+ * GetLastError returns ERROR_INTERNET_EXTENDED_ERROR (occurring after an unsuccessful function
+ * call).
+ *
+ * The buffer pointed to by lpszBuffer must be large enough to hold both the error string and a zero
+ * terminator at the end of the string. However, note that the value returned in lpdwBufferLength
+ * does not include the terminating zero.
+ *
+ * InternetGetLastResponseInfo can be called multiple times until another Win32 Internet function is
+ * called on this thread. When another function is called, the internal buffer that is storing the
+ * last response information is cleared.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1088,8 +2784,68 @@ InternetGetLastResponseInfoW(
     IN OUT LPDWORD lpdwBufferLength
     );
 #ifdef UNICODE
+/**
+ * This function retrieves the last Windows CE Internet function error description or server
+ * response on the thread calling this function.
+ *
+ * @param lpdwError Long pointer to a variable that receives an error message pertaining to the
+ *   operation that failed.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the error text.
+ * @param lpdwBufferLength Long pointer to the size of the lpszBuffer buffer. When the function
+ *   returns, this parameter contains the size of the string written to the buffer.
+ *
+ * @return TRUE indicates that the error text was successfully written to the buffer. FALSE
+ *   indicates failure. To get extended error information, call GetLastError. If the buffer is too
+ *   small to hold all the error text, GetLastError returns ERROR_INSUFFICIENT_BUFFER, and the
+ *   lpdwBufferLength parameter contains the minimum buffer size required to return all the error
+ *   text.
+ *
+ * The FTP protocol can return additional text information along with most errors. This extended
+ * error information can be retrieved by using the InternetGetLastResponseInfo function whenever
+ * GetLastError returns ERROR_INTERNET_EXTENDED_ERROR (occurring after an unsuccessful function
+ * call).
+ *
+ * The buffer pointed to by lpszBuffer must be large enough to hold both the error string and a zero
+ * terminator at the end of the string. However, note that the value returned in lpdwBufferLength
+ * does not include the terminating zero.
+ *
+ * InternetGetLastResponseInfo can be called multiple times until another Win32 Internet function is
+ * called on this thread. When another function is called, the internal buffer that is storing the
+ * last response information is cleared.
+ */
 #define InternetGetLastResponseInfo  InternetGetLastResponseInfoW
 #else
+/**
+ * This function retrieves the last Windows CE Internet function error description or server
+ * response on the thread calling this function.
+ *
+ * @param lpdwError Long pointer to a variable that receives an error message pertaining to the
+ *   operation that failed.
+ * @param lpszBuffer Long pointer to a buffer that receives the null-terminated string that contains
+ *   the error text.
+ * @param lpdwBufferLength Long pointer to the size of the lpszBuffer buffer. When the function
+ *   returns, this parameter contains the size of the string written to the buffer.
+ *
+ * @return TRUE indicates that the error text was successfully written to the buffer. FALSE
+ *   indicates failure. To get extended error information, call GetLastError. If the buffer is too
+ *   small to hold all the error text, GetLastError returns ERROR_INSUFFICIENT_BUFFER, and the
+ *   lpdwBufferLength parameter contains the minimum buffer size required to return all the error
+ *   text.
+ *
+ * The FTP protocol can return additional text information along with most errors. This extended
+ * error information can be retrieved by using the InternetGetLastResponseInfo function whenever
+ * GetLastError returns ERROR_INTERNET_EXTENDED_ERROR (occurring after an unsuccessful function
+ * call).
+ *
+ * The buffer pointed to by lpszBuffer must be large enough to hold both the error string and a zero
+ * terminator at the end of the string. However, note that the value returned in lpdwBufferLength
+ * does not include the terminating zero.
+ *
+ * InternetGetLastResponseInfo can be called multiple times until another Win32 Internet function is
+ * called on this thread. When another function is called, the internal buffer that is storing the
+ * last response information is cleared.
+ */
 #define InternetGetLastResponseInfo  InternetGetLastResponseInfoA
 #endif // !UNICODE
 
@@ -1109,6 +2865,40 @@ VOID
 
 typedef INTERNET_STATUS_CALLBACK * LPINTERNET_STATUS_CALLBACK;
 
+/**
+ * This function sets up a callback function that Windows CE Internet functions can call as progress
+ * is made during an operation.
+ *
+ * @param hInternet Handle for which the callback is to be set.
+ * @param lpfnInternetCallback Long pointer to the callback function to call when progress is made,
+ *   or to return NULL to remove the existing callback function. For more information about the
+ *   callback function, see INTERNET_STATUS_CALLBACK.
+ *
+ * @return The previously defined status callback function indicates success. NULL indicates that
+ *   there was no previously defined status callback function. INTERNET_INVALID_STATUS_CALLBACK
+ *   indicates that the callback function is not valid.
+ *
+ * Both synchronous and asynchronous functions use the callback function to indicate the progress of
+ * the request, such as resolving a name, connecting to a server, and so on. The callback function
+ * is required for an asynchronous operation. The asynchronous request will call back to the
+ * application with INTERNET_STATUS_REQUEST_COMPLETE to indicate the request has been completed.
+ *
+ * A callback function can be set on any handle, and is inherited by derived handles. A callback
+ * function can be changed using InternetSetStatusCallback, providing there are no pending requests
+ * that need to use the previous callback value. Note, however, that changing the callback function
+ * on a handle does not change the callbacks on derived handles, such as that returned by
+ * InternetConnect. You must change the callback function at each level.
+ *
+ * Many of the Win32 Internet functions perform several operations on the network. Each operation
+ * can take time to complete, and each can fail.
+ *
+ * It is sometimes desirable to display status information during a long-term operation. You can
+ * display status information by setting up an Internet status callback function that cannot be
+ * removed as long as any callbacks or any asynchronous functions are pending.
+ *
+ * After initiating InternetSetStatusCallback, the callback function can be accessed from within any
+ * Win32 Internet function for monitoring time-intensive network operations.
+ */
 INTERNETAPI
 INTERNET_STATUS_CALLBACK
 WINAPI
@@ -1165,6 +2955,66 @@ InternetSetStatusCallback(
 // prototypes
 //
 
+/**
+ * This function searches the specified directory of the specified FTP session. File and directory
+ * entries are returned to the application in the WIN32_FIND_DATA structure.
+ *
+ * @param hConnect [in] Valid handle to an FTP session returned by the InternetConnect function.
+ * @param lpszSearchFile [in] Long pointer to a null-terminated string that specifies a valid
+ *   directory path or file name for the FTP server file system. The string can contain wildcards, but
+ *   blank spaces are not accepted. If the value of lpszSearchFile is NULL or if it is an empty
+ *   string, it will find the first file in the current directory on the server.
+ * @param lpFindFileData [out] Long pointer to a WIN32_FIND_DATA structure that receives data about
+ *   the found file or directory.
+ * @param dwFlags [in] Specifies an application-defined value that associates this search with an
+ *   application. It is one of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does
+ *   not add the returned entity to the cache. Identical to the preferred value,
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value, INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called the
+ *   InternetSetStatusCallback function to set up a status callback function. All status requests are
+ *   handled synchronously.
+ *
+ * @return A valid handle for the request if the directory enumeration was started indicates
+ *   success. NULL indicates failure. To get extended error data, call GetLastError. If the function
+ *   finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * This function enumerates both files and directories.
+ *
+ * FtpFindFirstFile is similar to the Win32 FindFirstFile function. Note, however, that only one
+ * FtpFindFirstFile can occur at a time within a given FTP session. The enumerations, therefore, are
+ * correlated with the FTP session handle. This is because the FTP protocol accepts only one
+ * directory enumeration per session.
+ *
+ * After calling FtpFindFirstFile and until calling the InternetCloseHandle function, the
+ * application cannot call FtpFindFirstFile again on the given FTP session handle. If a call is made
+ * to FtpFindFirstFile on that handle, the function will fail with ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * After beginning a directory enumeration with FtpFindFirstFile, the InternetFindNextFile function
+ * can be used to continue the enumeration.
+ *
+ * InternetCloseHandle closes the handle returned by FtpFindFirstFile. If InternetCloseHandle closes
+ * the handle before InternetFindNextFile fails with ERROR_NO_MORE_FILES, the directory enumeration
+ * will be terminated.
+ *
+ * Because the FTP protocol provides no standard means of enumerating, common file data, such as
+ * file creation date and time, is not always available or correct. When this happens,
+ * FtpFindFirstFile and InternetFindNextFile fill in unavailable data with an estimate. For example,
+ * creation and last access dates will often be the same as the file modification date.
+ *
+ * The application cannot call FtpFindFirstFile between calls to FtpOpenFile and
+ * InternetCloseHandle.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1175,6 +3025,66 @@ FtpFindFirstFileA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function searches the specified directory of the specified FTP session. File and directory
+ * entries are returned to the application in the WIN32_FIND_DATA structure.
+ *
+ * @param hConnect [in] Valid handle to an FTP session returned by the InternetConnect function.
+ * @param lpszSearchFile [in] Long pointer to a null-terminated string that specifies a valid
+ *   directory path or file name for the FTP server file system. The string can contain wildcards, but
+ *   blank spaces are not accepted. If the value of lpszSearchFile is NULL or if it is an empty
+ *   string, it will find the first file in the current directory on the server.
+ * @param lpFindFileData [out] Long pointer to a WIN32_FIND_DATA structure that receives data about
+ *   the found file or directory.
+ * @param dwFlags [in] Specifies an application-defined value that associates this search with an
+ *   application. It is one of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does
+ *   not add the returned entity to the cache. Identical to the preferred value,
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value, INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called the
+ *   InternetSetStatusCallback function to set up a status callback function. All status requests are
+ *   handled synchronously.
+ *
+ * @return A valid handle for the request if the directory enumeration was started indicates
+ *   success. NULL indicates failure. To get extended error data, call GetLastError. If the function
+ *   finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * This function enumerates both files and directories.
+ *
+ * FtpFindFirstFile is similar to the Win32 FindFirstFile function. Note, however, that only one
+ * FtpFindFirstFile can occur at a time within a given FTP session. The enumerations, therefore, are
+ * correlated with the FTP session handle. This is because the FTP protocol accepts only one
+ * directory enumeration per session.
+ *
+ * After calling FtpFindFirstFile and until calling the InternetCloseHandle function, the
+ * application cannot call FtpFindFirstFile again on the given FTP session handle. If a call is made
+ * to FtpFindFirstFile on that handle, the function will fail with ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * After beginning a directory enumeration with FtpFindFirstFile, the InternetFindNextFile function
+ * can be used to continue the enumeration.
+ *
+ * InternetCloseHandle closes the handle returned by FtpFindFirstFile. If InternetCloseHandle closes
+ * the handle before InternetFindNextFile fails with ERROR_NO_MORE_FILES, the directory enumeration
+ * will be terminated.
+ *
+ * Because the FTP protocol provides no standard means of enumerating, common file data, such as
+ * file creation date and time, is not always available or correct. When this happens,
+ * FtpFindFirstFile and InternetFindNextFile fill in unavailable data with an estimate. For example,
+ * creation and last access dates will often be the same as the file modification date.
+ *
+ * The application cannot call FtpFindFirstFile between calls to FtpOpenFile and
+ * InternetCloseHandle.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1186,11 +3096,191 @@ FtpFindFirstFileW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function searches the specified directory of the specified FTP session. File and directory
+ * entries are returned to the application in the WIN32_FIND_DATA structure.
+ *
+ * @param hConnect [in] Valid handle to an FTP session returned by the InternetConnect function.
+ * @param lpszSearchFile [in] Long pointer to a null-terminated string that specifies a valid
+ *   directory path or file name for the FTP server file system. The string can contain wildcards, but
+ *   blank spaces are not accepted. If the value of lpszSearchFile is NULL or if it is an empty
+ *   string, it will find the first file in the current directory on the server.
+ * @param lpFindFileData [out] Long pointer to a WIN32_FIND_DATA structure that receives data about
+ *   the found file or directory.
+ * @param dwFlags [in] Specifies an application-defined value that associates this search with an
+ *   application. It is one of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does
+ *   not add the returned entity to the cache. Identical to the preferred value,
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value, INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called the
+ *   InternetSetStatusCallback function to set up a status callback function. All status requests are
+ *   handled synchronously.
+ *
+ * @return A valid handle for the request if the directory enumeration was started indicates
+ *   success. NULL indicates failure. To get extended error data, call GetLastError. If the function
+ *   finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * This function enumerates both files and directories.
+ *
+ * FtpFindFirstFile is similar to the Win32 FindFirstFile function. Note, however, that only one
+ * FtpFindFirstFile can occur at a time within a given FTP session. The enumerations, therefore, are
+ * correlated with the FTP session handle. This is because the FTP protocol accepts only one
+ * directory enumeration per session.
+ *
+ * After calling FtpFindFirstFile and until calling the InternetCloseHandle function, the
+ * application cannot call FtpFindFirstFile again on the given FTP session handle. If a call is made
+ * to FtpFindFirstFile on that handle, the function will fail with ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * After beginning a directory enumeration with FtpFindFirstFile, the InternetFindNextFile function
+ * can be used to continue the enumeration.
+ *
+ * InternetCloseHandle closes the handle returned by FtpFindFirstFile. If InternetCloseHandle closes
+ * the handle before InternetFindNextFile fails with ERROR_NO_MORE_FILES, the directory enumeration
+ * will be terminated.
+ *
+ * Because the FTP protocol provides no standard means of enumerating, common file data, such as
+ * file creation date and time, is not always available or correct. When this happens,
+ * FtpFindFirstFile and InternetFindNextFile fill in unavailable data with an estimate. For example,
+ * creation and last access dates will often be the same as the file modification date.
+ *
+ * The application cannot call FtpFindFirstFile between calls to FtpOpenFile and
+ * InternetCloseHandle.
+ */
 #define FtpFindFirstFile  FtpFindFirstFileW
 #else
+/**
+ * This function searches the specified directory of the specified FTP session. File and directory
+ * entries are returned to the application in the WIN32_FIND_DATA structure.
+ *
+ * @param hConnect [in] Valid handle to an FTP session returned by the InternetConnect function.
+ * @param lpszSearchFile [in] Long pointer to a null-terminated string that specifies a valid
+ *   directory path or file name for the FTP server file system. The string can contain wildcards, but
+ *   blank spaces are not accepted. If the value of lpszSearchFile is NULL or if it is an empty
+ *   string, it will find the first file in the current directory on the server.
+ * @param lpFindFileData [out] Long pointer to a WIN32_FIND_DATA structure that receives data about
+ *   the found file or directory.
+ * @param dwFlags [in] Specifies an application-defined value that associates this search with an
+ *   application. It is one of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does
+ *   not add the returned entity to the cache. Identical to the preferred value,
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value, INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called the
+ *   InternetSetStatusCallback function to set up a status callback function. All status requests are
+ *   handled synchronously.
+ *
+ * @return A valid handle for the request if the directory enumeration was started indicates
+ *   success. NULL indicates failure. To get extended error data, call GetLastError. If the function
+ *   finds no matching files, GetLastError returns ERROR_NO_MORE_FILES.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * This function enumerates both files and directories.
+ *
+ * FtpFindFirstFile is similar to the Win32 FindFirstFile function. Note, however, that only one
+ * FtpFindFirstFile can occur at a time within a given FTP session. The enumerations, therefore, are
+ * correlated with the FTP session handle. This is because the FTP protocol accepts only one
+ * directory enumeration per session.
+ *
+ * After calling FtpFindFirstFile and until calling the InternetCloseHandle function, the
+ * application cannot call FtpFindFirstFile again on the given FTP session handle. If a call is made
+ * to FtpFindFirstFile on that handle, the function will fail with ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * After beginning a directory enumeration with FtpFindFirstFile, the InternetFindNextFile function
+ * can be used to continue the enumeration.
+ *
+ * InternetCloseHandle closes the handle returned by FtpFindFirstFile. If InternetCloseHandle closes
+ * the handle before InternetFindNextFile fails with ERROR_NO_MORE_FILES, the directory enumeration
+ * will be terminated.
+ *
+ * Because the FTP protocol provides no standard means of enumerating, common file data, such as
+ * file creation date and time, is not always available or correct. When this happens,
+ * FtpFindFirstFile and InternetFindNextFile fill in unavailable data with an estimate. For example,
+ * creation and last access dates will often be the same as the file modification date.
+ *
+ * The application cannot call FtpFindFirstFile between calls to FtpOpenFile and
+ * InternetCloseHandle.
+ */
 #define FtpFindFirstFile  FtpFindFirstFileA
 #endif // !UNICODE
 
+/**
+ * This function retrieves a file from the FTP server and stores it under the specified file name,
+ * creating a new local file in the process.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszRemoteFile [in] Long pointer to a null-terminated string that contains the file name
+ *   to retrieve from the remote system.
+ * @param lpszNewFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   create on the local system.
+ * @param fFailIfExists [in] Boolean that specifies if the function should proceed if a local file
+ *   of the specified name already exists. If fFailIfExists is TRUE and the local file exists,
+ *   FtpGetFile fails.
+ * @param dwLocalFlagsAndAttributes [in] Specifies the file attributes for the new file. Can be a
+ *   combination of the FILE_ATTRIBUTE_* flags used by the CreateFile function.
+ * @param dwInternetFlags [in] Specifies how the function will handle the file download. The first
+ *   set of flag values indicates the conditions under which the transfer occurs. These transfer type
+ *   flags can be used in combination with the second set of flags that control caching. The
+ *   application can select one of these transfer type values: Value Description
+ *   FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP ASCII, Type A, transfer method. Control and
+ *   formatting data is converted to local equivalents. FTP_TRANSFER_TYPE_BINARY Transfers the file
+ *   using FTP Image, Type I, transfer method. The file is transferred exactly as it exists with no
+ *   changes. This is the default transfer method. FTP_TRANSFER_TYPE_UNKNOWN Defaults to
+ *   FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII.
+ *   INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. The following flags determine how the
+ *   file caching will be done. A combination of the following flags can be used with the transfer
+ *   type flag. Possible values are described in the following table. INTERNET_FLAG_DONT_CARE Does not
+ *   add the returned entity to the cache. Identical to the preferred value
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpGetFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file from an FTP server and storing it locally. An application that needs to retrieve
+ * file data only or that requires close control over the file transfer should use the FtpOpenFile
+ * and InternetReadFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents. The default transfer is binary
+ * mode, where the file is downloaded in the same format as it is stored on the server.
+ *
+ * Both lpszRemoteFile and lpszNewFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpGetFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1203,6 +3293,66 @@ FtpGetFileA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function retrieves a file from the FTP server and stores it under the specified file name,
+ * creating a new local file in the process.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszRemoteFile [in] Long pointer to a null-terminated string that contains the file name
+ *   to retrieve from the remote system.
+ * @param lpszNewFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   create on the local system.
+ * @param fFailIfExists [in] Boolean that specifies if the function should proceed if a local file
+ *   of the specified name already exists. If fFailIfExists is TRUE and the local file exists,
+ *   FtpGetFile fails.
+ * @param dwLocalFlagsAndAttributes [in] Specifies the file attributes for the new file. Can be a
+ *   combination of the FILE_ATTRIBUTE_* flags used by the CreateFile function.
+ * @param dwInternetFlags [in] Specifies how the function will handle the file download. The first
+ *   set of flag values indicates the conditions under which the transfer occurs. These transfer type
+ *   flags can be used in combination with the second set of flags that control caching. The
+ *   application can select one of these transfer type values: Value Description
+ *   FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP ASCII, Type A, transfer method. Control and
+ *   formatting data is converted to local equivalents. FTP_TRANSFER_TYPE_BINARY Transfers the file
+ *   using FTP Image, Type I, transfer method. The file is transferred exactly as it exists with no
+ *   changes. This is the default transfer method. FTP_TRANSFER_TYPE_UNKNOWN Defaults to
+ *   FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII.
+ *   INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. The following flags determine how the
+ *   file caching will be done. A combination of the following flags can be used with the transfer
+ *   type flag. Possible values are described in the following table. INTERNET_FLAG_DONT_CARE Does not
+ *   add the returned entity to the cache. Identical to the preferred value
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpGetFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file from an FTP server and storing it locally. An application that needs to retrieve
+ * file data only or that requires close control over the file transfer should use the FtpOpenFile
+ * and InternetReadFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents. The default transfer is binary
+ * mode, where the file is downloaded in the same format as it is stored on the server.
+ *
+ * Both lpszRemoteFile and lpszNewFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpGetFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1216,11 +3366,175 @@ FtpGetFileW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function retrieves a file from the FTP server and stores it under the specified file name,
+ * creating a new local file in the process.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszRemoteFile [in] Long pointer to a null-terminated string that contains the file name
+ *   to retrieve from the remote system.
+ * @param lpszNewFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   create on the local system.
+ * @param fFailIfExists [in] Boolean that specifies if the function should proceed if a local file
+ *   of the specified name already exists. If fFailIfExists is TRUE and the local file exists,
+ *   FtpGetFile fails.
+ * @param dwLocalFlagsAndAttributes [in] Specifies the file attributes for the new file. Can be a
+ *   combination of the FILE_ATTRIBUTE_* flags used by the CreateFile function.
+ * @param dwInternetFlags [in] Specifies how the function will handle the file download. The first
+ *   set of flag values indicates the conditions under which the transfer occurs. These transfer type
+ *   flags can be used in combination with the second set of flags that control caching. The
+ *   application can select one of these transfer type values: Value Description
+ *   FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP ASCII, Type A, transfer method. Control and
+ *   formatting data is converted to local equivalents. FTP_TRANSFER_TYPE_BINARY Transfers the file
+ *   using FTP Image, Type I, transfer method. The file is transferred exactly as it exists with no
+ *   changes. This is the default transfer method. FTP_TRANSFER_TYPE_UNKNOWN Defaults to
+ *   FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII.
+ *   INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. The following flags determine how the
+ *   file caching will be done. A combination of the following flags can be used with the transfer
+ *   type flag. Possible values are described in the following table. INTERNET_FLAG_DONT_CARE Does not
+ *   add the returned entity to the cache. Identical to the preferred value
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpGetFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file from an FTP server and storing it locally. An application that needs to retrieve
+ * file data only or that requires close control over the file transfer should use the FtpOpenFile
+ * and InternetReadFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents. The default transfer is binary
+ * mode, where the file is downloaded in the same format as it is stored on the server.
+ *
+ * Both lpszRemoteFile and lpszNewFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpGetFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpGetFile  FtpGetFileW
 #else
+/**
+ * This function retrieves a file from the FTP server and stores it under the specified file name,
+ * creating a new local file in the process.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszRemoteFile [in] Long pointer to a null-terminated string that contains the file name
+ *   to retrieve from the remote system.
+ * @param lpszNewFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   create on the local system.
+ * @param fFailIfExists [in] Boolean that specifies if the function should proceed if a local file
+ *   of the specified name already exists. If fFailIfExists is TRUE and the local file exists,
+ *   FtpGetFile fails.
+ * @param dwLocalFlagsAndAttributes [in] Specifies the file attributes for the new file. Can be a
+ *   combination of the FILE_ATTRIBUTE_* flags used by the CreateFile function.
+ * @param dwInternetFlags [in] Specifies how the function will handle the file download. The first
+ *   set of flag values indicates the conditions under which the transfer occurs. These transfer type
+ *   flags can be used in combination with the second set of flags that control caching. The
+ *   application can select one of these transfer type values: Value Description
+ *   FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP ASCII, Type A, transfer method. Control and
+ *   formatting data is converted to local equivalents. FTP_TRANSFER_TYPE_BINARY Transfers the file
+ *   using FTP Image, Type I, transfer method. The file is transferred exactly as it exists with no
+ *   changes. This is the default transfer method. FTP_TRANSFER_TYPE_UNKNOWN Defaults to
+ *   FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII.
+ *   INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. The following flags determine how the
+ *   file caching will be done. A combination of the following flags can be used with the transfer
+ *   type flag. Possible values are described in the following table. INTERNET_FLAG_DONT_CARE Does not
+ *   add the returned entity to the cache. Identical to the preferred value
+ *   INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires
+ *   time and no Last-Modified time returned by the server when determining whether to reload the item
+ *   from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the
+ *   file cannot be cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE.
+ *   INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the file cannot be cached.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache. INTERNET_FLAG_RELOAD
+ *   Forces a download of the requested file, object, or directory listing from the origin server, not
+ *   from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP resource to be reloaded from the
+ *   server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpGetFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file from an FTP server and storing it locally. An application that needs to retrieve
+ * file data only or that requires close control over the file transfer should use the FtpOpenFile
+ * and InternetReadFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents. The default transfer is binary
+ * mode, where the file is downloaded in the same format as it is stored on the server.
+ *
+ * Both lpszRemoteFile and lpszNewFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpGetFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpGetFile  FtpGetFileA
 #endif // !UNICODE
 
+/**
+ * This function stores a file on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszLocalFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   send from the local system.
+ * @param lpszNewRemoteFile [in] Long pointer to a null-terminated string that contains the file
+ *   name to create on the remote system.
+ * @param dwFlags [in] Specifies the conditions under which the transfer occurs. Can be a
+ *   combination of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does not add the
+ *   returned entity to the cache. Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned by the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the file cannot be
+ *   cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes
+ *   a temporary file to be created if the file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does
+ *   not add the returned entity to the cache. INTERNET_FLAG_RELOAD Forces a download of the requested
+ *   file, object, or directory listing from the origin server, not from the cache.
+ *   INTERNET_FLAG_RESYNCRONIZE Performs a conditional download of the file.
+ *   INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers
+ *   the file as binary.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpPutFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file locally and storing it on an FTP server. An application that needs to send file
+ * data only, or that requires close control over the file transfer, should use the FtpOpenFile and
+ * InternetWriteFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents.
+ *
+ * Both lpszNewRemoteFile and lpszLocalFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpPutFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1231,6 +3545,50 @@ FtpPutFileA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function stores a file on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszLocalFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   send from the local system.
+ * @param lpszNewRemoteFile [in] Long pointer to a null-terminated string that contains the file
+ *   name to create on the remote system.
+ * @param dwFlags [in] Specifies the conditions under which the transfer occurs. Can be a
+ *   combination of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does not add the
+ *   returned entity to the cache. Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned by the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the file cannot be
+ *   cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes
+ *   a temporary file to be created if the file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does
+ *   not add the returned entity to the cache. INTERNET_FLAG_RELOAD Forces a download of the requested
+ *   file, object, or directory listing from the origin server, not from the cache.
+ *   INTERNET_FLAG_RESYNCRONIZE Performs a conditional download of the file.
+ *   INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers
+ *   the file as binary.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpPutFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file locally and storing it on an FTP server. An application that needs to send file
+ * data only, or that requires close control over the file transfer, should use the FtpOpenFile and
+ * InternetWriteFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents.
+ *
+ * Both lpszNewRemoteFile and lpszLocalFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpPutFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1242,11 +3600,117 @@ FtpPutFileW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function stores a file on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszLocalFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   send from the local system.
+ * @param lpszNewRemoteFile [in] Long pointer to a null-terminated string that contains the file
+ *   name to create on the remote system.
+ * @param dwFlags [in] Specifies the conditions under which the transfer occurs. Can be a
+ *   combination of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does not add the
+ *   returned entity to the cache. Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned by the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the file cannot be
+ *   cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes
+ *   a temporary file to be created if the file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does
+ *   not add the returned entity to the cache. INTERNET_FLAG_RELOAD Forces a download of the requested
+ *   file, object, or directory listing from the origin server, not from the cache.
+ *   INTERNET_FLAG_RESYNCRONIZE Performs a conditional download of the file.
+ *   INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers
+ *   the file as binary.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpPutFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file locally and storing it on an FTP server. An application that needs to send file
+ * data only, or that requires close control over the file transfer, should use the FtpOpenFile and
+ * InternetWriteFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents.
+ *
+ * Both lpszNewRemoteFile and lpszLocalFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpPutFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpPutFile  FtpPutFileW
 #else
+/**
+ * This function stores a file on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszLocalFile [in] Long pointer to a null-terminated string that contains the file name to
+ *   send from the local system.
+ * @param lpszNewRemoteFile [in] Long pointer to a null-terminated string that contains the file
+ *   name to create on the remote system.
+ * @param dwFlags [in] Specifies the conditions under which the transfer occurs. Can be a
+ *   combination of the following values: Value Description INTERNET_FLAG_DONT_CACHE Does not add the
+ *   returned entity to the cache. Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned by the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_MUST_CACHE_REQUEST Causes a temporary file to be created if the file cannot be
+ *   cached. Identical to the preferred value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes
+ *   a temporary file to be created if the file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does
+ *   not add the returned entity to the cache. INTERNET_FLAG_RELOAD Forces a download of the requested
+ *   file, object, or directory listing from the origin server, not from the cache.
+ *   INTERNET_FLAG_RESYNCRONIZE Performs a conditional download of the file.
+ *   INTERNET_FLAG_TRANSFER_ASCII Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers
+ *   the file as binary.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This parameter is used only if the application has already called
+ *   InternetSetStatusCallback to set up a status callback. All status requests are handled
+ *   synchronously.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpPutFile is a high-level routine that handles all the bookkeeping and overhead associated with
+ * reading a file locally and storing it on an FTP server. An application that needs to send file
+ * data only, or that requires close control over the file transfer, should use the FtpOpenFile and
+ * InternetWriteFile functions.
+ *
+ * If the dwTransferType parameter specifies FILE_TRANSFER_TYPE_ASCII, translation of the file data
+ * converts control and formatting characters to local equivalents.
+ *
+ * Both lpszNewRemoteFile and lpszLocalFile can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpPutFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpPutFile  FtpPutFileA
 #endif // !UNICODE
 
+/**
+ * This function deletes a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the file name to
+ *   delete on the remote system.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpDeleteFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1254,6 +3718,24 @@ FtpDeleteFileA(
     IN HINTERNET hConnect,
     IN LPCSTR lpszFileName
     );
+/**
+ * This function deletes a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the file name to
+ *   delete on the remote system.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpDeleteFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1262,11 +3744,66 @@ FtpDeleteFileW(
     IN LPCWSTR lpszFileName
     );
 #ifdef UNICODE
+/**
+ * This function deletes a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the file name to
+ *   delete on the remote system.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpDeleteFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpDeleteFile  FtpDeleteFileW
 #else
+/**
+ * This function deletes a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the file name to
+ *   delete on the remote system.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpDeleteFile translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpDeleteFile  FtpDeleteFileA
 #endif // !UNICODE
 
+/**
+ * This function renames a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszExisting [in] Long pointer to a null-terminated string that contains the file name to
+ *   be changed on the remote FTP server.
+ * @param lpszNew [in] Long pointer to a null-terminated string that contains the new name for the
+ *   remote file.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszExisting and lpszNew parameters can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpRenameFile translates the directory name separators to
+ * the appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1275,6 +3812,25 @@ FtpRenameFileA(
     IN LPCSTR lpszExisting,
     IN LPCSTR lpszNew
     );
+/**
+ * This function renames a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszExisting [in] Long pointer to a null-terminated string that contains the file name to
+ *   be changed on the remote FTP server.
+ * @param lpszNew [in] Long pointer to a null-terminated string that contains the new name for the
+ *   remote file.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszExisting and lpszNew parameters can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpRenameFile translates the directory name separators to
+ * the appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1284,11 +3840,117 @@ FtpRenameFileW(
     IN LPCWSTR lpszNew
     );
 #ifdef UNICODE
+/**
+ * This function renames a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszExisting [in] Long pointer to a null-terminated string that contains the file name to
+ *   be changed on the remote FTP server.
+ * @param lpszNew [in] Long pointer to a null-terminated string that contains the new name for the
+ *   remote file.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszExisting and lpszNew parameters can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpRenameFile translates the directory name separators to
+ * the appropriate character before they are used.
+ */
 #define FtpRenameFile  FtpRenameFileW
 #else
+/**
+ * This function renames a file stored on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszExisting [in] Long pointer to a null-terminated string that contains the file name to
+ *   be changed on the remote FTP server.
+ * @param lpszNew [in] Long pointer to a null-terminated string that contains the new name for the
+ *   remote file.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The lpszExisting and lpszNew parameters can be either partially or fully qualified file names
+ * relative to the current directory. A backward slash (\) or forward slash (/) can be used as the
+ * directory separator for either name. FtpRenameFile translates the directory name separators to
+ * the appropriate character before they are used.
+ */
 #define FtpRenameFile  FtpRenameFileA
 #endif // !UNICODE
 
+/**
+ * This function initiates access to a remote file for writing or reading.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the name of the
+ *   file to access on the remote system.
+ * @param fdwAccess [in] Value that determines how the file will be accessed. This can be
+ *   GENERIC_READ or GENERIC_WRITE, but not both.
+ * @param dwFlags [in] Specifies the conditions under which the transfers occur. The application
+ *   should select one transfer type and flags that control file caching. The transfer type can be one
+ *   of the following values: Value Description FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP
+ *   ASCII, Type A, transfer method. Control and formatting data is converted to local equivalents.
+ *   FTP_TRANSFER_TYPE_BINARY Transfers the file using FTP Image, Type I, transfer method. The file is
+ *   transferred exactly as it exists with no changes. This is the default transfer method.
+ *   FTP_TRANSFER_TYPE_UNKNOWN Defaults to FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII
+ *   Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. One or
+ *   more of the values described in the following table are used by an application to control file
+ *   caching. INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a
+ *   reload if there was no Expires time and no Last-Modified time returned by the server when
+ *   determining whether to reload the item from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes
+ *   a temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in
+ *   gateways. INTERNET_FLAG_RELOAD Forces a download of the requested file, object, or directory
+ *   listing from the origin server, not from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP
+ *   resource to be reloaded from the server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is only used if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return A handle indicates success. NULL indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpOpenFile should be used in the following situations:
+ *
+ * An application has data it needs to send to an FTP server to be created as a file on the FTP
+ * server, but the application does not have a local file containing the data. After the file is
+ * opened with FtpOpenFile, the application uses InternetWriteFile to send the FTP file data to the
+ * server.
+ *
+ * An application needs to retrieve a file from the server into application-controlled memory,
+ * instead of writing the file to disk. The application uses InternetReadFile after using
+ * FtpOpenFile to open the file.
+ *
+ * An application needs a fine level of control over a file transfer. For example, the application
+ * may need to display a progress indicator when downloading a file to indicate to the user that the
+ * file transfer is, or is not, proceeding correctly.
+ *
+ * After calling FtpOpenFile and until calling InternetCloseHandle, all other calls to FTP functions
+ * on the same FTP session handle will fail and set the error message to
+ * ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * Only one file can be open in a single FTP session. Therefore, no file handle is returned and the
+ * application simply uses the FTP session handle when necessary.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpOpenFile translates the directory name separators to the
+ * appropriate character before they are used.
+ *
+ * The InternetCloseHandle function is used to close the handle returned by FtpOpenFile. If
+ * InternetCloseHandle closes the handle before all the data has been transferred, the transfer is
+ * terminated.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1299,6 +3961,74 @@ FtpOpenFileA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function initiates access to a remote file for writing or reading.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the name of the
+ *   file to access on the remote system.
+ * @param fdwAccess [in] Value that determines how the file will be accessed. This can be
+ *   GENERIC_READ or GENERIC_WRITE, but not both.
+ * @param dwFlags [in] Specifies the conditions under which the transfers occur. The application
+ *   should select one transfer type and flags that control file caching. The transfer type can be one
+ *   of the following values: Value Description FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP
+ *   ASCII, Type A, transfer method. Control and formatting data is converted to local equivalents.
+ *   FTP_TRANSFER_TYPE_BINARY Transfers the file using FTP Image, Type I, transfer method. The file is
+ *   transferred exactly as it exists with no changes. This is the default transfer method.
+ *   FTP_TRANSFER_TYPE_UNKNOWN Defaults to FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII
+ *   Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. One or
+ *   more of the values described in the following table are used by an application to control file
+ *   caching. INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a
+ *   reload if there was no Expires time and no Last-Modified time returned by the server when
+ *   determining whether to reload the item from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes
+ *   a temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in
+ *   gateways. INTERNET_FLAG_RELOAD Forces a download of the requested file, object, or directory
+ *   listing from the origin server, not from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP
+ *   resource to be reloaded from the server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is only used if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return A handle indicates success. NULL indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpOpenFile should be used in the following situations:
+ *
+ * An application has data it needs to send to an FTP server to be created as a file on the FTP
+ * server, but the application does not have a local file containing the data. After the file is
+ * opened with FtpOpenFile, the application uses InternetWriteFile to send the FTP file data to the
+ * server.
+ *
+ * An application needs to retrieve a file from the server into application-controlled memory,
+ * instead of writing the file to disk. The application uses InternetReadFile after using
+ * FtpOpenFile to open the file.
+ *
+ * An application needs a fine level of control over a file transfer. For example, the application
+ * may need to display a progress indicator when downloading a file to indicate to the user that the
+ * file transfer is, or is not, proceeding correctly.
+ *
+ * After calling FtpOpenFile and until calling InternetCloseHandle, all other calls to FTP functions
+ * on the same FTP session handle will fail and set the error message to
+ * ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * Only one file can be open in a single FTP session. Therefore, no file handle is returned and the
+ * application simply uses the FTP session handle when necessary.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpOpenFile translates the directory name separators to the
+ * appropriate character before they are used.
+ *
+ * The InternetCloseHandle function is used to close the handle returned by FtpOpenFile. If
+ * InternetCloseHandle closes the handle before all the data has been transferred, the transfer is
+ * terminated.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1310,11 +4040,171 @@ FtpOpenFileW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function initiates access to a remote file for writing or reading.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the name of the
+ *   file to access on the remote system.
+ * @param fdwAccess [in] Value that determines how the file will be accessed. This can be
+ *   GENERIC_READ or GENERIC_WRITE, but not both.
+ * @param dwFlags [in] Specifies the conditions under which the transfers occur. The application
+ *   should select one transfer type and flags that control file caching. The transfer type can be one
+ *   of the following values: Value Description FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP
+ *   ASCII, Type A, transfer method. Control and formatting data is converted to local equivalents.
+ *   FTP_TRANSFER_TYPE_BINARY Transfers the file using FTP Image, Type I, transfer method. The file is
+ *   transferred exactly as it exists with no changes. This is the default transfer method.
+ *   FTP_TRANSFER_TYPE_UNKNOWN Defaults to FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII
+ *   Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. One or
+ *   more of the values described in the following table are used by an application to control file
+ *   caching. INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a
+ *   reload if there was no Expires time and no Last-Modified time returned by the server when
+ *   determining whether to reload the item from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes
+ *   a temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in
+ *   gateways. INTERNET_FLAG_RELOAD Forces a download of the requested file, object, or directory
+ *   listing from the origin server, not from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP
+ *   resource to be reloaded from the server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is only used if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return A handle indicates success. NULL indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpOpenFile should be used in the following situations:
+ *
+ * An application has data it needs to send to an FTP server to be created as a file on the FTP
+ * server, but the application does not have a local file containing the data. After the file is
+ * opened with FtpOpenFile, the application uses InternetWriteFile to send the FTP file data to the
+ * server.
+ *
+ * An application needs to retrieve a file from the server into application-controlled memory,
+ * instead of writing the file to disk. The application uses InternetReadFile after using
+ * FtpOpenFile to open the file.
+ *
+ * An application needs a fine level of control over a file transfer. For example, the application
+ * may need to display a progress indicator when downloading a file to indicate to the user that the
+ * file transfer is, or is not, proceeding correctly.
+ *
+ * After calling FtpOpenFile and until calling InternetCloseHandle, all other calls to FTP functions
+ * on the same FTP session handle will fail and set the error message to
+ * ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * Only one file can be open in a single FTP session. Therefore, no file handle is returned and the
+ * application simply uses the FTP session handle when necessary.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpOpenFile translates the directory name separators to the
+ * appropriate character before they are used.
+ *
+ * The InternetCloseHandle function is used to close the handle returned by FtpOpenFile. If
+ * InternetCloseHandle closes the handle before all the data has been transferred, the transfer is
+ * terminated.
+ */
 #define FtpOpenFile  FtpOpenFileW
 #else
+/**
+ * This function initiates access to a remote file for writing or reading.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszFileName [in] Long pointer to a null-terminated string that contains the name of the
+ *   file to access on the remote system.
+ * @param fdwAccess [in] Value that determines how the file will be accessed. This can be
+ *   GENERIC_READ or GENERIC_WRITE, but not both.
+ * @param dwFlags [in] Specifies the conditions under which the transfers occur. The application
+ *   should select one transfer type and flags that control file caching. The transfer type can be one
+ *   of the following values: Value Description FTP_TRANSFER_TYPE_ASCII Transfers the file using FTP
+ *   ASCII, Type A, transfer method. Control and formatting data is converted to local equivalents.
+ *   FTP_TRANSFER_TYPE_BINARY Transfers the file using FTP Image, Type I, transfer method. The file is
+ *   transferred exactly as it exists with no changes. This is the default transfer method.
+ *   FTP_TRANSFER_TYPE_UNKNOWN Defaults to FTP_TRANSFER_TYPE_BINARY. INTERNET_FLAG_TRANSFER_ASCII
+ *   Transfers the file as ASCII. INTERNET_FLAG_TRANSFER_BINARY Transfers the file as binary. One or
+ *   more of the values described in the following table are used by an application to control file
+ *   caching. INTERNET_FLAG_DONT_CACHE Does not cache the data, either locally or in gateways.
+ *   Identical to the preferred value INTERNET_FLAG_NO_CACHE_WRITE. INTERNET_FLAG_HYPERLINK Forces a
+ *   reload if there was no Expires time and no Last-Modified time returned by the server when
+ *   determining whether to reload the item from the network. INTERNET_FLAG_MUST_CACHE_REQUEST Causes
+ *   a temporary file to be created if the file cannot be cached. Identical to the preferred value
+ *   INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if the
+ *   file cannot be cached. INTERNET_FLAG_NO_CACHE_WRITE Does not cache the data, either locally or in
+ *   gateways. INTERNET_FLAG_RELOAD Forces a download of the requested file, object, or directory
+ *   listing from the origin server, not from the cache. INTERNET_FLAG_RESYNCHRONIZE Causes the FTP
+ *   resource to be reloaded from the server.
+ * @param dwContext [in] Specifies an application-defined value that associates this search with
+ *   application data. This is only used if the application has already called
+ *   InternetSetStatusCallback to set up a status callback function. All status requests are handled
+ *   synchronously.
+ *
+ * @return A handle indicates success. NULL indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * FtpOpenFile should be used in the following situations:
+ *
+ * An application has data it needs to send to an FTP server to be created as a file on the FTP
+ * server, but the application does not have a local file containing the data. After the file is
+ * opened with FtpOpenFile, the application uses InternetWriteFile to send the FTP file data to the
+ * server.
+ *
+ * An application needs to retrieve a file from the server into application-controlled memory,
+ * instead of writing the file to disk. The application uses InternetReadFile after using
+ * FtpOpenFile to open the file.
+ *
+ * An application needs a fine level of control over a file transfer. For example, the application
+ * may need to display a progress indicator when downloading a file to indicate to the user that the
+ * file transfer is, or is not, proceeding correctly.
+ *
+ * After calling FtpOpenFile and until calling InternetCloseHandle, all other calls to FTP functions
+ * on the same FTP session handle will fail and set the error message to
+ * ERROR_FTP_TRANSFER_IN_PROGRESS.
+ *
+ * Only one file can be open in a single FTP session. Therefore, no file handle is returned and the
+ * application simply uses the FTP session handle when necessary.
+ *
+ * The lpszFile parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpOpenFile translates the directory name separators to the
+ * appropriate character before they are used.
+ *
+ * The InternetCloseHandle function is used to close the handle returned by FtpOpenFile. If
+ * InternetCloseHandle closes the handle before all the data has been transferred, the transfer is
+ * terminated.
+ */
 #define FtpOpenFile  FtpOpenFileA
 #endif // !UNICODE
 
+/**
+ * This function creates a new directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to create on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to create a
+ *   directory, use the InternetGetLastResponseInfo function to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpCreateDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1322,6 +4212,30 @@ FtpCreateDirectoryA(
     IN HINTERNET hConnect,
     IN LPCSTR lpszDirectory
     );
+/**
+ * This function creates a new directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to create on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to create a
+ *   directory, use the InternetGetLastResponseInfo function to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpCreateDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1330,11 +4244,82 @@ FtpCreateDirectoryW(
     IN LPCWSTR lpszDirectory
     );
 #ifdef UNICODE
+/**
+ * This function creates a new directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to create on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to create a
+ *   directory, use the InternetGetLastResponseInfo function to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpCreateDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpCreateDirectory  FtpCreateDirectoryW
 #else
+/**
+ * This function creates a new directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session. This handle must have been returned by a
+ *   previous call to the InternetConnect function.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to create on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to create a
+ *   directory, use the InternetGetLastResponseInfo function to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpCreateDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpCreateDirectory  FtpCreateDirectoryA
 #endif // !UNICODE
 
+/**
+ * This function removes the specified directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to remove on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpRemoveDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1342,6 +4327,29 @@ FtpRemoveDirectoryA(
     IN HINTERNET hConnect,
     IN LPCSTR lpszDirectory
     );
+/**
+ * This function removes the specified directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to remove on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpRemoveDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1350,11 +4358,80 @@ FtpRemoveDirectoryW(
     IN LPCWSTR lpszDirectory
     );
 #ifdef UNICODE
+/**
+ * This function removes the specified directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to remove on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpRemoveDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpRemoveDirectory  FtpRemoveDirectoryW
 #else
+/**
+ * This function removes the specified directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to remove on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpRemoveDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpRemoveDirectory  FtpRemoveDirectoryA
 #endif // !UNICODE
 
+/**
+ * This function changes to a different working directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to change to on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpSetCurrentDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1362,6 +4439,29 @@ FtpSetCurrentDirectoryA(
     IN HINTERNET hConnect,
     IN LPCSTR lpszDirectory
     );
+/**
+ * This function changes to a different working directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to change to on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpSetCurrentDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1370,11 +4470,76 @@ FtpSetCurrentDirectoryW(
     IN LPCWSTR lpszDirectory
     );
 #ifdef UNICODE
+/**
+ * This function changes to a different working directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to change to on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpSetCurrentDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpSetCurrentDirectory  FtpSetCurrentDirectoryW
 #else
+/**
+ * This function changes to a different working directory on the FTP server.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszDirectory [in] Long pointer to a null-terminated string that contains the name of the
+ *   directory to change to on the remote system. This can be either a fully qualified path or a name
+ *   relative to the current directory.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError. If the error message indicates that the FTP server denied the request to remove a
+ *   directory, use InternetGetLastResponseInfo to determine the cause.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * An application should use the FtpGetCurrentDirectory function to determine the remote site's
+ * current working directory, instead of assuming that the remote system uses a hierarchical naming
+ * scheme for directories.
+ *
+ * The lpszDirectory parameter can be either partially or fully qualified file names relative to the
+ * current directory. A backward slash (\) or forward slash (/) can be used as the directory
+ * separator for either name. FtpSetCurrentDirectory translates the directory name separators to the
+ * appropriate character before they are used.
+ */
 #define FtpSetCurrentDirectory  FtpSetCurrentDirectoryA
 #endif // !UNICODE
 
+/**
+ * This function retrieves the current directory for the specified FTP session.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszCurrentDirectory [out] Long pointer to a buffer that receives the null-terminated
+ *   string that contains the absolute path to the current directory.
+ * @param lpdwCurrentDirectory [in/out] Long pointer to a variable that specifies the buffer length,
+ *   in characters, for the current directory string. The buffer length must include room for a
+ *   terminating null character. Using a length of MAX_PATH is sufficient for all paths. When the
+ *   function returns, the variable receives the number of characters copied into the buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * If the lpszCurrentDirectory buffer is not large enough, lpdwCurrentDirectory receives the number
+ * of bytes required to retrieve the full, current directory name.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1383,6 +4548,25 @@ FtpGetCurrentDirectoryA(
     OUT LPSTR lpszCurrentDirectory,
     IN OUT LPDWORD lpdwCurrentDirectory
     );
+/**
+ * This function retrieves the current directory for the specified FTP session.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszCurrentDirectory [out] Long pointer to a buffer that receives the null-terminated
+ *   string that contains the absolute path to the current directory.
+ * @param lpdwCurrentDirectory [in/out] Long pointer to a variable that specifies the buffer length,
+ *   in characters, for the current directory string. The buffer length must include room for a
+ *   terminating null character. Using a length of MAX_PATH is sufficient for all paths. When the
+ *   function returns, the variable receives the number of characters copied into the buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * If the lpszCurrentDirectory buffer is not large enough, lpdwCurrentDirectory receives the number
+ * of bytes required to retrieve the full, current directory name.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1392,11 +4576,72 @@ FtpGetCurrentDirectoryW(
     IN OUT LPDWORD lpdwCurrentDirectory
     );
 #ifdef UNICODE
+/**
+ * This function retrieves the current directory for the specified FTP session.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszCurrentDirectory [out] Long pointer to a buffer that receives the null-terminated
+ *   string that contains the absolute path to the current directory.
+ * @param lpdwCurrentDirectory [in/out] Long pointer to a variable that specifies the buffer length,
+ *   in characters, for the current directory string. The buffer length must include room for a
+ *   terminating null character. Using a length of MAX_PATH is sufficient for all paths. When the
+ *   function returns, the variable receives the number of characters copied into the buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * If the lpszCurrentDirectory buffer is not large enough, lpdwCurrentDirectory receives the number
+ * of bytes required to retrieve the full, current directory name.
+ */
 #define FtpGetCurrentDirectory  FtpGetCurrentDirectoryW
 #else
+/**
+ * This function retrieves the current directory for the specified FTP session.
+ *
+ * @param hConnect [in] Valid handle to an FTP session.
+ * @param lpszCurrentDirectory [out] Long pointer to a buffer that receives the null-terminated
+ *   string that contains the absolute path to the current directory.
+ * @param lpdwCurrentDirectory [in/out] Long pointer to a variable that specifies the buffer length,
+ *   in characters, for the current directory string. The buffer length must include room for a
+ *   terminating null character. Using a length of MAX_PATH is sufficient for all paths. When the
+ *   function returns, the variable receives the number of characters copied into the buffer.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error data, call
+ *   GetLastError.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * If the lpszCurrentDirectory buffer is not large enough, lpdwCurrentDirectory receives the number
+ * of bytes required to retrieve the full, current directory name.
+ */
 #define FtpGetCurrentDirectory  FtpGetCurrentDirectoryA
 #endif // !UNICODE
 
+/**
+ * This function issues an arbitrary FTP command to the FTP server.
+ *
+ * @param hConnect [in] Valid handle for an FTP session.
+ * @param fExpectResponse [in] Boolean that specifies if a data response is expected. If
+ *   fExpectResponse is TRUE, a data response is expected, and the application can call the
+ *   InternetReadFile function to read the response.
+ * @param dwFlag [in] Specifies the conditions under which the data connection takes place. The
+ *   following flags can be set: Value Description FTP_TRANSFER_TYPE_ASCII Data connection using the
+ *   FTP ASCII ,Type A, transfer method. Control and formatting data is converted to local
+ *   equivalents. FTP_TRANSFER_TYPE_BINARY Data connection using the FTP Image, Type I, transfer
+ *   method. The file is transferred exactly as it exists with no changes. This is the default
+ *   transfer method.
+ * @param LpszCommand [in] Long pointer to the null-terminated string that contains an FTP command,
+ *   for example, "PWD \r\n".
+ * @param dwContext [in] Specifies an application-defined value that associates the FTP command in a
+ *   status callback.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The dwContext parameter accepts status callbacks to the application, but all requests are handled
+ * synchronously.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1407,6 +4652,29 @@ FtpCommandA(
     IN LPCSTR lpszCommand,
     IN DWORD dwContext
     );
+/**
+ * This function issues an arbitrary FTP command to the FTP server.
+ *
+ * @param hConnect [in] Valid handle for an FTP session.
+ * @param fExpectResponse [in] Boolean that specifies if a data response is expected. If
+ *   fExpectResponse is TRUE, a data response is expected, and the application can call the
+ *   InternetReadFile function to read the response.
+ * @param dwFlag [in] Specifies the conditions under which the data connection takes place. The
+ *   following flags can be set: Value Description FTP_TRANSFER_TYPE_ASCII Data connection using the
+ *   FTP ASCII ,Type A, transfer method. Control and formatting data is converted to local
+ *   equivalents. FTP_TRANSFER_TYPE_BINARY Data connection using the FTP Image, Type I, transfer
+ *   method. The file is transferred exactly as it exists with no changes. This is the default
+ *   transfer method.
+ * @param LpszCommand [in] Long pointer to the null-terminated string that contains an FTP command,
+ *   for example, "PWD \r\n".
+ * @param dwContext [in] Specifies an application-defined value that associates the FTP command in a
+ *   status callback.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The dwContext parameter accepts status callbacks to the application, but all requests are handled
+ * synchronously.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1418,8 +4686,54 @@ FtpCommandW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function issues an arbitrary FTP command to the FTP server.
+ *
+ * @param hConnect [in] Valid handle for an FTP session.
+ * @param fExpectResponse [in] Boolean that specifies if a data response is expected. If
+ *   fExpectResponse is TRUE, a data response is expected, and the application can call the
+ *   InternetReadFile function to read the response.
+ * @param dwFlag [in] Specifies the conditions under which the data connection takes place. The
+ *   following flags can be set: Value Description FTP_TRANSFER_TYPE_ASCII Data connection using the
+ *   FTP ASCII ,Type A, transfer method. Control and formatting data is converted to local
+ *   equivalents. FTP_TRANSFER_TYPE_BINARY Data connection using the FTP Image, Type I, transfer
+ *   method. The file is transferred exactly as it exists with no changes. This is the default
+ *   transfer method.
+ * @param LpszCommand [in] Long pointer to the null-terminated string that contains an FTP command,
+ *   for example, "PWD \r\n".
+ * @param dwContext [in] Specifies an application-defined value that associates the FTP command in a
+ *   status callback.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The dwContext parameter accepts status callbacks to the application, but all requests are handled
+ * synchronously.
+ */
 #define FtpCommand  FtpCommandW
 #else
+/**
+ * This function issues an arbitrary FTP command to the FTP server.
+ *
+ * @param hConnect [in] Valid handle for an FTP session.
+ * @param fExpectResponse [in] Boolean that specifies if a data response is expected. If
+ *   fExpectResponse is TRUE, a data response is expected, and the application can call the
+ *   InternetReadFile function to read the response.
+ * @param dwFlag [in] Specifies the conditions under which the data connection takes place. The
+ *   following flags can be set: Value Description FTP_TRANSFER_TYPE_ASCII Data connection using the
+ *   FTP ASCII ,Type A, transfer method. Control and formatting data is converted to local
+ *   equivalents. FTP_TRANSFER_TYPE_BINARY Data connection using the FTP Image, Type I, transfer
+ *   method. The file is transferred exactly as it exists with no changes. This is the default
+ *   transfer method.
+ * @param LpszCommand [in] Long pointer to the null-terminated string that contains an FTP command,
+ *   for example, "PWD \r\n".
+ * @param dwContext [in] Specifies an application-defined value that associates the FTP command in a
+ *   status callback.
+ *
+ * Inetftp.dll is available only for Intel x86 processors.
+ *
+ * The dwContext parameter accepts status callbacks to the application, but all requests are handled
+ * synchronously.
+ */
 #define FtpCommand  FtpCommandA
 #endif // !UNICODE
 
@@ -1587,6 +4901,85 @@ FtpCommandW(
 // prototypes
 //
 
+/**
+ * This function opens an HTTP request handle.
+ *
+ * @param hHttpSession [in] Handle to an HTTP session returned by InternetConnect.
+ * @param lpszVerb [in] Long pointer to a null-terminated string that contains the verb to use in
+ *   the request. If this parameter is NULL, the function uses "GET" as the verb.
+ * @param lpszObjectName [in] Long pointer to a null-terminated string that contains the name of the
+ *   target object of the specified verb. This is generally a file name, an executable module, or a
+ *   search specifier.
+ * @param lpszVersion [in] Long pointer to a null-terminated string that contains the HTTP version.
+ *   If this parameter is NULL, the function uses "HTTP/1.0" as the version.
+ * @param lpszReferer [in] Long pointer to a null-terminated string that specifies the address (URL)
+ *   of the document from which the URL in the request (lpszObjectName) was obtained. If this
+ *   parameter is NULL, no "referrer" is specified.
+ * @param lplpszAcceptTypes [in] Long pointer to a null-terminated array of string pointers
+ *   indicating content types accepted by the client. If this parameter is NULL, no types are accepted
+ *   by the client. Servers interpret a lack of accept types to indicate that the client accepts only
+ *   documents of type "text/ *" (that is, only text documents, and not pictures or other binary
+ *   files).
+ * @param dwFlags [in] Specifies a bitmask of Internet flags. Can be any of the following values:
+ *   Value Description INTERNET_FLAG_CACHE_IF_NET_FAIL Return the resource from the cache if the
+ *   network request for the resource fails due to an ERROR_INTERNET_CONNECTION_RESET or
+ *   ERROR_INTERNET_CANNOT_CONNECT. INTERNET_FLAG_DONT_CACHE Not supported. Data is never cached.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned from the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates that are returned from the server against the host name given in the request. Win32
+ *   Internet functions use a simple check against certificates by comparing for matching host names
+ *   and simple wildcarding rules. INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates for proper validity dates.
+ *   INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP Disables the ability of the Win32 Internet functions to
+ *   detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTPS to HTTP URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTP to HTTPS
+ *   URLs. INTERNET_FLAG_KEEP_CONNECTION Uses keep-alive semantics, if available, for the connection.
+ *   This flag is required for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of
+ *   authentication. INTERNET_FLAG_MAKE_PERSISTENT Not supported. INTERNET_FLAG_MUST_CACHE_REQUEST
+ *   Causes a temporary file to be created if the file cannot be cached. Identical to the preferred
+ *   value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if
+ *   the file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically.
+ *   INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection in HttpSendRequest.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache.
+ *   INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and does not
+ *   automatically add returned cookies to the cookie database. INTERNET_FLAG_NO_UI Disables the
+ *   cookie dialog box. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Not supported. Data is always from the wire and caching
+ *   is not supported. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been
+ *   modified since the last time it was downloaded. INTERNET_FLAG_SECURE Uses SSL/PCT transaction
+ *   semantics.
+ * @param dwContext [in] Specifies the application-defined value that associates this operation with
+ *   any application data.
+ *
+ * @return A valid, non-NULL HTTP request handle indicates success. NULL indicates failure. To get
+ *   extended error information, call GetLastError.
+ *
+ * HttpOpenRequest creates a new HTTP request handle and stores the specified parameters in that
+ * handle. An HTTP request handle holds a request to be sent to an HTTP server and contains all
+ * RFC822/MIME/HTTP headers to be sent as part of the request.
+ *
+ * Use the InternetCloseHandle function to close the handle returned by HttpOpenRequest.
+ * InternetCloseHandle cancels all outstanding I/O on the handle.
+ *
+ * The lpszReferer parameter to InternetOpen is used as the referrer for the HTTP request.
+ *
+ * The dwContext parameter allows for progress status callbacks to the application, but all requests
+ * will be handled synchronously.
+ *
+ * When establishing a Secure Sockets Layer (SSL) or Private Communications Technology,
+ * HttpOpenRequest uses the INTERNET_FLAG_SECURE option in addition to all other options.
+ *
+ * The following dwFlags values can be used in HttpOpenRequest to ignore invalid certificate errors:
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_CN_INVALID: Ignores errors caused when the certificate host name of
+ * the server does not match the host name in the request.
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_DATE_INVALID: Ignores errors caused by an expired server certificate.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1600,6 +4993,85 @@ HttpOpenRequestA(
     IN DWORD dwFlags,
     IN DWORD dwContext
     );
+/**
+ * This function opens an HTTP request handle.
+ *
+ * @param hHttpSession [in] Handle to an HTTP session returned by InternetConnect.
+ * @param lpszVerb [in] Long pointer to a null-terminated string that contains the verb to use in
+ *   the request. If this parameter is NULL, the function uses "GET" as the verb.
+ * @param lpszObjectName [in] Long pointer to a null-terminated string that contains the name of the
+ *   target object of the specified verb. This is generally a file name, an executable module, or a
+ *   search specifier.
+ * @param lpszVersion [in] Long pointer to a null-terminated string that contains the HTTP version.
+ *   If this parameter is NULL, the function uses "HTTP/1.0" as the version.
+ * @param lpszReferer [in] Long pointer to a null-terminated string that specifies the address (URL)
+ *   of the document from which the URL in the request (lpszObjectName) was obtained. If this
+ *   parameter is NULL, no "referrer" is specified.
+ * @param lplpszAcceptTypes [in] Long pointer to a null-terminated array of string pointers
+ *   indicating content types accepted by the client. If this parameter is NULL, no types are accepted
+ *   by the client. Servers interpret a lack of accept types to indicate that the client accepts only
+ *   documents of type "text/ *" (that is, only text documents, and not pictures or other binary
+ *   files).
+ * @param dwFlags [in] Specifies a bitmask of Internet flags. Can be any of the following values:
+ *   Value Description INTERNET_FLAG_CACHE_IF_NET_FAIL Return the resource from the cache if the
+ *   network request for the resource fails due to an ERROR_INTERNET_CONNECTION_RESET or
+ *   ERROR_INTERNET_CANNOT_CONNECT. INTERNET_FLAG_DONT_CACHE Not supported. Data is never cached.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned from the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates that are returned from the server against the host name given in the request. Win32
+ *   Internet functions use a simple check against certificates by comparing for matching host names
+ *   and simple wildcarding rules. INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates for proper validity dates.
+ *   INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP Disables the ability of the Win32 Internet functions to
+ *   detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTPS to HTTP URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTP to HTTPS
+ *   URLs. INTERNET_FLAG_KEEP_CONNECTION Uses keep-alive semantics, if available, for the connection.
+ *   This flag is required for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of
+ *   authentication. INTERNET_FLAG_MAKE_PERSISTENT Not supported. INTERNET_FLAG_MUST_CACHE_REQUEST
+ *   Causes a temporary file to be created if the file cannot be cached. Identical to the preferred
+ *   value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if
+ *   the file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically.
+ *   INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection in HttpSendRequest.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache.
+ *   INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and does not
+ *   automatically add returned cookies to the cookie database. INTERNET_FLAG_NO_UI Disables the
+ *   cookie dialog box. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Not supported. Data is always from the wire and caching
+ *   is not supported. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been
+ *   modified since the last time it was downloaded. INTERNET_FLAG_SECURE Uses SSL/PCT transaction
+ *   semantics.
+ * @param dwContext [in] Specifies the application-defined value that associates this operation with
+ *   any application data.
+ *
+ * @return A valid, non-NULL HTTP request handle indicates success. NULL indicates failure. To get
+ *   extended error information, call GetLastError.
+ *
+ * HttpOpenRequest creates a new HTTP request handle and stores the specified parameters in that
+ * handle. An HTTP request handle holds a request to be sent to an HTTP server and contains all
+ * RFC822/MIME/HTTP headers to be sent as part of the request.
+ *
+ * Use the InternetCloseHandle function to close the handle returned by HttpOpenRequest.
+ * InternetCloseHandle cancels all outstanding I/O on the handle.
+ *
+ * The lpszReferer parameter to InternetOpen is used as the referrer for the HTTP request.
+ *
+ * The dwContext parameter allows for progress status callbacks to the application, but all requests
+ * will be handled synchronously.
+ *
+ * When establishing a Secure Sockets Layer (SSL) or Private Communications Technology,
+ * HttpOpenRequest uses the INTERNET_FLAG_SECURE option in addition to all other options.
+ *
+ * The following dwFlags values can be used in HttpOpenRequest to ignore invalid certificate errors:
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_CN_INVALID: Ignores errors caused when the certificate host name of
+ * the server does not match the host name in the request.
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_DATE_INVALID: Ignores errors caused by an expired server certificate.
+ */
 INTERNETAPI
 HINTERNET
 WINAPI
@@ -1614,11 +5086,204 @@ HttpOpenRequestW(
     IN DWORD dwContext
     );
 #ifdef UNICODE
+/**
+ * This function opens an HTTP request handle.
+ *
+ * @param hHttpSession [in] Handle to an HTTP session returned by InternetConnect.
+ * @param lpszVerb [in] Long pointer to a null-terminated string that contains the verb to use in
+ *   the request. If this parameter is NULL, the function uses "GET" as the verb.
+ * @param lpszObjectName [in] Long pointer to a null-terminated string that contains the name of the
+ *   target object of the specified verb. This is generally a file name, an executable module, or a
+ *   search specifier.
+ * @param lpszVersion [in] Long pointer to a null-terminated string that contains the HTTP version.
+ *   If this parameter is NULL, the function uses "HTTP/1.0" as the version.
+ * @param lpszReferer [in] Long pointer to a null-terminated string that specifies the address (URL)
+ *   of the document from which the URL in the request (lpszObjectName) was obtained. If this
+ *   parameter is NULL, no "referrer" is specified.
+ * @param lplpszAcceptTypes [in] Long pointer to a null-terminated array of string pointers
+ *   indicating content types accepted by the client. If this parameter is NULL, no types are accepted
+ *   by the client. Servers interpret a lack of accept types to indicate that the client accepts only
+ *   documents of type "text/ *" (that is, only text documents, and not pictures or other binary
+ *   files).
+ * @param dwFlags [in] Specifies a bitmask of Internet flags. Can be any of the following values:
+ *   Value Description INTERNET_FLAG_CACHE_IF_NET_FAIL Return the resource from the cache if the
+ *   network request for the resource fails due to an ERROR_INTERNET_CONNECTION_RESET or
+ *   ERROR_INTERNET_CANNOT_CONNECT. INTERNET_FLAG_DONT_CACHE Not supported. Data is never cached.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned from the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates that are returned from the server against the host name given in the request. Win32
+ *   Internet functions use a simple check against certificates by comparing for matching host names
+ *   and simple wildcarding rules. INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates for proper validity dates.
+ *   INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP Disables the ability of the Win32 Internet functions to
+ *   detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTPS to HTTP URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTP to HTTPS
+ *   URLs. INTERNET_FLAG_KEEP_CONNECTION Uses keep-alive semantics, if available, for the connection.
+ *   This flag is required for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of
+ *   authentication. INTERNET_FLAG_MAKE_PERSISTENT Not supported. INTERNET_FLAG_MUST_CACHE_REQUEST
+ *   Causes a temporary file to be created if the file cannot be cached. Identical to the preferred
+ *   value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if
+ *   the file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically.
+ *   INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection in HttpSendRequest.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache.
+ *   INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and does not
+ *   automatically add returned cookies to the cookie database. INTERNET_FLAG_NO_UI Disables the
+ *   cookie dialog box. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Not supported. Data is always from the wire and caching
+ *   is not supported. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been
+ *   modified since the last time it was downloaded. INTERNET_FLAG_SECURE Uses SSL/PCT transaction
+ *   semantics.
+ * @param dwContext [in] Specifies the application-defined value that associates this operation with
+ *   any application data.
+ *
+ * @return A valid, non-NULL HTTP request handle indicates success. NULL indicates failure. To get
+ *   extended error information, call GetLastError.
+ *
+ * HttpOpenRequest creates a new HTTP request handle and stores the specified parameters in that
+ * handle. An HTTP request handle holds a request to be sent to an HTTP server and contains all
+ * RFC822/MIME/HTTP headers to be sent as part of the request.
+ *
+ * Use the InternetCloseHandle function to close the handle returned by HttpOpenRequest.
+ * InternetCloseHandle cancels all outstanding I/O on the handle.
+ *
+ * The lpszReferer parameter to InternetOpen is used as the referrer for the HTTP request.
+ *
+ * The dwContext parameter allows for progress status callbacks to the application, but all requests
+ * will be handled synchronously.
+ *
+ * When establishing a Secure Sockets Layer (SSL) or Private Communications Technology,
+ * HttpOpenRequest uses the INTERNET_FLAG_SECURE option in addition to all other options.
+ *
+ * The following dwFlags values can be used in HttpOpenRequest to ignore invalid certificate errors:
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_CN_INVALID: Ignores errors caused when the certificate host name of
+ * the server does not match the host name in the request.
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_DATE_INVALID: Ignores errors caused by an expired server certificate.
+ */
 #define HttpOpenRequest  HttpOpenRequestW
 #else
+/**
+ * This function opens an HTTP request handle.
+ *
+ * @param hHttpSession [in] Handle to an HTTP session returned by InternetConnect.
+ * @param lpszVerb [in] Long pointer to a null-terminated string that contains the verb to use in
+ *   the request. If this parameter is NULL, the function uses "GET" as the verb.
+ * @param lpszObjectName [in] Long pointer to a null-terminated string that contains the name of the
+ *   target object of the specified verb. This is generally a file name, an executable module, or a
+ *   search specifier.
+ * @param lpszVersion [in] Long pointer to a null-terminated string that contains the HTTP version.
+ *   If this parameter is NULL, the function uses "HTTP/1.0" as the version.
+ * @param lpszReferer [in] Long pointer to a null-terminated string that specifies the address (URL)
+ *   of the document from which the URL in the request (lpszObjectName) was obtained. If this
+ *   parameter is NULL, no "referrer" is specified.
+ * @param lplpszAcceptTypes [in] Long pointer to a null-terminated array of string pointers
+ *   indicating content types accepted by the client. If this parameter is NULL, no types are accepted
+ *   by the client. Servers interpret a lack of accept types to indicate that the client accepts only
+ *   documents of type "text/ *" (that is, only text documents, and not pictures or other binary
+ *   files).
+ * @param dwFlags [in] Specifies a bitmask of Internet flags. Can be any of the following values:
+ *   Value Description INTERNET_FLAG_CACHE_IF_NET_FAIL Return the resource from the cache if the
+ *   network request for the resource fails due to an ERROR_INTERNET_CONNECTION_RESET or
+ *   ERROR_INTERNET_CANNOT_CONNECT. INTERNET_FLAG_DONT_CACHE Not supported. Data is never cached.
+ *   INTERNET_FLAG_HYPERLINK Forces a reload if there was no Expires time and no Last-Modified time
+ *   returned from the server when determining whether to reload the item from the network.
+ *   INTERNET_FLAG_IGNORE_CERT_CN_INVALID Disables Win32 Internet function checking of SSL/PCT-based
+ *   certificates that are returned from the server against the host name given in the request. Win32
+ *   Internet functions use a simple check against certificates by comparing for matching host names
+ *   and simple wildcarding rules. INTERNET_FLAG_IGNORE_CERT_DATE_INVALID Disables Win32 Internet
+ *   function checking of SSL/PCT-based certificates for proper validity dates.
+ *   INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP Disables the ability of the Win32 Internet functions to
+ *   detect this special type of redirect. When this flag is used, Win32 Internet functions
+ *   transparently allow redirects from HTTPS to HTTP URLs. INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
+ *   Disables the ability of the Win32 Internet functions to detect this special type of redirect.
+ *   When this flag is used, Win32 Internet functions transparently allow redirects from HTTP to HTTPS
+ *   URLs. INTERNET_FLAG_KEEP_CONNECTION Uses keep-alive semantics, if available, for the connection.
+ *   This flag is required for Microsoft Network (MSN), NT LAN Manager (NTLM), and other types of
+ *   authentication. INTERNET_FLAG_MAKE_PERSISTENT Not supported. INTERNET_FLAG_MUST_CACHE_REQUEST
+ *   Causes a temporary file to be created if the file cannot be cached. Identical to the preferred
+ *   value INTERNET_FLAG_NEED_FILE. INTERNET_FLAG_NEED_FILE Causes a temporary file to be created if
+ *   the file cannot be cached. INTERNET_FLAG_NO_AUTH Does not attempt authentication automatically.
+ *   INTERNET_FLAG_NO_AUTO_REDIRECT Does not automatically handle redirection in HttpSendRequest.
+ *   INTERNET_FLAG_NO_CACHE_WRITE Does not add the returned entity to the cache.
+ *   INTERNET_FLAG_NO_COOKIES Does not automatically add cookie headers to requests, and does not
+ *   automatically add returned cookies to the cookie database. INTERNET_FLAG_NO_UI Disables the
+ *   cookie dialog box. INTERNET_FLAG_PRAGMA_NOCACHE Forces the request to be resolved by the origin
+ *   server, even if a cached copy exists on the proxy. INTERNET_FLAG_READ_PREFETCH This flag is
+ *   currently disabled. INTERNET_FLAG_RELOAD Not supported. Data is always from the wire and caching
+ *   is not supported. INTERNET_FLAG_RESYNCHRONIZE Reloads HTTP resources if the resource has been
+ *   modified since the last time it was downloaded. INTERNET_FLAG_SECURE Uses SSL/PCT transaction
+ *   semantics.
+ * @param dwContext [in] Specifies the application-defined value that associates this operation with
+ *   any application data.
+ *
+ * @return A valid, non-NULL HTTP request handle indicates success. NULL indicates failure. To get
+ *   extended error information, call GetLastError.
+ *
+ * HttpOpenRequest creates a new HTTP request handle and stores the specified parameters in that
+ * handle. An HTTP request handle holds a request to be sent to an HTTP server and contains all
+ * RFC822/MIME/HTTP headers to be sent as part of the request.
+ *
+ * Use the InternetCloseHandle function to close the handle returned by HttpOpenRequest.
+ * InternetCloseHandle cancels all outstanding I/O on the handle.
+ *
+ * The lpszReferer parameter to InternetOpen is used as the referrer for the HTTP request.
+ *
+ * The dwContext parameter allows for progress status callbacks to the application, but all requests
+ * will be handled synchronously.
+ *
+ * When establishing a Secure Sockets Layer (SSL) or Private Communications Technology,
+ * HttpOpenRequest uses the INTERNET_FLAG_SECURE option in addition to all other options.
+ *
+ * The following dwFlags values can be used in HttpOpenRequest to ignore invalid certificate errors:
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_CN_INVALID: Ignores errors caused when the certificate host name of
+ * the server does not match the host name in the request.
+ *
+ * - INTERNET_FLAG_IGNORE_CERT_DATE_INVALID: Ignores errors caused by an expired server certificate.
+ */
 #define HttpOpenRequest  HttpOpenRequestA
 #endif // !UNICODE
 
+/**
+ * This function adds one or more Hypertext Transfer Protocol (HTTP) request headers to the HTTP
+ * request handle.
+ *
+ * @param hHttpRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to the null-terminated strings that contains headers to
+ *   append to the request. Each header must be terminated by a CR/LF (carriage return/line feed)
+ *   pair.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of lpszHeaders. If this
+ *   parameter is -1L, the function assumes that lpszHeaders is zero-terminated (ASCIIZ), and the
+ *   length is computed.
+ * @param dwModifiers [in] Specifies the values used to modify the semantics of this function. Can
+ *   be a combination of the following values: Value Description HTTP_ADDREQ_FLAG_ADD Adds the header
+ *   if it does not exist. Used with HTTP_ADDREQ_FLAG_REPLACE. HTTP_ADDREQ_FLAG_ADD_IF_NEW Adds the
+ *   header only if it does not already exist; otherwise, an error is returned.
+ *   HTTP_ADDREQ_FLAG_COALESCE Coalesces headers of the same name.
+ *   HTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA Coalesces headers of the same name. For example, adding
+ *   "Accept: text/ *" followed by "Accept: audio/ *" with this flag results in the formation of the
+ *   single header "Accept: text/ *, audio/ *". This causes the first header found to be coalesced. It
+ *   is up to the calling application to ensure a cohesive scheme with respect to coalesced/separate
+ *   headers. HTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON Coalesces headers of the same name using a
+ *   semicolon. HTTP_ADDREQ_FLAG_REPLACE Replaces or removes a header. If the header value is empty
+ *   and the header is found, it is removed. If not empty, the header value is replaced.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpAddRequestHeaders appends additional, free-format headers to the HTTP request handle and is
+ * intended for use by sophisticated clients that need detailed control over the exact request sent
+ * to the HTTP server.
+ *
+ * Note that for basic HttpAddRequestHeaders, the application can pass in multiple headers in a
+ * single buffer. If the application is trying to remove or replace a header, only one header can be
+ * supplied in lpszHeaders.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1628,6 +5293,41 @@ HttpAddRequestHeadersA(
     IN DWORD dwHeadersLength,
     IN DWORD dwModifiers
     );
+/**
+ * This function adds one or more Hypertext Transfer Protocol (HTTP) request headers to the HTTP
+ * request handle.
+ *
+ * @param hHttpRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to the null-terminated strings that contains headers to
+ *   append to the request. Each header must be terminated by a CR/LF (carriage return/line feed)
+ *   pair.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of lpszHeaders. If this
+ *   parameter is -1L, the function assumes that lpszHeaders is zero-terminated (ASCIIZ), and the
+ *   length is computed.
+ * @param dwModifiers [in] Specifies the values used to modify the semantics of this function. Can
+ *   be a combination of the following values: Value Description HTTP_ADDREQ_FLAG_ADD Adds the header
+ *   if it does not exist. Used with HTTP_ADDREQ_FLAG_REPLACE. HTTP_ADDREQ_FLAG_ADD_IF_NEW Adds the
+ *   header only if it does not already exist; otherwise, an error is returned.
+ *   HTTP_ADDREQ_FLAG_COALESCE Coalesces headers of the same name.
+ *   HTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA Coalesces headers of the same name. For example, adding
+ *   "Accept: text/ *" followed by "Accept: audio/ *" with this flag results in the formation of the
+ *   single header "Accept: text/ *, audio/ *". This causes the first header found to be coalesced. It
+ *   is up to the calling application to ensure a cohesive scheme with respect to coalesced/separate
+ *   headers. HTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON Coalesces headers of the same name using a
+ *   semicolon. HTTP_ADDREQ_FLAG_REPLACE Replaces or removes a header. If the header value is empty
+ *   and the header is found, it is removed. If not empty, the header value is replaced.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpAddRequestHeaders appends additional, free-format headers to the HTTP request handle and is
+ * intended for use by sophisticated clients that need detailed control over the exact request sent
+ * to the HTTP server.
+ *
+ * Note that for basic HttpAddRequestHeaders, the application can pass in multiple headers in a
+ * single buffer. If the application is trying to remove or replace a header, only one header can be
+ * supplied in lpszHeaders.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1638,8 +5338,78 @@ HttpAddRequestHeadersW(
     IN DWORD dwModifiers
     );
 #ifdef UNICODE
+/**
+ * This function adds one or more Hypertext Transfer Protocol (HTTP) request headers to the HTTP
+ * request handle.
+ *
+ * @param hHttpRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to the null-terminated strings that contains headers to
+ *   append to the request. Each header must be terminated by a CR/LF (carriage return/line feed)
+ *   pair.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of lpszHeaders. If this
+ *   parameter is -1L, the function assumes that lpszHeaders is zero-terminated (ASCIIZ), and the
+ *   length is computed.
+ * @param dwModifiers [in] Specifies the values used to modify the semantics of this function. Can
+ *   be a combination of the following values: Value Description HTTP_ADDREQ_FLAG_ADD Adds the header
+ *   if it does not exist. Used with HTTP_ADDREQ_FLAG_REPLACE. HTTP_ADDREQ_FLAG_ADD_IF_NEW Adds the
+ *   header only if it does not already exist; otherwise, an error is returned.
+ *   HTTP_ADDREQ_FLAG_COALESCE Coalesces headers of the same name.
+ *   HTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA Coalesces headers of the same name. For example, adding
+ *   "Accept: text/ *" followed by "Accept: audio/ *" with this flag results in the formation of the
+ *   single header "Accept: text/ *, audio/ *". This causes the first header found to be coalesced. It
+ *   is up to the calling application to ensure a cohesive scheme with respect to coalesced/separate
+ *   headers. HTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON Coalesces headers of the same name using a
+ *   semicolon. HTTP_ADDREQ_FLAG_REPLACE Replaces or removes a header. If the header value is empty
+ *   and the header is found, it is removed. If not empty, the header value is replaced.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpAddRequestHeaders appends additional, free-format headers to the HTTP request handle and is
+ * intended for use by sophisticated clients that need detailed control over the exact request sent
+ * to the HTTP server.
+ *
+ * Note that for basic HttpAddRequestHeaders, the application can pass in multiple headers in a
+ * single buffer. If the application is trying to remove or replace a header, only one header can be
+ * supplied in lpszHeaders.
+ */
 #define HttpAddRequestHeaders  HttpAddRequestHeadersW
 #else
+/**
+ * This function adds one or more Hypertext Transfer Protocol (HTTP) request headers to the HTTP
+ * request handle.
+ *
+ * @param hHttpRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to the null-terminated strings that contains headers to
+ *   append to the request. Each header must be terminated by a CR/LF (carriage return/line feed)
+ *   pair.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of lpszHeaders. If this
+ *   parameter is -1L, the function assumes that lpszHeaders is zero-terminated (ASCIIZ), and the
+ *   length is computed.
+ * @param dwModifiers [in] Specifies the values used to modify the semantics of this function. Can
+ *   be a combination of the following values: Value Description HTTP_ADDREQ_FLAG_ADD Adds the header
+ *   if it does not exist. Used with HTTP_ADDREQ_FLAG_REPLACE. HTTP_ADDREQ_FLAG_ADD_IF_NEW Adds the
+ *   header only if it does not already exist; otherwise, an error is returned.
+ *   HTTP_ADDREQ_FLAG_COALESCE Coalesces headers of the same name.
+ *   HTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA Coalesces headers of the same name. For example, adding
+ *   "Accept: text/ *" followed by "Accept: audio/ *" with this flag results in the formation of the
+ *   single header "Accept: text/ *, audio/ *". This causes the first header found to be coalesced. It
+ *   is up to the calling application to ensure a cohesive scheme with respect to coalesced/separate
+ *   headers. HTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON Coalesces headers of the same name using a
+ *   semicolon. HTTP_ADDREQ_FLAG_REPLACE Replaces or removes a header. If the header value is empty
+ *   and the header is found, it is removed. If not empty, the header value is replaced.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpAddRequestHeaders appends additional, free-format headers to the HTTP request handle and is
+ * intended for use by sophisticated clients that need detailed control over the exact request sent
+ * to the HTTP server.
+ *
+ * Note that for basic HttpAddRequestHeaders, the application can pass in multiple headers in a
+ * single buffer. If the application is trying to remove or replace a header, only one header can be
+ * supplied in lpszHeaders.
+ */
 #define HttpAddRequestHeaders  HttpAddRequestHeadersA
 #endif // !UNICODE
 
@@ -1693,6 +5463,45 @@ HttpAddRequestHeadersW(
 
 #define HTTP_ADDREQ_FLAG_REPLACE    0x80000000
 
+/**
+ * This function sends the specified request to the HTTP server.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to null-terminated strings that contain additional headers
+ *   to be appended to the request. This parameter can be NULL if there are no additional headers to
+ *   append.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of the additional headers. If
+ *   this parameter is -1L and lpszHeaders is not NULL, the function assumes that lpszHeaders is
+ *   zero-terminated (ASCIIZ), and the length is calculated.
+ * @param lpOptional [in] Long pointer to any optional data to send immediately after the request
+ *   headers. This parameter is generally used for POST and PUT operations. The optional data can be
+ *   the resource or information being posted to the server. This parameter can be NULL if there is no
+ *   optional data to send.
+ * @param dwOptionalLength [in] Specifies the length, in bytes, of the optional data. This parameter
+ *   can be zero if there is no optional data to send.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpSendRequest sends the specified request to the HTTP server and allows the client to specify
+ * additional headers to send along with the request.
+ *
+ * The function also lets the client specify optional data to send to the HTTP server immediately
+ * following the request headers. This feature is generally used for "write" operations such as PUT
+ * and POST. When using optional data, be aware of the following caveat: the size of the optional
+ * data buffer, specified with the dwOptionalLength parameter, must be either less than 32 bytes or
+ * greater than approximately 150 bytes. Otherwise, the HttpSendRequest function fails.
+ *
+ * Another caveat requires that the optional data buffer begin with '/r/n'. This ensures that header
+ * and buffer is separated by '/r/n/r/n' as required by RFC 2068.
+ *
+ * After the request is sent, the status code and response headers from the HTTP server are read.
+ * These headers are maintained internally and are available to client applications through the
+ * HttpQueryInfo function.
+ *
+ * An application can use the same HTTP request handle in multiple calls to HttpSendRequest, but the
+ * application must read all data returned from the previous call before calling the function again.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1703,6 +5512,45 @@ HttpSendRequestA(
     IN LPVOID lpOptional OPTIONAL,
     IN DWORD dwOptionalLength
     );
+/**
+ * This function sends the specified request to the HTTP server.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to null-terminated strings that contain additional headers
+ *   to be appended to the request. This parameter can be NULL if there are no additional headers to
+ *   append.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of the additional headers. If
+ *   this parameter is -1L and lpszHeaders is not NULL, the function assumes that lpszHeaders is
+ *   zero-terminated (ASCIIZ), and the length is calculated.
+ * @param lpOptional [in] Long pointer to any optional data to send immediately after the request
+ *   headers. This parameter is generally used for POST and PUT operations. The optional data can be
+ *   the resource or information being posted to the server. This parameter can be NULL if there is no
+ *   optional data to send.
+ * @param dwOptionalLength [in] Specifies the length, in bytes, of the optional data. This parameter
+ *   can be zero if there is no optional data to send.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpSendRequest sends the specified request to the HTTP server and allows the client to specify
+ * additional headers to send along with the request.
+ *
+ * The function also lets the client specify optional data to send to the HTTP server immediately
+ * following the request headers. This feature is generally used for "write" operations such as PUT
+ * and POST. When using optional data, be aware of the following caveat: the size of the optional
+ * data buffer, specified with the dwOptionalLength parameter, must be either less than 32 bytes or
+ * greater than approximately 150 bytes. Otherwise, the HttpSendRequest function fails.
+ *
+ * Another caveat requires that the optional data buffer begin with '/r/n'. This ensures that header
+ * and buffer is separated by '/r/n/r/n' as required by RFC 2068.
+ *
+ * After the request is sent, the status code and response headers from the HTTP server are read.
+ * These headers are maintained internally and are available to client applications through the
+ * HttpQueryInfo function.
+ *
+ * An application can use the same HTTP request handle in multiple calls to HttpSendRequest, but the
+ * application must read all data returned from the previous call before calling the function again.
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1714,11 +5562,207 @@ HttpSendRequestW(
     IN DWORD dwOptionalLength
     );
 #ifdef UNICODE
+/**
+ * This function sends the specified request to the HTTP server.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to null-terminated strings that contain additional headers
+ *   to be appended to the request. This parameter can be NULL if there are no additional headers to
+ *   append.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of the additional headers. If
+ *   this parameter is -1L and lpszHeaders is not NULL, the function assumes that lpszHeaders is
+ *   zero-terminated (ASCIIZ), and the length is calculated.
+ * @param lpOptional [in] Long pointer to any optional data to send immediately after the request
+ *   headers. This parameter is generally used for POST and PUT operations. The optional data can be
+ *   the resource or information being posted to the server. This parameter can be NULL if there is no
+ *   optional data to send.
+ * @param dwOptionalLength [in] Specifies the length, in bytes, of the optional data. This parameter
+ *   can be zero if there is no optional data to send.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpSendRequest sends the specified request to the HTTP server and allows the client to specify
+ * additional headers to send along with the request.
+ *
+ * The function also lets the client specify optional data to send to the HTTP server immediately
+ * following the request headers. This feature is generally used for "write" operations such as PUT
+ * and POST. When using optional data, be aware of the following caveat: the size of the optional
+ * data buffer, specified with the dwOptionalLength parameter, must be either less than 32 bytes or
+ * greater than approximately 150 bytes. Otherwise, the HttpSendRequest function fails.
+ *
+ * Another caveat requires that the optional data buffer begin with '/r/n'. This ensures that header
+ * and buffer is separated by '/r/n/r/n' as required by RFC 2068.
+ *
+ * After the request is sent, the status code and response headers from the HTTP server are read.
+ * These headers are maintained internally and are available to client applications through the
+ * HttpQueryInfo function.
+ *
+ * An application can use the same HTTP request handle in multiple calls to HttpSendRequest, but the
+ * application must read all data returned from the previous call before calling the function again.
+ */
 #define HttpSendRequest  HttpSendRequestW
 #else
+/**
+ * This function sends the specified request to the HTTP server.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest.
+ * @param lpszHeaders [in] Long pointer to null-terminated strings that contain additional headers
+ *   to be appended to the request. This parameter can be NULL if there are no additional headers to
+ *   append.
+ * @param dwHeadersLength [in] Specifies the length, in characters, of the additional headers. If
+ *   this parameter is -1L and lpszHeaders is not NULL, the function assumes that lpszHeaders is
+ *   zero-terminated (ASCIIZ), and the length is calculated.
+ * @param lpOptional [in] Long pointer to any optional data to send immediately after the request
+ *   headers. This parameter is generally used for POST and PUT operations. The optional data can be
+ *   the resource or information being posted to the server. This parameter can be NULL if there is no
+ *   optional data to send.
+ * @param dwOptionalLength [in] Specifies the length, in bytes, of the optional data. This parameter
+ *   can be zero if there is no optional data to send.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpSendRequest sends the specified request to the HTTP server and allows the client to specify
+ * additional headers to send along with the request.
+ *
+ * The function also lets the client specify optional data to send to the HTTP server immediately
+ * following the request headers. This feature is generally used for "write" operations such as PUT
+ * and POST. When using optional data, be aware of the following caveat: the size of the optional
+ * data buffer, specified with the dwOptionalLength parameter, must be either less than 32 bytes or
+ * greater than approximately 150 bytes. Otherwise, the HttpSendRequest function fails.
+ *
+ * Another caveat requires that the optional data buffer begin with '/r/n'. This ensures that header
+ * and buffer is separated by '/r/n/r/n' as required by RFC 2068.
+ *
+ * After the request is sent, the status code and response headers from the HTTP server are read.
+ * These headers are maintained internally and are available to client applications through the
+ * HttpQueryInfo function.
+ *
+ * An application can use the same HTTP request handle in multiple calls to HttpSendRequest, but the
+ * application must read all data returned from the previous call before calling the function again.
+ */
 #define HttpSendRequest  HttpSendRequestA
 #endif // !UNICODE
 
+/**
+ * This function queries for information about an HTTP request.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest or InternetOpenUrl.
+ * @param dwInfoLevel [in] Specifies a combination of the attribute to query and the flags that
+ *   modify the request. The attributes can be any of the following values: Value Description
+ *   HTTP_QUERY_ACCEPT Retrieves the acceptable media types for the response.
+ *   HTTP_QUERY_ACCEPT_CHARSET Retrieves the acceptable character sets for the response.
+ *   HTTP_QUERY_ACCEPT_ENCODING Retrieves the acceptable content-coding values for the response.
+ *   HTTP_QUERY_ACCEPT_LANGUAGE Retrieves the acceptable natural languages for the response.
+ *   HTTP_QUERY_ACCEPT_RANGES Retrieves the types of range requests that are accepted for a resource.
+ *   HTTP_QUERY_AGE Retrieves the Age response-header field, which contains the sender's estimate of
+ *   the amount of time since the response was generated at the origin server. HTTP_QUERY_ALLOW
+ *   Receives the methods supported by the server. HTTP_QUERY_AUTHORIZATION Retrieves the
+ *   authorization credentials used for a request. HTTP_QUERY_CACHE_CONTROL Retrieves the cache
+ *   control directives. HTTP_QUERY_CONNECTION Retrieves any options that are specified for a
+ *   particular connection and must not be communicated by proxies over further connections.
+ *   HTTP_QUERY_COOKIE Retrieves any cookies associated with the request. HTTP_QUERY_CONTENT_BASE
+ *   Retrieves the base URI for resolving relative URLs within the entity.
+ *   HTTP_QUERY_CONTENT_DESCRIPTION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_DISPOSITION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_ENCODING Receives any additional content codings that have been applied to the
+ *   entire resource. HTTP_QUERY_CONTENT_ID Receives the content identification.
+ *   HTTP_QUERY_CONTENT_LANGUAGE Receives the language that the content is in.
+ *   HTTP_QUERY_CONTENT_LENGTH Receives the size of the resource, in bytes.
+ *   HTTP_QUERY_CONTENT_LOCATION Retrieves the resource location for the entity enclosed in the
+ *   message. HTTP_QUERY_CONTENT_MD5 Retrieves a MD5 digest of the entity-body for the purpose of
+ *   providing an end-to-end message integrity check (MIC) for the entity-body.
+ *   HTTP_QUERY_CONTENT_RANGE Retrieves the location in the full entity-body where the partial
+ *   entity-body should be inserted and the total size of the full entity-body.
+ *   HTTP_QUERY_CONTENT_TRANSFER_ENCODING Receives the additional content coding that has been applied
+ *   to the resource. HTTP_QUERY_CONTENT_TYPE Receives the content type of the resource (such as
+ *   text/html). HTTP_QUERY_COST No longer implemented. HTTP_QUERY_DATE Receives the date and time at
+ *   which the message was originated. HTTP_QUERY_DERIVED_FROM No longer supported. HTTP_QUERY_ETAG
+ *   Retrieves the entity tag for the associated entity. HTTP_QUERY_EXPIRES Receives the date and time
+ *   after which the resource should be considered outdated. HTTP_QUERY_FORWARDED Obsolete. Maintained
+ *   for legacy application compatibility only. HTTP_QUERY_FROM Retrieves the e-mail address for the
+ *   human user who controls the requesting user agent if the From header is given. HTTP_QUERY_HOST
+ *   Retrieves the Internet host and port number of the resource being requested. HTTP_QUERY_IF_MATCH
+ *   Retrieves the contents of the If-Match request-header field. HTTP_QUERY_IF_MODIFIED_SINCE
+ *   Retrieves the contents of the If-Modified-Since header. HTTP_QUERY_IF_NONE_MATCH Retrieves the
+ *   contents of the If-None-Match request-header field. HTTP_QUERY_IF_RANGE Retrieves the contents of
+ *   the If-Range request-header field. This header allows the client application to check if the
+ *   entity related to a partial copy of the entity in the client application's cache has not been
+ *   updated. If the entity has not been updated, send the parts that the client application is
+ *   missing. If the entity has been updated, send the entire updated entity.
+ *   HTTP_QUERY_IF_UNMODIFIED_SINCE Retrieves the contents of the If-Unmodified-Since request-header
+ *   field. HTTP_QUERY_LINK Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_LAST_MODIFIED Receives the date and time at which the server believes the resource was
+ *   last modified. HTTP_QUERY_LOCATION Retrieves the absolute URI used in a Location response-header.
+ *   HTTP_QUERY_MAX Retrieves the maximum value of an HTTP_QUERY_* value. HTTP_QUERY_MAX_FORWARDS
+ *   Retrieves the number of proxies or gateways that can forward the request to the next inbound
+ *   server. HTTP_QUERY_MESSAGE_ID No longer implemented. HTTP_QUERY_MIME_VERSION Receives the version
+ *   of the MIME protocol that was used to construct the message. HTTP_QUERY_ORIG_URI Obsolete.
+ *   Maintained for legacy application compatibility only. HTTP_QUERY_PRAGMA Receives the
+ *   implementation-specific directives that may apply to any recipient along the request/response
+ *   chain. HTTP_QUERY_PROXY_AUTHENTICATE Retrieves the authentication scheme and realm returned by
+ *   the proxy. HTTP_QUERY_PROXY_AUTHORIZATION Retrieves the header that is used to identify the user
+ *   to a proxy that requires authentication. HTTP_QUERY_PUBLIC Receives methods available at this
+ *   server. HTTP_QUERY_RANGE Retrieves the byte range of an entity. HTTP_QUERY_RAW_HEADERS Receives
+ *   all the headers returned by the server. Each header is terminated by "\0". An additional "\0"
+ *   terminates the list of headers. HTTP_QUERY_RAW_HEADERS_CRLF Receives all the headers returned by
+ *   the server. Each header is separated by a carriage return/line feed (CR/LF) sequence.
+ *   HTTP_QUERY_REFERER Receives the URI of the resource where the requested URI was obtained.
+ *   HTTP_QUERY_REFRESH Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_REQUEST_METHOD Receives the verb that is being used in the request, typically GET or
+ *   POST. HTTP_QUERY_RETRY_AFTER Retrieves the amount of time the service is expected to be
+ *   unavailable. HTTP_QUERY_SERVER Retrieves information about the software used by the origin server
+ *   to handle the request. HTTP_QUERY_SET_COOKIE Receives the value of the cookie set for the
+ *   request. HTTP_QUERY_STATUS_CODE Receives the status code returned by the server.
+ *   HTTP_QUERY_STATUS_TEXT Receives any additional text returned by the server on the response line.
+ *   HTTP_QUERY_TITLE Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_TRANSFER_ENCODING Retrieves the type of transformation that has been applied to the
+ *   message body so it can be safely transferred between the sender and recipient. HTTP_QUERY_UPGRADE
+ *   Retrieves the additional communication protocols that are supported by the server. HTTP_QUERY_URI
+ *   Receives some or all of the Uniform Resource Identifiers (URIs) by which the Request-URI resource
+ *   can be identified. HTTP_QUERY_USER_AGENT Retrieves information about the user agent that made the
+ *   request. HTTP_QUERY_VARY Retrieves the header that indicates that the entity was selected from a
+ *   number of available representations of the response using server-driven negotiation.
+ *   HTTP_QUERY_VERSION Receives the last response code returned by the server. HTTP_QUERY_VIA
+ *   Retrieves the intermediate protocols and recipients between the user agent and the server on
+ *   requests, and between the origin server and the client on responses. HTTP_QUERY_WARNING Retrieves
+ *   additional information about the status of a response that may not be reflected by the response
+ *   status code. HTTP_QUERY_WWW_AUTHENTICATE Retrieves the authentication scheme and realm returned
+ *   by the server. The following modifiers can be used with the information values: Value Description
+ *   HTTP_QUERY_CUSTOM Causes HttpQueryInfo to search for the header name specified in lpvBuffer and
+ *   store the header information in lpvBuffer. HTTP_QUERY_FLAG_COALESCE Not supported.
+ *   HTTP_QUERY_FLAG_NUMBER Returns the data as a 32-bit number for headers whose value is a number,
+ *   such as the status code. HTTP_QUERY_FLAG_REQUEST_HEADERS Queries request headers only.
+ *   HTTP_QUERY_FLAG_SYSTEMTIME Returns the header value as a standard Win32 SYSTEMTIME structure,
+ *   which does not require the application to parse the data. Use for headers whose value is a
+ *   date/time string, such as "Last-Modified-Time".
+ * @param lpBuffer [in\out] Long void pointer to the buffer that receives the information.
+ * @param lpdwBufferLength [in\out] Long pointer to a value that contains the length of the data
+ *   buffer. When the function returns, this parameter contains the address of a value specifying the
+ *   length of the information written to the buffer. When the function returns strings, the following
+ *   rules apply: If the function succeeds, lpdwBufferLength specifies the length of the string, in
+ *   characters, minus 1 for the terminating null. If the function fails and ERROR_INSUFFICIENT_BUFFER
+ *   is returned, lpdwBufferLength specifies the number of bytes that the application must allocate to
+ *   receive the string.
+ * @param lpdwIndex [in\out] Long pointer to a zero-based header index used to enumerate multiple
+ *   headers with the same name. When calling the function, this parameter is the index of the
+ *   specified header to return. When the function returns, this parameter is the index of the next
+ *   header. If the next index cannot be found, ERROR_HTTP_HEADER_NOT_FOUND is returned.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpQueryInfo is used to return response or request headers from an HTTP request.
+ *
+ * You can retrieve different types of data from HttpQueryInfo:
+ *
+ * strings (default)
+ *
+ * SYSTEMTIME (for Data: Expires:, headers)
+ *
+ * DWORD (for STATUS_CODE, CONTENT_LENGTH, and so on if HTTP_QUERY_INFO_NUMBER has been used)
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1729,6 +5773,124 @@ HttpQueryInfoA(
     IN OUT LPDWORD lpdwBufferLength,
     IN OUT LPDWORD lpdwIndex OPTIONAL
     );
+/**
+ * This function queries for information about an HTTP request.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest or InternetOpenUrl.
+ * @param dwInfoLevel [in] Specifies a combination of the attribute to query and the flags that
+ *   modify the request. The attributes can be any of the following values: Value Description
+ *   HTTP_QUERY_ACCEPT Retrieves the acceptable media types for the response.
+ *   HTTP_QUERY_ACCEPT_CHARSET Retrieves the acceptable character sets for the response.
+ *   HTTP_QUERY_ACCEPT_ENCODING Retrieves the acceptable content-coding values for the response.
+ *   HTTP_QUERY_ACCEPT_LANGUAGE Retrieves the acceptable natural languages for the response.
+ *   HTTP_QUERY_ACCEPT_RANGES Retrieves the types of range requests that are accepted for a resource.
+ *   HTTP_QUERY_AGE Retrieves the Age response-header field, which contains the sender's estimate of
+ *   the amount of time since the response was generated at the origin server. HTTP_QUERY_ALLOW
+ *   Receives the methods supported by the server. HTTP_QUERY_AUTHORIZATION Retrieves the
+ *   authorization credentials used for a request. HTTP_QUERY_CACHE_CONTROL Retrieves the cache
+ *   control directives. HTTP_QUERY_CONNECTION Retrieves any options that are specified for a
+ *   particular connection and must not be communicated by proxies over further connections.
+ *   HTTP_QUERY_COOKIE Retrieves any cookies associated with the request. HTTP_QUERY_CONTENT_BASE
+ *   Retrieves the base URI for resolving relative URLs within the entity.
+ *   HTTP_QUERY_CONTENT_DESCRIPTION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_DISPOSITION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_ENCODING Receives any additional content codings that have been applied to the
+ *   entire resource. HTTP_QUERY_CONTENT_ID Receives the content identification.
+ *   HTTP_QUERY_CONTENT_LANGUAGE Receives the language that the content is in.
+ *   HTTP_QUERY_CONTENT_LENGTH Receives the size of the resource, in bytes.
+ *   HTTP_QUERY_CONTENT_LOCATION Retrieves the resource location for the entity enclosed in the
+ *   message. HTTP_QUERY_CONTENT_MD5 Retrieves a MD5 digest of the entity-body for the purpose of
+ *   providing an end-to-end message integrity check (MIC) for the entity-body.
+ *   HTTP_QUERY_CONTENT_RANGE Retrieves the location in the full entity-body where the partial
+ *   entity-body should be inserted and the total size of the full entity-body.
+ *   HTTP_QUERY_CONTENT_TRANSFER_ENCODING Receives the additional content coding that has been applied
+ *   to the resource. HTTP_QUERY_CONTENT_TYPE Receives the content type of the resource (such as
+ *   text/html). HTTP_QUERY_COST No longer implemented. HTTP_QUERY_DATE Receives the date and time at
+ *   which the message was originated. HTTP_QUERY_DERIVED_FROM No longer supported. HTTP_QUERY_ETAG
+ *   Retrieves the entity tag for the associated entity. HTTP_QUERY_EXPIRES Receives the date and time
+ *   after which the resource should be considered outdated. HTTP_QUERY_FORWARDED Obsolete. Maintained
+ *   for legacy application compatibility only. HTTP_QUERY_FROM Retrieves the e-mail address for the
+ *   human user who controls the requesting user agent if the From header is given. HTTP_QUERY_HOST
+ *   Retrieves the Internet host and port number of the resource being requested. HTTP_QUERY_IF_MATCH
+ *   Retrieves the contents of the If-Match request-header field. HTTP_QUERY_IF_MODIFIED_SINCE
+ *   Retrieves the contents of the If-Modified-Since header. HTTP_QUERY_IF_NONE_MATCH Retrieves the
+ *   contents of the If-None-Match request-header field. HTTP_QUERY_IF_RANGE Retrieves the contents of
+ *   the If-Range request-header field. This header allows the client application to check if the
+ *   entity related to a partial copy of the entity in the client application's cache has not been
+ *   updated. If the entity has not been updated, send the parts that the client application is
+ *   missing. If the entity has been updated, send the entire updated entity.
+ *   HTTP_QUERY_IF_UNMODIFIED_SINCE Retrieves the contents of the If-Unmodified-Since request-header
+ *   field. HTTP_QUERY_LINK Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_LAST_MODIFIED Receives the date and time at which the server believes the resource was
+ *   last modified. HTTP_QUERY_LOCATION Retrieves the absolute URI used in a Location response-header.
+ *   HTTP_QUERY_MAX Retrieves the maximum value of an HTTP_QUERY_* value. HTTP_QUERY_MAX_FORWARDS
+ *   Retrieves the number of proxies or gateways that can forward the request to the next inbound
+ *   server. HTTP_QUERY_MESSAGE_ID No longer implemented. HTTP_QUERY_MIME_VERSION Receives the version
+ *   of the MIME protocol that was used to construct the message. HTTP_QUERY_ORIG_URI Obsolete.
+ *   Maintained for legacy application compatibility only. HTTP_QUERY_PRAGMA Receives the
+ *   implementation-specific directives that may apply to any recipient along the request/response
+ *   chain. HTTP_QUERY_PROXY_AUTHENTICATE Retrieves the authentication scheme and realm returned by
+ *   the proxy. HTTP_QUERY_PROXY_AUTHORIZATION Retrieves the header that is used to identify the user
+ *   to a proxy that requires authentication. HTTP_QUERY_PUBLIC Receives methods available at this
+ *   server. HTTP_QUERY_RANGE Retrieves the byte range of an entity. HTTP_QUERY_RAW_HEADERS Receives
+ *   all the headers returned by the server. Each header is terminated by "\0". An additional "\0"
+ *   terminates the list of headers. HTTP_QUERY_RAW_HEADERS_CRLF Receives all the headers returned by
+ *   the server. Each header is separated by a carriage return/line feed (CR/LF) sequence.
+ *   HTTP_QUERY_REFERER Receives the URI of the resource where the requested URI was obtained.
+ *   HTTP_QUERY_REFRESH Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_REQUEST_METHOD Receives the verb that is being used in the request, typically GET or
+ *   POST. HTTP_QUERY_RETRY_AFTER Retrieves the amount of time the service is expected to be
+ *   unavailable. HTTP_QUERY_SERVER Retrieves information about the software used by the origin server
+ *   to handle the request. HTTP_QUERY_SET_COOKIE Receives the value of the cookie set for the
+ *   request. HTTP_QUERY_STATUS_CODE Receives the status code returned by the server.
+ *   HTTP_QUERY_STATUS_TEXT Receives any additional text returned by the server on the response line.
+ *   HTTP_QUERY_TITLE Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_TRANSFER_ENCODING Retrieves the type of transformation that has been applied to the
+ *   message body so it can be safely transferred between the sender and recipient. HTTP_QUERY_UPGRADE
+ *   Retrieves the additional communication protocols that are supported by the server. HTTP_QUERY_URI
+ *   Receives some or all of the Uniform Resource Identifiers (URIs) by which the Request-URI resource
+ *   can be identified. HTTP_QUERY_USER_AGENT Retrieves information about the user agent that made the
+ *   request. HTTP_QUERY_VARY Retrieves the header that indicates that the entity was selected from a
+ *   number of available representations of the response using server-driven negotiation.
+ *   HTTP_QUERY_VERSION Receives the last response code returned by the server. HTTP_QUERY_VIA
+ *   Retrieves the intermediate protocols and recipients between the user agent and the server on
+ *   requests, and between the origin server and the client on responses. HTTP_QUERY_WARNING Retrieves
+ *   additional information about the status of a response that may not be reflected by the response
+ *   status code. HTTP_QUERY_WWW_AUTHENTICATE Retrieves the authentication scheme and realm returned
+ *   by the server. The following modifiers can be used with the information values: Value Description
+ *   HTTP_QUERY_CUSTOM Causes HttpQueryInfo to search for the header name specified in lpvBuffer and
+ *   store the header information in lpvBuffer. HTTP_QUERY_FLAG_COALESCE Not supported.
+ *   HTTP_QUERY_FLAG_NUMBER Returns the data as a 32-bit number for headers whose value is a number,
+ *   such as the status code. HTTP_QUERY_FLAG_REQUEST_HEADERS Queries request headers only.
+ *   HTTP_QUERY_FLAG_SYSTEMTIME Returns the header value as a standard Win32 SYSTEMTIME structure,
+ *   which does not require the application to parse the data. Use for headers whose value is a
+ *   date/time string, such as "Last-Modified-Time".
+ * @param lpBuffer [in\out] Long void pointer to the buffer that receives the information.
+ * @param lpdwBufferLength [in\out] Long pointer to a value that contains the length of the data
+ *   buffer. When the function returns, this parameter contains the address of a value specifying the
+ *   length of the information written to the buffer. When the function returns strings, the following
+ *   rules apply: If the function succeeds, lpdwBufferLength specifies the length of the string, in
+ *   characters, minus 1 for the terminating null. If the function fails and ERROR_INSUFFICIENT_BUFFER
+ *   is returned, lpdwBufferLength specifies the number of bytes that the application must allocate to
+ *   receive the string.
+ * @param lpdwIndex [in\out] Long pointer to a zero-based header index used to enumerate multiple
+ *   headers with the same name. When calling the function, this parameter is the index of the
+ *   specified header to return. When the function returns, this parameter is the index of the next
+ *   header. If the next index cannot be found, ERROR_HTTP_HEADER_NOT_FOUND is returned.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpQueryInfo is used to return response or request headers from an HTTP request.
+ *
+ * You can retrieve different types of data from HttpQueryInfo:
+ *
+ * strings (default)
+ *
+ * SYSTEMTIME (for Data: Expires:, headers)
+ *
+ * DWORD (for STATUS_CODE, CONTENT_LENGTH, and so on if HTTP_QUERY_INFO_NUMBER has been used)
+ */
 INTERNETAPI
 BOOL
 WINAPI
@@ -1740,8 +5902,244 @@ HttpQueryInfoW(
     IN OUT LPDWORD lpdwIndex OPTIONAL
     );
 #ifdef UNICODE
+/**
+ * This function queries for information about an HTTP request.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest or InternetOpenUrl.
+ * @param dwInfoLevel [in] Specifies a combination of the attribute to query and the flags that
+ *   modify the request. The attributes can be any of the following values: Value Description
+ *   HTTP_QUERY_ACCEPT Retrieves the acceptable media types for the response.
+ *   HTTP_QUERY_ACCEPT_CHARSET Retrieves the acceptable character sets for the response.
+ *   HTTP_QUERY_ACCEPT_ENCODING Retrieves the acceptable content-coding values for the response.
+ *   HTTP_QUERY_ACCEPT_LANGUAGE Retrieves the acceptable natural languages for the response.
+ *   HTTP_QUERY_ACCEPT_RANGES Retrieves the types of range requests that are accepted for a resource.
+ *   HTTP_QUERY_AGE Retrieves the Age response-header field, which contains the sender's estimate of
+ *   the amount of time since the response was generated at the origin server. HTTP_QUERY_ALLOW
+ *   Receives the methods supported by the server. HTTP_QUERY_AUTHORIZATION Retrieves the
+ *   authorization credentials used for a request. HTTP_QUERY_CACHE_CONTROL Retrieves the cache
+ *   control directives. HTTP_QUERY_CONNECTION Retrieves any options that are specified for a
+ *   particular connection and must not be communicated by proxies over further connections.
+ *   HTTP_QUERY_COOKIE Retrieves any cookies associated with the request. HTTP_QUERY_CONTENT_BASE
+ *   Retrieves the base URI for resolving relative URLs within the entity.
+ *   HTTP_QUERY_CONTENT_DESCRIPTION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_DISPOSITION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_ENCODING Receives any additional content codings that have been applied to the
+ *   entire resource. HTTP_QUERY_CONTENT_ID Receives the content identification.
+ *   HTTP_QUERY_CONTENT_LANGUAGE Receives the language that the content is in.
+ *   HTTP_QUERY_CONTENT_LENGTH Receives the size of the resource, in bytes.
+ *   HTTP_QUERY_CONTENT_LOCATION Retrieves the resource location for the entity enclosed in the
+ *   message. HTTP_QUERY_CONTENT_MD5 Retrieves a MD5 digest of the entity-body for the purpose of
+ *   providing an end-to-end message integrity check (MIC) for the entity-body.
+ *   HTTP_QUERY_CONTENT_RANGE Retrieves the location in the full entity-body where the partial
+ *   entity-body should be inserted and the total size of the full entity-body.
+ *   HTTP_QUERY_CONTENT_TRANSFER_ENCODING Receives the additional content coding that has been applied
+ *   to the resource. HTTP_QUERY_CONTENT_TYPE Receives the content type of the resource (such as
+ *   text/html). HTTP_QUERY_COST No longer implemented. HTTP_QUERY_DATE Receives the date and time at
+ *   which the message was originated. HTTP_QUERY_DERIVED_FROM No longer supported. HTTP_QUERY_ETAG
+ *   Retrieves the entity tag for the associated entity. HTTP_QUERY_EXPIRES Receives the date and time
+ *   after which the resource should be considered outdated. HTTP_QUERY_FORWARDED Obsolete. Maintained
+ *   for legacy application compatibility only. HTTP_QUERY_FROM Retrieves the e-mail address for the
+ *   human user who controls the requesting user agent if the From header is given. HTTP_QUERY_HOST
+ *   Retrieves the Internet host and port number of the resource being requested. HTTP_QUERY_IF_MATCH
+ *   Retrieves the contents of the If-Match request-header field. HTTP_QUERY_IF_MODIFIED_SINCE
+ *   Retrieves the contents of the If-Modified-Since header. HTTP_QUERY_IF_NONE_MATCH Retrieves the
+ *   contents of the If-None-Match request-header field. HTTP_QUERY_IF_RANGE Retrieves the contents of
+ *   the If-Range request-header field. This header allows the client application to check if the
+ *   entity related to a partial copy of the entity in the client application's cache has not been
+ *   updated. If the entity has not been updated, send the parts that the client application is
+ *   missing. If the entity has been updated, send the entire updated entity.
+ *   HTTP_QUERY_IF_UNMODIFIED_SINCE Retrieves the contents of the If-Unmodified-Since request-header
+ *   field. HTTP_QUERY_LINK Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_LAST_MODIFIED Receives the date and time at which the server believes the resource was
+ *   last modified. HTTP_QUERY_LOCATION Retrieves the absolute URI used in a Location response-header.
+ *   HTTP_QUERY_MAX Retrieves the maximum value of an HTTP_QUERY_* value. HTTP_QUERY_MAX_FORWARDS
+ *   Retrieves the number of proxies or gateways that can forward the request to the next inbound
+ *   server. HTTP_QUERY_MESSAGE_ID No longer implemented. HTTP_QUERY_MIME_VERSION Receives the version
+ *   of the MIME protocol that was used to construct the message. HTTP_QUERY_ORIG_URI Obsolete.
+ *   Maintained for legacy application compatibility only. HTTP_QUERY_PRAGMA Receives the
+ *   implementation-specific directives that may apply to any recipient along the request/response
+ *   chain. HTTP_QUERY_PROXY_AUTHENTICATE Retrieves the authentication scheme and realm returned by
+ *   the proxy. HTTP_QUERY_PROXY_AUTHORIZATION Retrieves the header that is used to identify the user
+ *   to a proxy that requires authentication. HTTP_QUERY_PUBLIC Receives methods available at this
+ *   server. HTTP_QUERY_RANGE Retrieves the byte range of an entity. HTTP_QUERY_RAW_HEADERS Receives
+ *   all the headers returned by the server. Each header is terminated by "\0". An additional "\0"
+ *   terminates the list of headers. HTTP_QUERY_RAW_HEADERS_CRLF Receives all the headers returned by
+ *   the server. Each header is separated by a carriage return/line feed (CR/LF) sequence.
+ *   HTTP_QUERY_REFERER Receives the URI of the resource where the requested URI was obtained.
+ *   HTTP_QUERY_REFRESH Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_REQUEST_METHOD Receives the verb that is being used in the request, typically GET or
+ *   POST. HTTP_QUERY_RETRY_AFTER Retrieves the amount of time the service is expected to be
+ *   unavailable. HTTP_QUERY_SERVER Retrieves information about the software used by the origin server
+ *   to handle the request. HTTP_QUERY_SET_COOKIE Receives the value of the cookie set for the
+ *   request. HTTP_QUERY_STATUS_CODE Receives the status code returned by the server.
+ *   HTTP_QUERY_STATUS_TEXT Receives any additional text returned by the server on the response line.
+ *   HTTP_QUERY_TITLE Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_TRANSFER_ENCODING Retrieves the type of transformation that has been applied to the
+ *   message body so it can be safely transferred between the sender and recipient. HTTP_QUERY_UPGRADE
+ *   Retrieves the additional communication protocols that are supported by the server. HTTP_QUERY_URI
+ *   Receives some or all of the Uniform Resource Identifiers (URIs) by which the Request-URI resource
+ *   can be identified. HTTP_QUERY_USER_AGENT Retrieves information about the user agent that made the
+ *   request. HTTP_QUERY_VARY Retrieves the header that indicates that the entity was selected from a
+ *   number of available representations of the response using server-driven negotiation.
+ *   HTTP_QUERY_VERSION Receives the last response code returned by the server. HTTP_QUERY_VIA
+ *   Retrieves the intermediate protocols and recipients between the user agent and the server on
+ *   requests, and between the origin server and the client on responses. HTTP_QUERY_WARNING Retrieves
+ *   additional information about the status of a response that may not be reflected by the response
+ *   status code. HTTP_QUERY_WWW_AUTHENTICATE Retrieves the authentication scheme and realm returned
+ *   by the server. The following modifiers can be used with the information values: Value Description
+ *   HTTP_QUERY_CUSTOM Causes HttpQueryInfo to search for the header name specified in lpvBuffer and
+ *   store the header information in lpvBuffer. HTTP_QUERY_FLAG_COALESCE Not supported.
+ *   HTTP_QUERY_FLAG_NUMBER Returns the data as a 32-bit number for headers whose value is a number,
+ *   such as the status code. HTTP_QUERY_FLAG_REQUEST_HEADERS Queries request headers only.
+ *   HTTP_QUERY_FLAG_SYSTEMTIME Returns the header value as a standard Win32 SYSTEMTIME structure,
+ *   which does not require the application to parse the data. Use for headers whose value is a
+ *   date/time string, such as "Last-Modified-Time".
+ * @param lpBuffer [in\out] Long void pointer to the buffer that receives the information.
+ * @param lpdwBufferLength [in\out] Long pointer to a value that contains the length of the data
+ *   buffer. When the function returns, this parameter contains the address of a value specifying the
+ *   length of the information written to the buffer. When the function returns strings, the following
+ *   rules apply: If the function succeeds, lpdwBufferLength specifies the length of the string, in
+ *   characters, minus 1 for the terminating null. If the function fails and ERROR_INSUFFICIENT_BUFFER
+ *   is returned, lpdwBufferLength specifies the number of bytes that the application must allocate to
+ *   receive the string.
+ * @param lpdwIndex [in\out] Long pointer to a zero-based header index used to enumerate multiple
+ *   headers with the same name. When calling the function, this parameter is the index of the
+ *   specified header to return. When the function returns, this parameter is the index of the next
+ *   header. If the next index cannot be found, ERROR_HTTP_HEADER_NOT_FOUND is returned.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpQueryInfo is used to return response or request headers from an HTTP request.
+ *
+ * You can retrieve different types of data from HttpQueryInfo:
+ *
+ * strings (default)
+ *
+ * SYSTEMTIME (for Data: Expires:, headers)
+ *
+ * DWORD (for STATUS_CODE, CONTENT_LENGTH, and so on if HTTP_QUERY_INFO_NUMBER has been used)
+ */
 #define HttpQueryInfo  HttpQueryInfoW
 #else
+/**
+ * This function queries for information about an HTTP request.
+ *
+ * @param hRequest [in] Open HTTP request handle returned by HttpOpenRequest or InternetOpenUrl.
+ * @param dwInfoLevel [in] Specifies a combination of the attribute to query and the flags that
+ *   modify the request. The attributes can be any of the following values: Value Description
+ *   HTTP_QUERY_ACCEPT Retrieves the acceptable media types for the response.
+ *   HTTP_QUERY_ACCEPT_CHARSET Retrieves the acceptable character sets for the response.
+ *   HTTP_QUERY_ACCEPT_ENCODING Retrieves the acceptable content-coding values for the response.
+ *   HTTP_QUERY_ACCEPT_LANGUAGE Retrieves the acceptable natural languages for the response.
+ *   HTTP_QUERY_ACCEPT_RANGES Retrieves the types of range requests that are accepted for a resource.
+ *   HTTP_QUERY_AGE Retrieves the Age response-header field, which contains the sender's estimate of
+ *   the amount of time since the response was generated at the origin server. HTTP_QUERY_ALLOW
+ *   Receives the methods supported by the server. HTTP_QUERY_AUTHORIZATION Retrieves the
+ *   authorization credentials used for a request. HTTP_QUERY_CACHE_CONTROL Retrieves the cache
+ *   control directives. HTTP_QUERY_CONNECTION Retrieves any options that are specified for a
+ *   particular connection and must not be communicated by proxies over further connections.
+ *   HTTP_QUERY_COOKIE Retrieves any cookies associated with the request. HTTP_QUERY_CONTENT_BASE
+ *   Retrieves the base URI for resolving relative URLs within the entity.
+ *   HTTP_QUERY_CONTENT_DESCRIPTION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_DISPOSITION Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_CONTENT_ENCODING Receives any additional content codings that have been applied to the
+ *   entire resource. HTTP_QUERY_CONTENT_ID Receives the content identification.
+ *   HTTP_QUERY_CONTENT_LANGUAGE Receives the language that the content is in.
+ *   HTTP_QUERY_CONTENT_LENGTH Receives the size of the resource, in bytes.
+ *   HTTP_QUERY_CONTENT_LOCATION Retrieves the resource location for the entity enclosed in the
+ *   message. HTTP_QUERY_CONTENT_MD5 Retrieves a MD5 digest of the entity-body for the purpose of
+ *   providing an end-to-end message integrity check (MIC) for the entity-body.
+ *   HTTP_QUERY_CONTENT_RANGE Retrieves the location in the full entity-body where the partial
+ *   entity-body should be inserted and the total size of the full entity-body.
+ *   HTTP_QUERY_CONTENT_TRANSFER_ENCODING Receives the additional content coding that has been applied
+ *   to the resource. HTTP_QUERY_CONTENT_TYPE Receives the content type of the resource (such as
+ *   text/html). HTTP_QUERY_COST No longer implemented. HTTP_QUERY_DATE Receives the date and time at
+ *   which the message was originated. HTTP_QUERY_DERIVED_FROM No longer supported. HTTP_QUERY_ETAG
+ *   Retrieves the entity tag for the associated entity. HTTP_QUERY_EXPIRES Receives the date and time
+ *   after which the resource should be considered outdated. HTTP_QUERY_FORWARDED Obsolete. Maintained
+ *   for legacy application compatibility only. HTTP_QUERY_FROM Retrieves the e-mail address for the
+ *   human user who controls the requesting user agent if the From header is given. HTTP_QUERY_HOST
+ *   Retrieves the Internet host and port number of the resource being requested. HTTP_QUERY_IF_MATCH
+ *   Retrieves the contents of the If-Match request-header field. HTTP_QUERY_IF_MODIFIED_SINCE
+ *   Retrieves the contents of the If-Modified-Since header. HTTP_QUERY_IF_NONE_MATCH Retrieves the
+ *   contents of the If-None-Match request-header field. HTTP_QUERY_IF_RANGE Retrieves the contents of
+ *   the If-Range request-header field. This header allows the client application to check if the
+ *   entity related to a partial copy of the entity in the client application's cache has not been
+ *   updated. If the entity has not been updated, send the parts that the client application is
+ *   missing. If the entity has been updated, send the entire updated entity.
+ *   HTTP_QUERY_IF_UNMODIFIED_SINCE Retrieves the contents of the If-Unmodified-Since request-header
+ *   field. HTTP_QUERY_LINK Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_LAST_MODIFIED Receives the date and time at which the server believes the resource was
+ *   last modified. HTTP_QUERY_LOCATION Retrieves the absolute URI used in a Location response-header.
+ *   HTTP_QUERY_MAX Retrieves the maximum value of an HTTP_QUERY_* value. HTTP_QUERY_MAX_FORWARDS
+ *   Retrieves the number of proxies or gateways that can forward the request to the next inbound
+ *   server. HTTP_QUERY_MESSAGE_ID No longer implemented. HTTP_QUERY_MIME_VERSION Receives the version
+ *   of the MIME protocol that was used to construct the message. HTTP_QUERY_ORIG_URI Obsolete.
+ *   Maintained for legacy application compatibility only. HTTP_QUERY_PRAGMA Receives the
+ *   implementation-specific directives that may apply to any recipient along the request/response
+ *   chain. HTTP_QUERY_PROXY_AUTHENTICATE Retrieves the authentication scheme and realm returned by
+ *   the proxy. HTTP_QUERY_PROXY_AUTHORIZATION Retrieves the header that is used to identify the user
+ *   to a proxy that requires authentication. HTTP_QUERY_PUBLIC Receives methods available at this
+ *   server. HTTP_QUERY_RANGE Retrieves the byte range of an entity. HTTP_QUERY_RAW_HEADERS Receives
+ *   all the headers returned by the server. Each header is terminated by "\0". An additional "\0"
+ *   terminates the list of headers. HTTP_QUERY_RAW_HEADERS_CRLF Receives all the headers returned by
+ *   the server. Each header is separated by a carriage return/line feed (CR/LF) sequence.
+ *   HTTP_QUERY_REFERER Receives the URI of the resource where the requested URI was obtained.
+ *   HTTP_QUERY_REFRESH Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_REQUEST_METHOD Receives the verb that is being used in the request, typically GET or
+ *   POST. HTTP_QUERY_RETRY_AFTER Retrieves the amount of time the service is expected to be
+ *   unavailable. HTTP_QUERY_SERVER Retrieves information about the software used by the origin server
+ *   to handle the request. HTTP_QUERY_SET_COOKIE Receives the value of the cookie set for the
+ *   request. HTTP_QUERY_STATUS_CODE Receives the status code returned by the server.
+ *   HTTP_QUERY_STATUS_TEXT Receives any additional text returned by the server on the response line.
+ *   HTTP_QUERY_TITLE Obsolete. Maintained for legacy application compatibility only.
+ *   HTTP_QUERY_TRANSFER_ENCODING Retrieves the type of transformation that has been applied to the
+ *   message body so it can be safely transferred between the sender and recipient. HTTP_QUERY_UPGRADE
+ *   Retrieves the additional communication protocols that are supported by the server. HTTP_QUERY_URI
+ *   Receives some or all of the Uniform Resource Identifiers (URIs) by which the Request-URI resource
+ *   can be identified. HTTP_QUERY_USER_AGENT Retrieves information about the user agent that made the
+ *   request. HTTP_QUERY_VARY Retrieves the header that indicates that the entity was selected from a
+ *   number of available representations of the response using server-driven negotiation.
+ *   HTTP_QUERY_VERSION Receives the last response code returned by the server. HTTP_QUERY_VIA
+ *   Retrieves the intermediate protocols and recipients between the user agent and the server on
+ *   requests, and between the origin server and the client on responses. HTTP_QUERY_WARNING Retrieves
+ *   additional information about the status of a response that may not be reflected by the response
+ *   status code. HTTP_QUERY_WWW_AUTHENTICATE Retrieves the authentication scheme and realm returned
+ *   by the server. The following modifiers can be used with the information values: Value Description
+ *   HTTP_QUERY_CUSTOM Causes HttpQueryInfo to search for the header name specified in lpvBuffer and
+ *   store the header information in lpvBuffer. HTTP_QUERY_FLAG_COALESCE Not supported.
+ *   HTTP_QUERY_FLAG_NUMBER Returns the data as a 32-bit number for headers whose value is a number,
+ *   such as the status code. HTTP_QUERY_FLAG_REQUEST_HEADERS Queries request headers only.
+ *   HTTP_QUERY_FLAG_SYSTEMTIME Returns the header value as a standard Win32 SYSTEMTIME structure,
+ *   which does not require the application to parse the data. Use for headers whose value is a
+ *   date/time string, such as "Last-Modified-Time".
+ * @param lpBuffer [in\out] Long void pointer to the buffer that receives the information.
+ * @param lpdwBufferLength [in\out] Long pointer to a value that contains the length of the data
+ *   buffer. When the function returns, this parameter contains the address of a value specifying the
+ *   length of the information written to the buffer. When the function returns strings, the following
+ *   rules apply: If the function succeeds, lpdwBufferLength specifies the length of the string, in
+ *   characters, minus 1 for the terminating null. If the function fails and ERROR_INSUFFICIENT_BUFFER
+ *   is returned, lpdwBufferLength specifies the number of bytes that the application must allocate to
+ *   receive the string.
+ * @param lpdwIndex [in\out] Long pointer to a zero-based header index used to enumerate multiple
+ *   headers with the same name. When calling the function, this parameter is the index of the
+ *   specified header to return. When the function returns, this parameter is the index of the next
+ *   header. If the next index cannot be found, ERROR_HTTP_HEADER_NOT_FOUND is returned.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ *
+ * HttpQueryInfo is used to return response or request headers from an HTTP request.
+ *
+ * You can retrieve different types of data from HttpQueryInfo:
+ *
+ * strings (default)
+ *
+ * SYSTEMTIME (for Data: Expires:, headers)
+ *
+ * DWORD (for STATUS_CODE, CONTENT_LENGTH, and so on if HTTP_QUERY_INFO_NUMBER has been used)
+ */
 #define HttpQueryInfo  HttpQueryInfoA
 #endif // !UNICODE
 
@@ -1769,6 +6167,51 @@ InternetAttemptConnect(
 #define FLAGS_ERROR_UI_FLAGS_GENERATE_DATA      0x04
 #define FLAGS_ERROR_UI_FLAGS_NO_UI              0x08
 
+/**
+ * This function displays a dialog box for the error that is passed to it, if an appropriate dialog
+ * box exists. If the FLAGS_ERROR_UI_FILTER_FOR_ERRORS flag is used, the function also checks the
+ * headers for any hidden errors and displays a dialog box if needed.
+ *
+ * @param hWnd [in] Handle to the parent window for any needed dialog box. This parameter can be
+ *   NULL if no dialog box is needed.
+ * @param hRequest [in] [out] HINTERNET handle to the Internet connection used in the call to
+ *   HttpSendRequest.
+ * @param dwError [in] Error value for which to display a dialog box. Can be one of the following
+ *   values: Value Description ERROR_INTERNET_HTTP_TO_HTTPS_ON_REDIR Notifies the user of the zone
+ *   crossing to and from a secure site. ERROR_INTERNET_INCORRECT_PASSWORD Displays a dialog box for
+ *   obtaining the user's name and password. (On Microsoft Windows(R) 95, the function first attempts
+ *   to use any cached authentication information for the server being accessed, before displaying a
+ *   dialog box.) ERROR_INTERNET_INVALID_CA Notifies the user that the Win32(R) Internet function does
+ *   not recognize the certificate authority that generated the certificate for this Secure Sockets
+ *   Layer (SSL) site. ERROR_INTERNET_POST_IS_NON_SECURE Displays a warning about posting data to the
+ *   server through a nonsecure connection. ERROR_INTERNET_SEC_CERT_CN_INVALID Indicates that the SSL
+ *   certificate Common Name (hostname field) is incorrect. Displays an Invalid SSL Common Name dialog
+ *   box, and lets the user view the incorrect certificate. Also allows the user to select a
+ *   certificate in response to a server request. ERROR_INTERNET_SEC_CERT_DATE_INVALID Tells the user
+ *   that the SSL certificate has expired.
+ * @param dwFlags [in] Unsigned long integer value that contains the action flags. Can be a
+ *   combination of these values: Value Description FLAGS_ERROR_UI_FILTER_FOR_ERRORS Scans the
+ *   returned headers for errors. Call after using HttpSendRequest. This option detects any hidden
+ *   errors, such as an authentication error. FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS If the function
+ *   succeeds, stores the results of the dialog box in the Internet handle.
+ *   FLAGS_ERROR_UI_FLAGS_GENERATE_DATA Queries the Internet handle for needed information. The
+ *   function constructs the appropriate data structure for the error. (For example, for Cert CN
+ *   failures, the function grabs the certificate.) FLAGS_ERROR_UI_SERIALIZE_DIALOGS Serializes
+ *   authentication dialog boxes for concurrent requests on a password cache entry. The lppvData
+ *   parameter should contain the address of a pointer to an INTERNET_AUTH_NOTIFY_DATA structure, and
+ *   the client should implement a thread-safe, nonblocking callback function.
+ * @param lppvData [in] [out] Address of a data structure. The structure can be different for each
+ *   error that needs to be handled.
+ *
+ * @return Returns one of the following values: - ERROR_SUCCESS: The function completed
+ *   successfully. - ERROR_CANCELLED: The function was cancelled by the user. -
+ *   ERROR_INTERNET_FORCE_RETRY: The function needs to redo its request.
+ *
+ * Authentication errors are hidden, since the call to HttpSendRequest will complete successfully,
+ * but the status code would indicate that the proxy or server requires authentication. The
+ * FLAGS_ERROR_UI_FILTER_FOR_ERRORS flag causes the function to search the headers for status codes
+ * that indicate user input is needed.
+ */
 INTERNETAPI
 DWORD
 WINAPI

@@ -47,6 +47,19 @@ extern "C" {            /* Assume C declarations for C++ */
 #define     DeleteBitmap(hbm)       DeleteObject((HGDIOBJ)(HBITMAP)(hbm))
 #define     SelectBitmap(hdc, hbm)  ((HBITMAP)SelectObject((hdc), (HGDIOBJ)(HBITMAP)(hbm)))
 
+/**
+ * This macro calls the InflateRect function, passing in the negative value of the specified x- and
+ * y-coordinates.
+ *
+ * @param lprc Long pointer to the RECT structure that increases or decreases in size.
+ * @param dx Specifies the amount to increase or decrease the rectangle width. This parameter must
+ *   be negative to increase the width.
+ * @param dy Specifies the amount to increase or decrease the rectangle height. This parameter must
+ *   be negative to increase the height.
+ *
+ * @return TRUE indicates success. FALSE indicates failure. To get extended error information, call
+ *   GetLastError.
+ */
 #define     InsetRect(lprc, dx, dy) InflateRect((lprc), -(dx), -(dy))
 
 /****** USER Macro APIs ******************************************************/
@@ -69,6 +82,14 @@ extern "C" {            /* Assume C declarations for C++ */
 
 #define     GetWindowFont(hwnd)                 FORWARD_WM_GETFONT((hwnd), SendMessage)
 #if (WINVER >= 0x030a)
+/**
+ * This macro calls the function MapWindowPoints.
+ *
+ * @param hwndFrom Handle to the source window.
+ * @param hwndto Handle to the target window.
+ * @param lprc Long pointer to the rectangle to be mapped. During input, this rectangle is relative
+ *   to the source window. During output, it is relative to the target window.
+ */
 #define     MapWindowRect(hwndFrom, hwndTo, lprc) \
                     MapWindowPoints((hwndFrom), (hwndTo), (POINT *)(lprc), 2)
 #endif
@@ -81,6 +102,9 @@ extern "C" {            /* Assume C declarations for C++ */
 
 #ifdef UNDER_NT
 
+/**
+ * This macro maps to the SetWindowLong function.
+ */
 #define     SetDlgMsgResult(hwnd, msg, result) (( \
         (msg) == WM_CTLCOLORMSGBOX      || \
         (msg) == WM_CTLCOLOREDIT        || \
@@ -96,6 +120,9 @@ extern "C" {            /* Assume C declarations for C++ */
         (msg) == WM_INITDIALOG             \
     ) ? (BOOL)(result) : (SetWindowLong((hwnd), DWL_MSGRESULT, (LPARAM)(LRESULT)(result)), TRUE))
 #else
+/**
+ * This macro maps to the SetWindowLong function.
+ */
 #define     SetDlgMsgResult(hwnd, msg, result) (( \
         (msg) == WM_INITDIALOG             \
     ) ? (BOOL)(result) : (SetWindowLong((hwnd), DWL_MSGRESULT, (LPARAM)(LRESULT)(result)), TRUE))

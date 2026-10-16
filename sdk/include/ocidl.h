@@ -1452,11 +1452,34 @@ void __RPC_STUB IProvideClassInfo2_GetGUID_Stub(
 
 typedef IOleControl __RPC_FAR *LPOLECONTROL;
 
+/**
+ * This structure contains parameters that describe a control's keyboard mnemonics and keyboard
+ * behavior.
+ */
 typedef struct  tagCONTROLINFO
     {
+    /**
+     * Size of the CONTROLINFO structure.
+     */
     ULONG cb;
+    /**
+     * Handle to an array of Windows ACCEL structures, each structure describing a keyboard mnemonic.
+     * The array is allocated with the GlobalAlloc function. The control always maintains the memory for
+     * this array; the caller of IOleControl::GetControlInfo should not attempt to free the memory.
+     */
     HACCEL hAccel;
+    /**
+     * Number of mnemonics described in the hAccel member. This value can be zero to indicate no
+     * mnemonics.
+     */
     USHORT cAccel;
+    /**
+     * Specifies the keyboard behavior of the control. It is one of the following values: Value
+     * Description CTRLINFO_EATS_RETURN When the control has the focus, it will process the RETURN key.
+     * CTRLINFO_EATS_ESCAPE When the control has the focus, it will process the ESCAPE key. When the
+     * control has the focus, the dialog box containing the control cannot use the RETURN or ESCAPE keys
+     * as mnemonics for the default and cancel buttons.
+     */
     DWORD dwFlags;
     }	CONTROLINFO;
 
@@ -5759,10 +5782,24 @@ enum tagDVASPECT2
 	DVASPECT_TRANSPARENT	= 32
     }	DVASPECT2;
 
+/**
+ * This structure is used to provide sizing hints from the container for the object to use as the
+ * user resizes it.
+ */
 typedef struct  tagExtentInfo
     {
+    /**
+     * Size of the structure, in bytes. The size includes this member as well as the dwExtentMode and
+     * sizelProposed members.
+     */
     ULONG cb;
+    /**
+     * Indicates whether the sizing mode is content or integral sizing.
+     */
     DWORD dwExtentMode;
+    /**
+     * Specifies the proposed size in content sizing or the preferred size in integral sizing.
+     */
     SIZEL sizelProposed;
     }	DVEXTENTINFO;
 

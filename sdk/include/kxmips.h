@@ -127,8 +127,21 @@
 #if defined(R3000)
 
 #define index $0                        // TB index register
+/**
+ * This function generates a random number.
+ *
+ * @return A randomly generated DWORD.
+ */
 #define random $1                       // TB random register
 #define entrylo $2                      // TB entry low register
+/**
+ * This structure contains processor-specific register data. Currently there are CONTEXT structures
+ * defined for Intel, MIPS, Alpha, SHx, ARM, and PowerPC processors. Refer to the WinNT.h header
+ * file for definitions of these structures.
+ *
+ * Windows CE defines an additional CONTEXT structure for SHx and ARM processors which is also found
+ * in the WinNT.h header file.
+ */
 #define context $4                      // TB context register
 #define badvaddr $8                     // TB bad virtual address register
 #define entryhi $10                     // TB entry high register
@@ -184,9 +197,22 @@
 #if defined(R4000)
 
 #define index $0                        // TB index register
+/**
+ * This function generates a random number.
+ *
+ * @return A randomly generated DWORD.
+ */
 #define random $1                       // TB random register
 #define entrylo0 $2                     // TB entry low 0 register
 #define entrylo1 $3                     // TB entry low 1 register
+/**
+ * This structure contains processor-specific register data. Currently there are CONTEXT structures
+ * defined for Intel, MIPS, Alpha, SHx, ARM, and PowerPC processors. Refer to the WinNT.h header
+ * file for definitions of these structures.
+ *
+ * Windows CE defines an additional CONTEXT structure for SHx and ARM processors which is also found
+ * in the WinNT.h header file.
+ */
 #define context $4                      // TB context register
 #define pagemask $5                     // Page mask register
 #define wired $6                        // Wired TB entries register

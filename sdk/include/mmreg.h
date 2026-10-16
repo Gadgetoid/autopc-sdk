@@ -743,14 +743,71 @@ typedef PCMWAVEFORMAT FAR  *LPPCMWAVEFORMAT;
 */
 #ifndef _WAVEFORMATEX_
 #define _WAVEFORMATEX_
+/**
+ * This structure defines the format of waveform-audio data. Only format information common to all
+ * waveform-audio data formats is included in this structure. For formats that require additional
+ * information, this structure is included as the first member in another structure, along with the
+ * additional information.
+ *
+ * An example of a format that uses extra information is the Microsoft Adaptive Delta Pulse Code
+ * Modulation (MS-ADPCM) format. The wFormatTag for MS-ADPCM is WAVE_FORMAT_ADPCM. The cbSize member
+ * is typically set to 32. The extra information stored for WAVE_FORMAT_ADPCM is coefficient pairs
+ * required for encoding and decoding the waveform-audio data.
+ */
 typedef struct tWAVEFORMATEX
 {
+    /**
+     * Waveform-audio format type. Format tags are registered with Microsoft Corporation for many
+     * compression algorithms. A complete list of format tags can be found in the Mmsystem.h header
+     * file.
+     */
     WORD    wFormatTag;        /* format type */
+    /**
+     * Number of channels in the waveform-audio data. Monaural data uses one channel and stereo data
+     * uses two channels.
+     */
     WORD    nChannels;         /* number of channels (i.e. mono, stereo...) */
+    /**
+     * Sample rate, in samples per second (hertz), that each channel should be played or recorded. If
+     * wFormatTag is WAVE_FORMAT_PCM, then common values for nSamplesPerSec are 8.0 kHz, 11.025 kHz,
+     * 22.05 kHz, and 44.1 kHz. For non-PCM formats, this member must be computed according to the
+     * manufacturer's specification of the format tag.
+     */
     DWORD   nSamplesPerSec;    /* sample rate */
+    /**
+     * Required average data-transfer rate, in bytes per second, for the format tag. If wFormatTag is
+     * WAVE_FORMAT_PCM, nAvgBytesPerSec should be equal to the product of nSamplesPerSec and
+     * nBlockAlign. For non-PCM formats, this member must be computed according to the manufacturer's
+     * specification of the format tag.
+     *
+     * Playback and record software can estimate buffer sizes by using the nAvgBytesPerSec member.
+     */
     DWORD   nAvgBytesPerSec;   /* for buffer estimation */
+    /**
+     * Block alignment, in bytes. The block alignment is the minimum atomic unit of data for the
+     * wFormatTag format type. If wFormatTag is WAVE_FORMAT_PCM, nBlockAlign should be equal to the
+     * product of nChannels and wBitsPerSample divided by 8 (bits per byte). For non-PCM formats, this
+     * member must be computed according to the manufacturer's specification of the format tag.
+     *
+     * Playback and record software must process a multiple of nBlockAlign bytes of data at a time. Data
+     * written and read from a device must always start at the beginning of a block. For example, it is
+     * illegal to start playback of PCM data in the middle of a sample (that is, on a non-block-aligned
+     * boundary).
+     */
     WORD    nBlockAlign;       /* block size of data */
+    /**
+     * Bits per sample for the wFormatTag format type. If wFormatTag is WAVE_FORMAT_PCM, then
+     * wBitsPerSample should be equal to 8 or 16. For non-PCM formats, this member must be set according
+     * to the manufacturer's specification of the format tag. Note that some compression schemes cannot
+     * define a value for wBitsPerSample, so this member can be zero.
+     */
     WORD    wBitsPerSample;    /* Number of bits per sample of mono data */
+    /**
+     * Size, in bytes, of extra format information appended to the end of the WAVEFORMATEX structure.
+     * This information can be used by non-PCM formats to store extra attributes for the wFormatTag. If
+     * no extra information is required by the wFormatTag, this member must be set to zero. For
+     * WAVE_FORMAT_PCM formats only, this member is ignored.
+     */
     WORD    cbSize;            /* The count in bytes of the size of
                                     extra information (after cbSize) */
 

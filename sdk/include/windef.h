@@ -158,11 +158,82 @@ typedef LONG LRESULT;
 
 #endif  /* NOMINMAX */
 
+/**
+ * This macro creates an unsigned 16-bit integer by concatenating two spscified unsigned character
+ * values.
+ *
+ * @param bLow Specifies the low-order byte of the new short value.
+ * @param bHigh Specifies the high-order byte of the new short value.
+ *
+ * @return The return value is an unsigned 16-bit integer value.
+ *
+ * The MAKEWORD macro is defined as follows:
+ *
+ *     #define MAKEWORD(a, b) \
+ *         ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8))
+ */
 #define MAKEWORD(a, b)      ((WORD)(((BYTE)(a)) | ((WORD)((BYTE)(b))) << 8))
+/**
+ * This macro creates an unsigned 32-bit value by concatenating two specified 16-bit values.
+ *
+ * @param wLow Specifies the low-order word of the new long value.
+ * @param wHigh Specifies the high-order word of the new long value.
+ *
+ * @return The return value is an unsigned 32-bit value.
+ *
+ * The MAKELONG macro is defined as follows:
+ *
+ *     #define MAKELONG(a, b) \
+ *         ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16))
+ */
 #define MAKELONG(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
+/**
+ * This macro retrieves the low-order word from the specified 32-bit value.
+ *
+ * @param dwValue Specifies the value to be converted.
+ *
+ * @return The return value is the low-order word of the specified value.
+ *
+ * The LOWORD macro is defined as follows:
+ *
+ *     #define LOWORD(l)   ((WORD) (l))
+ */
 #define LOWORD(l)           ((WORD)(l))
+/**
+ * This macro retrieves the high-order word from the specified 32-bit value.
+ *
+ * @param dwValue Specifies the value to be converted.
+ *
+ * @return The return value is the high-order word of the specified value.
+ *
+ * The HIWORD macro is defined as follows:
+ *
+ *     #define HIWORD(l)   ((WORD) (((DWORD) (l) >> 16) & 0xFFFF))
+ */
 #define HIWORD(l)           ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
+/**
+ * This macro retrieves the low-order byte from the specified 16-bit value.
+ *
+ * @param wValue Specifies the value to be converted.
+ *
+ * @return The return value is the low-order byte of the specified value.
+ *
+ * The LOBYTE macro is defined as follows:
+ *
+ *     #define LOBYTE(w)   ((BYTE) (w))
+ */
 #define LOBYTE(w)           ((BYTE)(w))
+/**
+ * This macro retrieves the high-order byte from the specified 16-bit value.
+ *
+ * @param wValue Specifies the value to be converted.
+ *
+ * @return The return value is the high-order byte of the specified value.
+ *
+ * The HIBYTE macro is defined as follows:
+ *
+ *     #define HIBYTE(w)   ((BYTE) (((WORD) (w) >> 8) & 0xFF))
+ */
 #define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 
 #ifndef WIN_INTERNAL
@@ -221,11 +292,29 @@ typedef DWORD   *LPCOLORREF;
 
 #define HFILE_ERROR ((HFILE)-1)
 
+/**
+ * This structure defines the coordinates of the upper-left and lower-right corners of a rectangle.
+ *
+ * When RECT is passed to the FillRect function, the rectangle is filled up to, but not including,
+ * the right column and bottom row of pixels. This structure is identical to the RECTL structure.
+ */
 typedef struct tagRECT
 {
+    /**
+     * Specifies the x-coordinate of the upper-left corner of the rectangle.
+     */
     LONG    left;
+    /**
+     * Specifies the y-coordinate of the upper-left corner of the rectangle.
+     */
     LONG    top;
+    /**
+     * Specifies the x-coordinate of the lower-right corner of the rectangle.
+     */
     LONG    right;
+    /**
+     * Specifies the y-coordinate of the lower-right corner of the rectangle.
+     */
     LONG    bottom;
 } RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;
 
@@ -241,9 +330,18 @@ typedef struct _RECTL       /* rcl */
 
 typedef const RECTL FAR* LPCRECTL;
 
+/**
+ * This structure defines the x- and y-coordinates of a point.
+ */
 typedef struct tagPOINT
 {
+    /**
+     * Specifies the x-coordinate of the point.
+     */
     LONG  x;
+    /**
+     * Specifies the y-coordinate of the point.
+     */
     LONG  y;
 } POINT, *PPOINT, NEAR *NPPOINT, FAR *LPPOINT;
 
@@ -253,18 +351,39 @@ typedef struct _POINTL      /* ptl  */
     LONG  y;
 } POINTL, *PPOINTL;
 
+/**
+ * This structure specifies the width and height of a rectangle.
+ *
+ * The rectangle dimensions stored in this structure may correspond to viewport extents, window
+ * extents, text extents, bitmap dimensions, or the aspect-ratio filter for some extended functions.
+ */
 typedef struct tagSIZE
 {
+    /**
+     * Specifies the rectangle's width.
+     */
     LONG        cx;
+    /**
+     * Specifies the rectangle's height.
+     */
     LONG        cy;
 } SIZE, *PSIZE, *LPSIZE;
 
 typedef SIZE               SIZEL;
 typedef SIZE               *PSIZEL, *LPSIZEL;
 
+/**
+ * This structure defines the coordinates of a point.
+ */
 typedef struct tagPOINTS
 {
+    /**
+     * Specifies the x-coordinate of the point.
+     */
     SHORT   x;
+    /**
+     * Specifies the y-coordinate of the point.
+     */
     SHORT   y;
 } POINTS, *PPOINTS, *LPPOINTS;
 

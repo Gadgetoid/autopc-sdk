@@ -216,11 +216,39 @@ typedef /* [string] */ const WCHAR __RPC_FAR *LPCWSTR;
 
 typedef /* [string] */ const TCHAR __RPC_FAR *LPCTSTR;
 
+/**
+ * This structure specifies the color and usage of a logical palette entry. A logical palette is
+ * defined by a LOGPALETTE structure.
+ *
+ * Window CE ignores the peFlags member. It should be initialized to 0.
+ */
 typedef struct  tagPALETTEENTRY
     {
+    /**
+     * Specifies a red intensity value for the palette entry.
+     */
     BYTE peRed;
+    /**
+     * Specifies a green intensity value for the palette entry.
+     */
     BYTE peGreen;
+    /**
+     * Specifies a blue intensity value for the palette entry.
+     */
     BYTE peBlue;
+    /**
+     * Specifies how the palette entry is to be used. The peFlags member may be set to NULL or one of
+     * the following values: Value Description PC_EXPLICIT Specifies that the low-order word of the
+     * logical palette entry designates a hardware palette index. This flag allows the application to
+     * show the contents of the display device palette. PC_NOCOLLAPSE Specifies that the color be placed
+     * in an unused entry in the system palette instead of being matched to an existing color in the
+     * system palette. If there are no unused entries in the system palette, the color is matched
+     * normally. Once this color is in the system palette, colors in other logical palettes can be
+     * matched to this color. PC_RESERVED Specifies that the logical palette entry be used for palette
+     * animation. This flag prevents other windows from matching colors to the palette entry since the
+     * color frequently changes. If an unused system-palette entry is available, the color is placed in
+     * that entry. Otherwise, the color is not available for animation.
+     */
     BYTE peFlags;
     }	PALETTEENTRY;
 
@@ -229,10 +257,26 @@ typedef struct tagPALETTEENTRY __RPC_FAR *PPALETTEENTRY;
 typedef struct tagPALETTEENTRY __RPC_FAR *LPPALETTEENTRY;
 
 #if 0
+/**
+ * This structure defines a logical color palette.
+ *
+ * The colors in the palette-entry table should appear in order of importance because entries
+ * earlier in the logical palette are most likely to be placed in the system palette.
+ */
 typedef struct  tagLOGPALETTE
     {
+    /**
+     * Specifies the version number of the system.
+     */
     WORD palVersion;
+    /**
+     * Specifies the number of entries in the logical color palette.
+     */
     WORD palNumEntries;
+    /**
+     * Specifies an array of PALETTEENTRY structures that define the color and usage of each entry in
+     * the logical palette.
+     */
     /* [size_is] */ PALETTEENTRY palPalEntry[ 1 ];
     }	LOGPALETTE;
 
@@ -241,9 +285,25 @@ typedef struct tagLOGPALETTE __RPC_FAR *PLOGPALETTE;
 typedef struct tagLOGPALETTE __RPC_FAR *LPLOGPALETTE;
 
 #else
+/**
+ * This structure defines a logical color palette.
+ *
+ * The colors in the palette-entry table should appear in order of importance because entries
+ * earlier in the logical palette are most likely to be placed in the system palette.
+ */
 typedef struct tagLOGPALETTE {
+    /**
+     * Specifies the version number of the system.
+     */
     WORD        palVersion;
+    /**
+     * Specifies the number of entries in the logical color palette.
+     */
     WORD        palNumEntries;
+    /**
+     * Specifies an array of PALETTEENTRY structures that define the color and usage of each entry in
+     * the logical palette.
+     */
     PALETTEENTRY        palPalEntry[1];
 } LOGPALETTE, *PLOGPALETTE, *LPLOGPALETTE;
 #endif
@@ -271,9 +331,18 @@ typedef struct _RECTL __RPC_FAR *PRECTL;
 
 typedef struct _RECTL __RPC_FAR *LPRECTL;
 
+/**
+ * This structure defines the x- and y-coordinates of a point.
+ */
 typedef struct  tagPOINT
     {
+    /**
+     * Specifies the x-coordinate of the point.
+     */
     LONG x;
+    /**
+     * Specifies the y-coordinate of the point.
+     */
     LONG y;
     }	POINT;
 
@@ -290,9 +359,21 @@ typedef struct  _POINTL
 typedef struct _POINTL __RPC_FAR *PPOINTL;
 
 #ifndef WIN16
+/**
+ * This structure specifies the width and height of a rectangle.
+ *
+ * The rectangle dimensions stored in this structure may correspond to viewport extents, window
+ * extents, text extents, bitmap dimensions, or the aspect-ratio filter for some extended functions.
+ */
 typedef struct  tagSIZE
     {
+    /**
+     * Specifies the rectangle's width.
+     */
     LONG cx;
+    /**
+     * Specifies the rectangle's height.
+     */
     LONG cy;
     }	SIZE;
 
@@ -301,9 +382,21 @@ typedef struct tagSIZE __RPC_FAR *PSIZE;
 typedef struct tagSIZE __RPC_FAR *LPSIZE;
 
 #else // WIN16
+/**
+ * This structure specifies the width and height of a rectangle.
+ *
+ * The rectangle dimensions stored in this structure may correspond to viewport extents, window
+ * extents, text extents, bitmap dimensions, or the aspect-ratio filter for some extended functions.
+ */
 typedef struct tagSIZE
 {
+    /**
+     * Specifies the rectangle's width.
+     */
     INT cx;
+    /**
+     * Specifies the rectangle's height.
+     */
     INT cy;
 } SIZE, *PSIZE, *LPSIZE;
 #endif // WIN16
@@ -344,11 +437,29 @@ typedef void __RPC_FAR *LPVOID;
 
 typedef float FLOAT;
 
+/**
+ * This structure defines the coordinates of the upper-left and lower-right corners of a rectangle.
+ *
+ * When RECT is passed to the FillRect function, the rectangle is filled up to, but not including,
+ * the right column and bottom row of pixels. This structure is identical to the RECTL structure.
+ */
 typedef struct  tagRECT
     {
+    /**
+     * Specifies the x-coordinate of the upper-left corner of the rectangle.
+     */
     LONG left;
+    /**
+     * Specifies the y-coordinate of the upper-left corner of the rectangle.
+     */
     LONG top;
+    /**
+     * Specifies the x-coordinate of the lower-right corner of the rectangle.
+     */
     LONG right;
+    /**
+     * Specifies the y-coordinate of the lower-right corner of the rectangle.
+     */
     LONG bottom;
     }	RECT;
 
@@ -393,8 +504,19 @@ typedef struct  _LARGE_INTEGER
 
 typedef LARGE_INTEGER __RPC_FAR *PLARGE_INTEGER;
 
+/**
+ * This union provides a 64-bit data type which is accessible as two DWORDs or as a single
+ * DWORDLONG.
+ *
+ * The ULARGE_INTEGER structure is actually a union. If your compiler has built-in support for
+ * 64-bit integers, use the QuadPart member to store the 64-bit integer. Otherwise, use the LowPart
+ * and HighPart members to store the 64-bit integer.
+ */
 typedef struct  _ULARGE_INTEGER
     {
+    /**
+     * Specifies a 64-bit unsigned integer.
+     */
     ULONGLONG QuadPart;
     }	ULARGE_INTEGER;
 
@@ -402,9 +524,21 @@ typedef struct  _ULARGE_INTEGER
 #ifndef _WINBASE_
 #ifndef _FILETIME_
 #define _FILETIME_
+/**
+ * This structure is a 64-bit value representing the number of 100-nanosecond intervals since
+ * January 1, 1601.
+ *
+ * The FILETIME data structure is used in the time conversion functions between MS-DOS and Win32.
+ */
 typedef struct  _FILETIME
     {
+    /**
+     * Specifies the low 32 bits of the Win32 date/time value.
+     */
     DWORD dwLowDateTime;
+    /**
+     * Specifies the upper 32 bits of the Win32 date/time value.
+     */
     DWORD dwHighDateTime;
     }	FILETIME;
 
@@ -415,15 +549,52 @@ typedef struct _FILETIME __RPC_FAR *LPFILETIME;
 #endif // !_FILETIME
 #ifndef _SYSTEMTIME_
 #define _SYSTEMTIME_
+/**
+ * This structure represents a date and time using individual members for the month, day, year,
+ * weekday, hour, minute, second, and millisecond.
+ *
+ * It is not recommended that you add and subtract values from the SYSTEMTIME structure to obtain
+ * relative times. Instead, you should
+ *
+ * Convert the SYSTEMTIME structure to a FILETIME structure.
+ *
+ * Copy the resulting FILETIME structure to a ULARGE_INTEGER structure.
+ *
+ * Use normal 64-bit arithmetic on the ULARGE_INTEGER value.
+ */
 typedef struct  _SYSTEMTIME
     {
+    /**
+     * Specifies the current year.
+     */
     WORD wYear;
+    /**
+     * Specifies the current month; January = 1, February = 2, and so on.
+     */
     WORD wMonth;
+    /**
+     * Specifies the current day of the week; Sunday = 0, Monday = 1, and so on.
+     */
     WORD wDayOfWeek;
+    /**
+     * Specifies the current day of the month.
+     */
     WORD wDay;
+    /**
+     * Specifies the current hour.
+     */
     WORD wHour;
+    /**
+     * Specifies the current minute.
+     */
     WORD wMinute;
+    /**
+     * Specifies the current second.
+     */
     WORD wSecond;
+    /**
+     * Specifies the current millisecond.
+     */
     WORD wMilliseconds;
     }	SYSTEMTIME;
 
@@ -490,22 +661,139 @@ typedef struct  _COAUTHIDENTITY
     ULONG Flags;
     }	COAUTHIDENTITY;
 
+/**
+ * This structure is used to determine the authentication settings.
+ *
+ * A pointer to a COAUTHINFO structure is a member of the COSERVERINFO structure. The COAUTHINFO
+ * structure provides security information to object creation functions across the network. The
+ * values of the COAUTHINFO structure determine the authentication settings used while making a
+ * remote activation request from the client machine to the server machine.
+ *
+ * If pAuthInfo in COSERVERINFO is set to NULL, NTLMSSP with the identity of the actual client will
+ * be used. However, a non-NULL COAUTHINFO structure can be specified for pAuthInfo to meet any one
+ * of the following special needs:
+ *
+ * To specify a different client identity for machine remote activations. The specified identity
+ * will be used for the launch permission check on the server rather than the real client identity.
+ *
+ * To specify that Kerberos, rather than NTLMSSP, is used for machine remote activation. A
+ * nondefault client identity may or may not be specified.
+ *
+ * To request unsecure activation.
+ *
+ * To specify a proprietary authentication service.
+ *
+ * Specifying a COAUTHINFO structure allows DCOM activations to work correctly with security
+ * providers other than NTLMSSP. You can also specify additional security information used during
+ * remote activations for interoperability with alternate implementations of DCOM.
+ *
+ * For more information on the uses of COAUTHINFO, see COSERVERINFO.
+ */
 typedef struct  _COAUTHINFO
     {
+    /**
+     * [in] Specifies a single DWORD value from the list of RPC_C_AUTHN_xxx constants indicating the
+     * authentication service to use. It may be RPC_C_AUTHN_NONE if no authentication is required.
+     * RPC_C_AUTHN_WINNT is the default and RPC_C_AUTHN_GSS_KERBEROS is also supported.
+     */
     DWORD dwAuthnSvc;
+    /**
+     * [in] Specifies a single DWORD value from the list of RPC_C_AUTHZ_xxx constants indicating the
+     * authorization service to use. If you are using the NT authentication service, use
+     * RPC_C_AUTHZ_NONE.
+     */
     DWORD dwAuthzSvc;
+    /**
+     * Pointer to a character string that indicates the server principal name to use with the
+     * authentication service. If you are using RPC_C_AUTHN_WINNT, the principal name must be NULL.
+     */
     LPWSTR pwszServerPrincName;
+    /**
+     * [in] Specifies a single DWORD value from the list of RPC_C_AUTHN_LEVEL_xxx constants indicating
+     * the authentication level to use.
+     */
     DWORD dwAuthnLevel;
+    /**
+     * [in] Specifies the impersonation level to be used. This value must be
+     * RPC_C_IMP_LEVEL_IMPERSONATE.
+     */
     DWORD dwImpersonationLevel;
+    /**
+     * Pointer to a COAUTHIDENTITY structure that establishes a nondefault client identity. If NULL, the
+     * actual identity of the client is used. Values of structure members are authentication-service
+     * specific. This value must be NULL if dwAuthnSvc is not NTLMSSP or Kerberos. The form of the
+     * COAUTHIDENTITY structure is identical to that of the Windows NT SEC_WINNT_AUTH_IDENTITY
+     * structure.
+     */
     COAUTHIDENTITY __RPC_FAR *pAuthIdentityData;
+    /**
+     * [in] Specifies a DWORD defining flags that indicate the further capabilities of this proxy.
+     * Currently, this value must be EOAC_NONE.
+     */
     DWORD dwCapabilities;
     }	COAUTHINFO;
 
+/**
+ * This structure is used to identify a remote machine resource to the new or enhanced activation
+ * functions.
+ *
+ * The COSERVERINFO structure is used primarily to identify a remote system in object creation
+ * functions. Machine resources are named using the naming scheme of the network transport. By
+ * default, all UNC and DNS names names are allowed.
+ *
+ * If pAuthInfo is set to NULL, NTLMSSP with the identity of the actual client will be used. To meet
+ * any one of the needs in the following list, pAuthInfo can be set to point to a non-NULL
+ * COAUTHINFO structure:
+ *
+ * To specify a different client identity for machine remote activations. The specified identity
+ * will be used for the launch permission check on the server rather than the real client identity.
+ *
+ * To specify that Kerberos, rather than NTLMSSP, is used for machine remote activation. A
+ * nondefault client identity may or may not be specified.
+ *
+ * To request unsecure activation.
+ *
+ * To specify a proprietary authentication service.
+ *
+ * If pAuthInfo is not NULL, those values will be used to specify the authentication settings for
+ * the remote call. These settings will be passed to RpcBindingSetAuthInfoEx.
+ *
+ * If the pAuthInfo member is not specified, any values in the AppID section of the registry will be
+ * used to override the following default authentication settings:
+ *
+ * - dwAuthnSvc: RPC_C_AUTHN_WINNT
+ *
+ * - dwAuthzSvc: RPC_C_AUTHZ_NONE
+ *
+ * - pszServerPrincName: NULL
+ *
+ * - dwAuthnLevel: RPC_C_AUTHN_LEVEL_CONNECT
+ *
+ * - dwImpersonationLevel: RPC_C_IMP_LEVEL_IMPERSONATE
+ *
+ * - pvAuthIdentityData: NULL
+ *
+ * - dwCapabilities: RPC_C_QOS_CAPABILITIES_DEFAULT
+ */
 typedef struct  _COSERVERINFO
     {
+    /**
+     * Reserved for future use; set to zero.
+     */
     DWORD dwReserved1;
+    /**
+     * Pointer to the name of the machine to be used.
+     */
     LPWSTR pwszName;
+    /**
+     * Set to a pointer to a COAUTHINFO structure to override the default activation security for
+     * machine remote activations. Otherwise, set to NULL to indicate that default values should be
+     * used. For more information, see the Remarks section.
+     */
     COAUTHINFO __RPC_FAR *pAuthInfo;
+    /**
+     * Reserved for future use; set to zero.
+     */
     DWORD dwReserved2;
     }	COSERVERINFO;
 
@@ -927,40 +1215,177 @@ typedef HICON HCURSOR;
 
 #endif // !_HCURSOR_DEFINED
 /* tagTEXTMETRICW was copied from wingdi.h for MIDL */
+/**
+ * This structure contains basic information about a physical font.
+ */
 typedef struct  tagTEXTMETRICW
     {
+    /**
+     * Specifies the height (ascent + descent) of characters.
+     */
     LONG tmHeight;
+    /**
+     * Specifies the ascent (units above the base line) of characters.
+     */
     LONG tmAscent;
+    /**
+     * Specifies the descent (units below the base line) of characters.
+     */
     LONG tmDescent;
+    /**
+     * Specifies the amount of leading (space) inside the bounds set by the tmHeight member. Accent
+     * marks and other diacritical characters may occur in this area. The designer may set this member
+     * to zero.
+     */
     LONG tmInternalLeading;
+    /**
+     * Specifies the amount of extra leading (space) that the application adds between rows. Since this
+     * area is outside the font, it contains no marks and is not altered by text output calls in either
+     * OPAQUE or TRANSPARENT mode. The designer may set this member to zero.
+     */
     LONG tmExternalLeading;
+    /**
+     * Specifies the average width of characters in the font (generally defined as the width of the
+     * letter x). This value does not include the overhang required for bold or italic characters.
+     */
     LONG tmAveCharWidth;
+    /**
+     * Specifies the width of the widest character in the font.
+     */
     LONG tmMaxCharWidth;
+    /**
+     * Specifies the weight of the font.
+     */
     LONG tmWeight;
+    /**
+     * Specifies the extra width per string that may be added to some synthesized fonts. When
+     * synthesizing some attributes, such as bold or italic, graphics device interface (GDI) or a device
+     * may have to add width to a string on both a per-character and per-string basis. For example, GDI
+     * makes a string bold by expanding the spacing of each character and overstriking by an offset
+     * value; it italicizes a font by shearing the string. In either case, there is an overhang past the
+     * basic string. For bold strings, the overhang is the distance by which the overstrike is offset.
+     * For italic strings, the overhang is the amount the top of the font is sheared past the bottom of
+     * the font.
+     *
+     * The tmOverhang member enables the application to determine how much of the character width
+     * returned by a GetTextExtentPoint32 function call on a single character is the actual character
+     * width and how much is the per-string extra width. The actual width is the extent minus the
+     * overhang.
+     */
     LONG tmOverhang;
+    /**
+     * Specifies the horizontal aspect of the device for which the font was designed.
+     */
     LONG tmDigitizedAspectX;
+    /**
+     * Specifies the vertical aspect of the device for which the font was designed. The ratio of the
+     * tmDigitizedAspectX and tmDigitizedAspectY members is the aspect ratio of the device for which the
+     * font was designed.
+     */
     LONG tmDigitizedAspectY;
+    /**
+     * Specifies the value of the first character defined in the font.
+     */
     WCHAR tmFirstChar;
+    /**
+     * Specifies the value of the last character defined in the font.
+     */
     WCHAR tmLastChar;
+    /**
+     * Specifies the value of the character to be substituted for characters not in the font.
+     */
     WCHAR tmDefaultChar;
+    /**
+     * Specifies the value of the character that will be used to define word breaks for text
+     * justification.
+     */
     WCHAR tmBreakChar;
+    /**
+     * Specifies an italic font if it is nonzero.
+     */
     BYTE tmItalic;
+    /**
+     * Specifies an underlined font if it is nonzero.
+     */
     BYTE tmUnderlined;
+    /**
+     * Specifies a strikeout font if it is nonzero.
+     */
     BYTE tmStruckOut;
+    /**
+     * Specifies information about the pitch, the technology, and the family of a physical font.
+     *
+     * The four low-order bits of this member specify information about the pitch and the technology of
+     * the font. A constant is defined for each of the four bits: Value Description TMPF_FIXED_PITCH If
+     * this bit is set the font is a variable pitch font. If this bit is clear the font is a fixed pitch
+     * font. Note that those meanings are the opposite of what the constant name implies. TMPF_VECTOR If
+     * this bit is set, the font is a vector font. TMPF_TRUETYPE If this bit is set, the font is a
+     * TrueType font. TMPF_DEVICE If this bit is set, the font is a device font.
+     *
+     * An application should carefully test for qualities encoded in these low-order bits, making no
+     * arbitrary assumptions. For example, besides having their own bits set, TrueType and PostScript
+     * fonts set the TMPF_VECTOR bit. A monospace bitmap font has all of these low-order bits clear; a
+     * proportional bitmap font sets the TMPF_FIXED_PITCH bit. A Postscript printer device font sets the
+     * TMPF_DEVICE, TMPF_VECTOR, and TMPF_FIXED_PITCH bits.
+     *
+     * The four high-order bits of tmPitchAndFamily designate the font's font family. An application can
+     * use the value 0xF0 and the bitwise AND operator to mask out the four low-order bits of
+     * tmPitchAndFamily, thus obtaining a value that can be directly compared with font family names to
+     * find an identical match. For information about font families, see the description of the LOGFONT
+     * structure.
+     */
     BYTE tmPitchAndFamily;
+    /**
+     * Specifies the character set of the font. The character set is one of the following values:
+     * ANSI_CHARSET DEFAULT_CHARSET SYMBOL_CHARSET SHIFTJIS_CHARSET HANGUL_CHARSET GB2312_CHARSET
+     * CHINESEBIG5_CHARSET OEM_CHARSET JOHAB_CHARSET HEBREW_CHARSET ARABIC_CHARSET GREEK_CHARSET
+     * TURKISH_CHARSET VIETNAMESE_CHARSET THAI_CHARSET EASTEUROPE_CHARSET RUSSIAN_CHARSET MAC_CHARSET
+     * BALTIC_CHARSET
+     */
     BYTE tmCharSet;
     }	TEXTMETRICW;
 
 #endif //0
 #ifndef _WIN32           // The following code is for Win16 only
 #ifndef WINAPI          // If not included with 3.1 headers...
+/**
+ * This structure contains message information from a thread's message queue.
+ *
+ * On Windows CE-based devices that use a stylus and touch screen instead of a mouse, the pt member
+ * contains the coordinates of the last position touched on the screen, rather than the coordinates
+ * of the current cursor position.
+ *
+ * If you need mouse cursor support in your application, use the Windows CE Iconcurs component
+ * rather than the Windows CE Icon component and the Windows CE Mcursor component rather than the
+ * Windows CE Cursor component.
+ */
 typedef struct  tagMSG
     {
+    /**
+     * Handle to the window whose window procedure receives the message.
+     */
     HWND hwnd;
+    /**
+     * Specifies the message identifier.
+     */
     UINT message;
+    /**
+     * Specifies additional information about the message. The exact meaning depends on the value of the
+     * message member.
+     */
     WPARAM wParam;
+    /**
+     * Specifies additional information about the message. The exact meaning depends on the value of the
+     * message member.
+     */
     LPARAM lParam;
+    /**
+     * Specifies the time at which the message was posted.
+     */
     DWORD time;
+    /**
+     * Specifies the cursor position, in screen coordinates, when the message was posted.
+     */
     POINT pt;
     }	MSG;
 

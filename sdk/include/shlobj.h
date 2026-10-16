@@ -91,13 +91,28 @@ typedef const SHITEMID  * LPCSHITEMID;
 //
 // ITEMIDLIST -- List if item IDs (combined with 0-terminator)
 //
+/**
+ * This structure contains a list of item identifiers.
+ */
 typedef struct _ITEMIDLIST	// idl
 {
+    /**
+     * List of item identifiers.
+     */
     SHITEMID	mkid;
 } ITEMIDLIST, * LPITEMIDLIST;
 typedef const ITEMIDLIST * LPCITEMIDLIST;
 
 
+/**
+ * This function retrieves a pointer to the shell's IMalloc interface. A shell extension must use
+ * this interface to allocate memory that is later freed by the shell. Applications can also use
+ * this interface to allocate and free their own memory.
+ *
+ * @param ppMalloc [out] Pointer to a pointer that receives the shell's IMalloc interface pointer.
+ *
+ * @return NONERROR indicates success. E_FAIL indicates failure.
+ */
 WINSHELLAPI HRESULT WINAPI SHGetMalloc(LPMALLOC * ppMalloc);
 
 //===========================================================================
@@ -838,6 +853,19 @@ typedef struct _STRRET
 //
 //-------------------------------------------------------------------------
 
+/**
+ * This function converts an item identifier list to a file system path.
+ *
+ * @param pidl [in] Pointer to an item identifier list that specifies a file or directory location
+ *   relative to the root of the namespace (the desktop).
+ * @param pszPath [out] Pointer to a buffer to receive the file system path. This buffer must be at
+ *   least MAX_PATH characters in size.
+ *
+ * @return TRUE indicates success. FALSE indicates failure.
+ *
+ * If the location specified by the pidl parameter is not part of the file system, this function
+ * will fail.
+ */
 WINSHELLAPI BOOL WINAPI SHGetPathFromIDList(LPCITEMIDLIST pidl, LPTSTR pszPath);
 
 //-------------------------------------------------------------------------
@@ -869,6 +897,55 @@ WINSHELLAPI BOOL WINAPI SHGetPathFromIDList(LPCITEMIDLIST pidl, LPTSTR pszPath);
 #define CSIDL_FONTS		 0x0014
 #define CSIDL_TEMPLATES          0x0015
 
+/**
+ * This function retrieves the location of a special folder, such as My Handheld PC, Recycle Bin,
+ * Control Panel, Desktop, Printers, Fonts, or various file system directories.
+ *
+ * @param hwndOwner [in] Handle to the owner window the client should specify if it displays a
+ *   dialog box or message box.
+ * @param nFolder [in] Value specifying the folder for which to retrieve the location. It is one of
+ *   the following values: Value Description CSIDL_ALTSTARTUP File system directory that corresponds
+ *   to the user's nonlocalized Startup program group. CSIDL_APPDATA File system directory that serves
+ *   as a common repository for application-specific data. CSIDL_BITBUCKET File system directory that
+ *   contains file objects in the user's Recycle Bin. The location of this directory is not in the
+ *   registry; it is marked with the hidden and system attributes to prevent the user from moving or
+ *   deleting it. CSIDL_COMMON_ALTSTARTUP File system directory that corresponds to the nonlocalized
+ *   Startup program group for all users. CSIDL_COMMON_DESKTOPDIRECTORY File system directory that
+ *   contains files and folders that appear on the desktop for all users. CSIDL_COMMON_FAVORITES File
+ *   system directory that serves as a common repository for all users' favorite items.
+ *   CSIDL_COMMON_PROGRAMS File system directory that contains the directories for the common program
+ *   groups that appear on the Start menu for all users. CSIDL_COMMON_STARTMENU File system directory
+ *   that contains the programs and folders that appear on the Start menu for all users.
+ *   CSIDL_COMMON_STARTUP File system directory that contains the programs that appear in the Startup
+ *   folder for all users. CSIDL_CONTROLS Virtual folder containing icons for the Control Panel
+ *   applications. CSIDL_COOKIES File system directory that serves as a common repository for Internet
+ *   cookies. CSIDL_DESKTOP Windows Desktop, which is a virtual folder at the root of the namespace.
+ *   CSIDL_DESKTOPDIRECTORY File system directory used to physically store file objects on the desktop
+ *   (not to be confused with the desktop folder itself). CSIDL_DRIVES My Computer, which is a virtual
+ *   folder that contains everything on the local computer: storage devices, printers, and Control
+ *   Panel. The folder may also contain mapped network drives. CSIDL_FAVORITES File system directory
+ *   that serves as a common repository for the user's favorite items. CSIDL_FONTS Virtual folder
+ *   containing fonts. CSIDL_HISTORY File system directory that serves as a common repository for
+ *   Internet history items. CSIDL_INTERNET Virtual folder representing the Internet.
+ *   CSIDL_INTERNET_CACHE File system directory that serves as a common repository for temporary
+ *   Internet files. CSIDL_NETHOOD File system directory containing objects that appear in the network
+ *   neighborhood. CSIDL_NETWORK Network Neighborhood Folder, which is a virtual folder that
+ *   represents the top level of the network hierarchy. CSIDL_PERSONAL File system directory that
+ *   serves as a common repository for documents. CSIDL_PRINTERS Virtual folder containing installed
+ *   printers. CSIDL_PRINTHOOD File system directory that serves as a common repository for printer
+ *   links. CSIDL_PROGRAMS File system directory that contains the user's program groups (which are
+ *   also file system directories). CSIDL_RECENT File system directory that contains the user's most
+ *   recently used documents. CSIDL_SENDTO File system directory that contains Send To menu items.
+ *   CSIDL_STARTMENU File system directory containing Start menu items. CSIDL_STARTUP File system
+ *   directory that corresponds to the user's Startup program group. The system starts these programs
+ *   whenever any user logs onto Windows NT or starts Windows 95. CSIDL_TEMPLATES File system
+ *   directory that serves as a common repository for document templates.
+ * @param ppidl [in] Pointer to a pointer to an item identifier list specifying the folder's
+ *   location relative to the root of the namespace (the desktop). The calling application is
+ *   responsible for freeing this pointer with the shell's IMalloc interface (see SHGetMalloc).
+ *
+ * @return NOERROR indicates success. An OLE-defined error result indicates failure.
+ */
 WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(HWND hwndOwner, int nFolder, LPITEMIDLIST * ppidl);
 
 //-------------------------------------------------------------------------

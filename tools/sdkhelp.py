@@ -6,10 +6,13 @@ declaration a page describes: interfaces and their methods, functions,
 structures and their members, and #define'd messages. Editors show these in
 hovers and completions.
 
-    python3 tools/sdkhelp.py Online_help_files/wceapc.chm --headers sdk/include
+    python3 tools/sdkhelp.py Online_help_files/wceapc.chm Online_help_files/wcesdkr.chm --headers sdk/include --headers sdk/compat
 
-The blocks this writes start with a line holding only /**, which the SDK's own
-comments never do, so a second run replaces them rather than adding more.
+Where two help files have a page with the same name, the first one given wins.
+
+The blocks this writes start with a line holding only /**, end with one holding
+only */, and every line between starts with *, so a second run can find and
+replace them rather than adding more.
 Interfaces and functions the headers only declare with an A or W suffix, such
 as IVoiceCmdW, get the page for the unsuffixed name.
 
@@ -254,9 +257,9 @@ def strip_generated(lines):
     while index < len(lines):
         if lines[index].strip() == "/**":
             end = index + 1
-            while end < len(lines) and lines[end].strip() != "*/":
+            while end < len(lines) and lines[end].strip() != "*/" and lines[end].strip().startswith("*"):
                 end += 1
-            if end < len(lines):
+            if end < len(lines) and lines[end].strip() == "*/":
                 index = end + 1
                 continue
         kept.append(lines[index])
@@ -307,6 +310,8 @@ def annotate(lines, pages, used):
         return False
 
     for index, line in enumerate(lines):
+        if index and lines[index - 1].rstrip().endswith("\\"):
+            continue
         code = code_only(line)
         if in_block_comment:
             if "*/" in code:
@@ -364,7 +369,8 @@ def annotate(lines, pages, used):
         elif stripped == "}" and depth == 0 and extern_blocks:
             extern_blocks -= 1
             code = ""
-        depth += code.count("{") - code.count("}")
+        if not stripped.startswith("#"):
+            depth += code.count("{") - code.count("}")
         if interface and depth <= interface_depth and "}" in code:
             interface = None
 
@@ -397,7 +403,7 @@ def annotate(lines, pages, used):
 def main():
     parser = argparse.ArgumentParser(description="Add the Auto PC SDK's help to its headers as documentation comments")
     parser.add_argument("help", nargs="+", help=".chm files, or folders of their unpacked pages")
-    parser.add_argument("--headers", required=True, help="the folder of headers to annotate")
+    parser.add_argument("--headers", required=True, action="append", help="a folder of headers to annotate; can be given more than once")
     parser.add_argument("--unused", action="store_true", help="list the API pages no declaration matched")
     arguments = parser.parse_args()
 
@@ -405,10 +411,8 @@ def main():
         pages = load_pages(unpack(arguments.help, scratch))
     used = set()
     total = 0
-    for name in sorted(os.listdir(arguments.headers)):
-        if not name.lower().endswith(".h"):
-            continue
-        path = os.path.join(arguments.headers, name)
+    paths = sorted(os.path.join(folder, name) for folder in arguments.headers for name in os.listdir(folder) if name.lower().endswith(".h"))
+    for path in paths:
         data = open(path, "rb").read()
         newline = "\r\n" if b"\r\n" in data else "\n"
         text = data.decode("latin-1")
