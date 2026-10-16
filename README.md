@@ -8,8 +8,13 @@ CI builds a real SH3 `.exe` for the device - no Microsoft tools, no Wine.
 - `include/autopc.h`, `src/autopc.c` - a small helper that binds to the device's
   own `coredll` at runtime, so it reaches APIs velo-toolchain doesn't expose
   (notably the faceplate display, drawn through the `FACEPLT` GDI driver).
-- `examples/hello` - the safe proof of concept: draws a message to the faceplate
-  and exits. It only writes to the screen; it reads and changes nothing.
+- `include/autopc_app.h`, `src/autopc_app.c` - app lifetime: registers with the
+  Forms Manager so the shell does not terminate the program after ~15 seconds,
+  with a relaunch fallback where there is no Forms Manager. See
+  [docs/apps.md](docs/apps.md).
+- `examples/hello` - the safe proof of concept: registers, draws a message to
+  the faceplate for a minute and exits. It only writes to the screen; it reads
+  and changes nothing.
 - `examples/stonks` - a second screen-only demo.
 - `tools/splice.py` - wrap a built `.exe` into a `BurnOS.bin` to run it (below).
 
