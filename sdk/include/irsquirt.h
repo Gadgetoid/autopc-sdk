@@ -27,10 +27,14 @@ DEFINE_GUID(IID_IRSQUIRT,
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface enables applications to use infrared (IR).
  */
+struct IIRSquirt : public IUnknown
+#else
 DECLARE_INTERFACE_(IIRSquirt, IUnknown)
+#endif
 {
     /**
      * This method transfers data.

@@ -3026,6 +3026,7 @@ typedef ISRPhraseW FAR *PISRPHRASEW;
 // {93D03F81-A65F-11d0-91E1-00A0C913CAD7}
 DEFINE_GUID(IID_IVCmdUserWordW, 0x93d03f81, 0xa65f, 0x11d0, 0x91, 0xe1, 0x0, 0xa0, 0xc9, 0x13, 0xca, 0xd7);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface allows an application to enable the speaker-dependent and speaker-independent
  * templates, and to add new words to the speaker-dependent template.
@@ -3045,7 +3046,10 @@ DEFINE_GUID(IID_IVCmdUserWordW, 0x93d03f81, 0xa65f, 0x11d0, 0x91, 0xe1, 0x0, 0xa
  * speaker-dependent template whether or not the speaker-independent template is available. Enabling
  * both templates may achieve better recognition accuracy.
  */
+struct IVCmdUserWordW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdUserWordW, IUnknown) {
+#endif
 
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
@@ -4389,13 +4393,17 @@ interfaces */
 
 DEFINE_GUID(IID_IVCmdNotifySinkW, 0xCCFD7A60L, 0x604D, 0x101B, 0x99, 0x26, 0x00, 0xAA, 0x00, 0x3C, 0xFC, 0x2C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface must be implemented by an application in order to receive notifications from the
  * voice command object. In addition to the recognized command, an application can also be notified
  * of events such as beginning and ending of an utterance, menu activation, and the presence of
  * interference.
  */
+struct IVCmdNotifySinkW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdNotifySinkW, IUnknown) {
+#endif
 
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
@@ -4552,13 +4560,17 @@ typedef IVCmdNotifySinkW FAR * PIVCMDNOTIFYSINKW;
 // {80B25CC0-5540-11b9-C000-5611722E1D15}
 DEFINE_GUID(IID_IVCmdNotifySinkA, 0x80b25cc0, 0x5540, 0x11b9, 0xc0, 0x0, 0x56, 0x11, 0x72, 0x2e, 0x1d, 0x15);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface must be implemented by an application in order to receive notifications from the
  * voice command object. In addition to the recognized command, an application can also be notified
  * of events such as beginning and ending of an utterance, menu activation, and the presence of
  * interference.
  */
+struct IVCmdNotifySinkA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdNotifySinkA, IUnknown) {
+#endif
 
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
@@ -4743,13 +4755,17 @@ typedef IVCmdNotifySinkA FAR * PIVCMDNOTIFYSINKA;
 
 DEFINE_GUID(IID_IVCmdEnumW, 0xD3CC0820L, 0x604D, 0x101B, 0x99, 0x26, 0x00, 0xAA, 0x00, 0x3C, 0xFC, 0x2C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is a standard OLE enumeration interface. Its methods are used by applications to
  * enumerate the menus stored in the voice command database
  *
  * This interface is supported by all voice command objects.
  */
+struct IVCmdEnumW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdEnumW, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -4821,13 +4837,17 @@ typedef IVCmdEnumW FAR * PIVCMDENUMW;
 DEFINE_GUID(IID_IVCmdEnumA, 
 0xE86F9540, 0xDCA2, 0x11CD, 0xA1, 0x66, 0x0, 0xAA, 0x0, 0x4C, 0xD6, 0x5C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is a standard OLE enumeration interface. Its methods are used by applications to
  * enumerate the menus stored in the voice command database
  *
  * This interface is supported by all voice command objects.
  */
+struct IVCmdEnumA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdEnumA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -4995,6 +5015,7 @@ typedef IEnumSRShareA FAR * PIENUMSRSHAREA;
 
 DEFINE_GUID(IID_IVCmdMenuW, 0xDAC54F60L, 0x604D, 0x101B, 0x99, 0x26, 0x00, 0xAA, 0x00, 0x3C, 0xFC, 0x2C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface allows an application to manage voice command menus. It includes methods for such
  * tasks as activating and deactivating menus, and adding and deleting phrases.
@@ -5008,7 +5029,10 @@ DEFINE_GUID(IID_IVCmdMenuW, 0xDAC54F60L, 0x604D, 0x101B, 0x99, 0x26, 0x00, 0xAA,
  *
  * - VCMD_BY_POSITION: The dwCmdNum parameter is the position in the list of commands.
  */
+struct IVCmdMenuW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdMenuW, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -5309,6 +5333,7 @@ typedef IVCmdMenuW FAR * PIVCMDMENUW;
 // {746141E0-5543-11b9-C000-5611722E1D15}
 DEFINE_GUID(IID_IVCmdMenuA, 0x746141e0, 0x5543, 0x11b9, 0xc0, 0x0, 0x56, 0x11, 0x72, 0x2e, 0x1d, 0x15);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface allows an application to manage voice command menus. It includes methods for such
  * tasks as activating and deactivating menus, and adding and deleting phrases.
@@ -5322,7 +5347,10 @@ DEFINE_GUID(IID_IVCmdMenuA, 0x746141e0, 0x5543, 0x11b9, 0xc0, 0x0, 0x56, 0x11, 0
  *
  * - VCMD_BY_POSITION: The dwCmdNum parameter is the position in the list of commands.
  */
+struct IVCmdMenuA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdMenuA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -5665,13 +5693,17 @@ typedef IVCmdMenuA FAR * PIVCMDMENUA;
 
 DEFINE_GUID(IID_IVoiceCmdW, 0xE0DCC220L, 0x604D, 0x101B, 0x99, 0x26, 0x00, 0xAA, 0x00, 0x3C, 0xFC, 0x2C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface registers an application with a voice command object. It is also used for tasks
  * such as creating menus and menu enumerators.
  *
  * This interface is supported by all voice command objects.
  */
+struct IVoiceCmdW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVoiceCmdW, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -5870,13 +5902,17 @@ typedef IVoiceCmdW FAR * PIVOICECMDW;
 // {C63A2B30-5543-11b9-C000-5611722E1D15}
 DEFINE_GUID(IID_IVoiceCmdA, 0xc63a2b30, 0x5543, 0x11b9, 0xc0, 0x0, 0x56, 0x11, 0x72, 0x2e, 0x1d, 0x15);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface registers an application with a voice command object. It is also used for tasks
  * such as creating menus and menu enumerators.
  *
  * This interface is supported by all voice command objects.
  */
+struct IVoiceCmdA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVoiceCmdA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -6103,13 +6139,17 @@ typedef IVoiceCmdA FAR * PIVOICECMDA;
 
 DEFINE_GUID(IID_IVCmdAttributesW, 0xE5F24680L, 0x6053, 0x101B, 0x99, 0x26, 0x00, 0xAA, 0x00, 0x3C, 0xFC, 0x2C);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to set various attributes of the voice command object, including
  * audio output, recognition mode, and whether or not recognition is enabled.
  *
  * This interface is supported by all voice command objects.
  */
+struct IVCmdAttributesW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdAttributesW, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -6373,13 +6413,17 @@ typedef IVCmdAttributesW FAR * PIVCMDATTRIBUTESW;
 // {FFF5DF80-5544-11b9-C000-5611722E1D15}
 DEFINE_GUID(IID_IVCmdAttributesA, 0xfff5df80, 0x5544, 0x11b9, 0xc0, 0x0, 0x56, 0x11, 0x72, 0x2e, 0x1d, 0x15);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to set various attributes of the voice command object, including
  * audio output, recognition mode, and whether or not recognition is enabled.
  *
  * This interface is supported by all voice command objects.
  */
+struct IVCmdAttributesA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVCmdAttributesA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -6825,10 +6869,14 @@ interfaces */
 // {FD3A2430-E090-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVTxtNotifySinkW, 0xfd3a2430, 0xe090, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface notifies an application of the status of the object.
  */
+struct IVTxtNotifySinkW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVTxtNotifySinkW, IUnknown) {
+#endif
 
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
@@ -6863,10 +6911,14 @@ typedef IVTxtNotifySinkW FAR * PIVTXTNOTIFYSINKW;
 // {D2C840E0-E092-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVTxtNotifySinkA, 0xd2c840e0, 0xe092, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface notifies an application of the status of the object.
  */
+struct IVTxtNotifySinkA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVTxtNotifySinkA, IUnknown) {
+#endif
 
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
@@ -6924,11 +6976,15 @@ typedef IVTxtNotifySinkA FAR * PIVTXTNOTIFYSINKA;
 // {C4FE8740-E093-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVoiceTextW, 0xc4fe8740, 0xe093, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface registers an application to use the voice text object, and controls playback of
  * text.
  */
+struct IVoiceTextW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVoiceTextW, IUnknown) {
+#endif
     // IUnknown members
     STDMETHOD(QueryInterface)   (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
     STDMETHOD_(ULONG,AddRef)    (THIS) PURE;
@@ -7071,11 +7127,15 @@ typedef IVoiceTextW FAR * PIVOICETEXTW;
 // {E1B7A180-E093-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVoiceTextA, 0xe1b7a180, 0xe093, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface registers an application to use the voice text object, and controls playback of
  * text.
  */
+struct IVoiceTextA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVoiceTextA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -7243,11 +7303,15 @@ typedef IVoiceTextA FAR * PIVOICETEXTA;
 // {6A8D6140-E095-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVTxtAttributesW, 0x6a8d6140, 0xe095, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface allows an application to control various aspects of the operation of a voice text
  * object.
  */
+struct IVTxtAttributesW : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVTxtAttributesW, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;
@@ -7399,11 +7463,15 @@ typedef IVTxtAttributesW FAR * PIVTXTATTRIBUTESW;
 // {8BE9CC30-E095-11cd-A166-00AA004CD65C}
 DEFINE_GUID(IID_IVTxtAttributesA, 0x8be9cc30, 0xe095, 0x11cd, 0xa1, 0x66, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0x5c);
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface allows an application to control various aspects of the operation of a voice text
  * object.
  */
+struct IVTxtAttributesA : public IUnknown {
+#else
 DECLARE_INTERFACE_ (IVTxtAttributesA, IUnknown) {
+#endif
    // IUnknown members
    STDMETHOD(QueryInterface)  (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
    STDMETHOD_(ULONG,AddRef)   (THIS) PURE;

@@ -168,11 +168,15 @@ const CEPROPID kFullProp[] =
 //
 // The IVerifyContactSink
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods that allow an application to modify how the address book responds
  * to events .
  */
+struct IVerifyContactSink : public IUnknown
+#else
 DECLARE_INTERFACE_(IVerifyContactSink, IUnknown)
+#endif
 {
     /**
      * This method checks whether the information stored for a contact is valid.

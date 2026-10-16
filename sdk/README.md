@@ -14,5 +14,7 @@
 python3 tools/sdkhelp.py Online_help_files/wceapc.chm --headers sdk/include --unused
 ```
 
-It needs `7zz` or `7z` to unpack `.chm` files. `autopc_add_sdk_executable` passes `-fretain-comments-from-system-headers`, so clangd shows the comments on interfaces, functions, structures, their members and messages. clang doesn't attach comments to methods declared with `STDMETHOD` inside `DECLARE_INTERFACE_`, as the class name comes from a macro argument, so method comments are only in the headers.
+It needs `7zz` or `7z` to unpack `.chm` files. `autopc_add_sdk_executable` passes `-fretain-comments-from-system-headers`, so clangd shows the comments on interfaces and their methods, functions, structures, their members and messages.
+
+clang doesn't attach comments to members of a class whose name comes from a macro argument, as `DECLARE_INTERFACE_` gives it. So for C++ the script gives each documented interface the `struct` line the macro expands to, between `#if defined(__cplusplus) && !defined(CINTERFACE)` and `#else`, keeping `DECLARE_INTERFACE_` for C.
 

@@ -397,6 +397,7 @@ STDAPI UnInitASFormsManager(void);
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides indirect access to the screen device context (DC).
  *
@@ -412,7 +413,10 @@ STDAPI UnInitASFormsManager(void);
  * updated. The drawing process proceeds normally-no errors are generated-but the screen is not
  * repainted.
  */
+struct IFMDraw : public IDispatch
+#else
 DECLARE_INTERFACE_(IFMDraw, IDispatch)
+#endif
 	{
 	/**
 	 * This method gets a screen device context (DC).
@@ -542,6 +546,7 @@ DECLARE_INTERFACE_(IFMDraw, IDispatch)
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This optional interface provides a simple way for controls to fire events.
  *
@@ -550,7 +555,10 @@ DECLARE_INTERFACE_(IFMDraw, IDispatch)
  * exposes the interface, and place a pointer to it in the IASControl EventSink property. If this
  * interface is not adequate, create a custom IConnectionPoint interface.
  */
+struct IASEventSink : public IDispatch
+#else
 DECLARE_INTERFACE_(IASEventSink, IDispatch)
+#endif
 	{
 	/**
 	 * This method allows a control to receive a message when a message event is fired.
@@ -571,6 +579,7 @@ DECLARE_INTERFACE_(IASEventSink, IDispatch)
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods used to subclass the messaging and drawing functions of
  * IASControl.
@@ -583,7 +592,10 @@ DECLARE_INTERFACE_(IASEventSink, IDispatch)
  * IASClassMsgSink methods, have the remainder return S_FALSE. This indicates to the IASControl
  * method that no processing has taken place.
  */
+struct IASClassMsgSink : public IDispatch
+#else
 DECLARE_INTERFACE_(IASClassMsgSink, IDispatch)
+#endif
 	{
 	//
 	// Lifetime
@@ -691,6 +703,7 @@ DECLARE_INTERFACE_(IASClassMsgSink, IDispatch)
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods that manage communication between a form and an individual
  * control.
@@ -704,7 +717,10 @@ DECLARE_INTERFACE_(IASClassMsgSink, IDispatch)
  * indicating that no processing takes place. The IASControl method should be prepared to handle
  * processing in this event.
  */
+struct IASControl : public IDispatch
+#else
 DECLARE_INTERFACE_(IASControl, IDispatch)
+#endif
 	{
 	//
 	// Lifetime
@@ -1421,13 +1437,17 @@ DECLARE_INTERFACE_(IASControl, IDispatch)
 #define	INTERFACE
 
 // Titlebar interface
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods for managing a title bar.
  *
  * The IASTitleBar interface extends the IASControl interface. The title bar has a programmatic
  * identifier equal to APC_Titlebar.
  */
+struct IASTitlebar : public IASControl
+#else
 DECLARE_INTERFACE_(IASTitlebar, IASControl)
+#endif
 {
     /**
      * This method gets the title bar subcaption.
@@ -1534,13 +1554,17 @@ DECLARE_INTERFACE_(IASTitlebar, IASControl)
 #define	INTERFACE
 
 // Navigation Arrows interface
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods for managing a navigational arrows control.
  *
  * The IASUserNavArrows interface extends the IASControl interface. The navigational arrows control
  * has a programmatic identifier equal to APC_NavArrows.
  */
+struct IASUserNavArrows : public IASControl
+#else
 DECLARE_INTERFACE_(IASUserNavArrows, IASControl)
+#endif
 {
     /**
      * This method gets the state of the navigational arrows control.
@@ -1583,10 +1607,14 @@ DECLARE_INTERFACE_(IASUserNavArrows, IASControl)
 #define	INTERFACE
 
 // Query Key Usage interface
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides a method to determine key usage.
  */
+struct IQueryKeyUsage : public IUnknown
+#else
 DECLARE_INTERFACE_(IQueryKeyUsage, IUnknown)
+#endif
 {
     /**
      * This method gets the flags of the keys used.
@@ -1638,12 +1666,16 @@ DECLARE_INTERFACE_(IQueryKeyUsage, IUnknown)
 // AutoPC Simple Forms must implement this interface
 // A Form is ALSO a control and inherits from IASControl
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods for managing controls on a form.
  *
  * The IASForm interface extends the IASControl interface.
  */
+struct IASForm : public IASControl
+#else
 DECLARE_INTERFACE_(IASForm, IASControl)
+#endif
 	{
     // Unitialize
 	/**
@@ -2012,13 +2044,17 @@ DECLARE_INTERFACE_(IASIconTray, IDispatch)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is exposed by the Forms Manager object , and provides methods that enable an
  * application to manage its forms.
  *
  * The IASActiveForms interface extends the IDispatch interface.
  */
+struct IASActiveForms : public IDispatch
+#else
 DECLARE_INTERFACE_(IASActiveForms, IDispatch)
+#endif
     {
 	//
 	// Collection methods
@@ -2079,13 +2115,17 @@ DECLARE_INTERFACE_(IASActiveForms, IDispatch)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface, exposed by the Forms Manager object, provides methods that are used to manage
  * forms.
  *
  * The IfmManage interface extends the IDispatch interface.
  */
+struct IfmManage : public IDispatch
+#else
 DECLARE_INTERFACE_(IfmManage, IDispatch)
+#endif
     {
     //
     // Start or Stop Forms
@@ -2643,12 +2683,16 @@ DECLARE_INTERFACE_(IfmManage, IDispatch)
 //
 // The Forms Manager Information interface
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is exposed by the Forms Manager and provides some system-level methods.
  *
  * The IfmSystem interface extends the IDispatch interface.
  */
+struct IfmSystem : public IDispatch
+#else
 DECLARE_INTERFACE_(IfmSystem, IDispatch)
+#endif
     {
     /**
      * This method retrieves the display capabilities.
@@ -2705,13 +2749,17 @@ DECLARE_INTERFACE_(IfmSystem, IDispatch)
 //
 // A Collection of Forms Managers
 // 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is exposed by the Forms Manager collection object and provides methods for
  * handling multiple Forms Managers.
  *
  * The IfmCollection interface extends the IDispatch interface.
  */
+struct IfmCollection : public IDispatch
+#else
 DECLARE_INTERFACE_(IfmCollection, IDispatch)
+#endif
     {
 	/**
 	 * This method gets the number of Forms Managers in the collection

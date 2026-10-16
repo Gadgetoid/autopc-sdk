@@ -45,10 +45,14 @@ DECLARE_INTERFACE(IVIO_MiniDriverData);
 // Minidriver manager interface
 // This interface is used to allow the mindrivers to be initialized when the API 
 // is started up.  
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is used to initialize the mini-drivers when the API is started.
  */
+struct IVIO_MiniDriverMgr : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_MiniDriverMgr, IUnknown)
+#endif
 {
   // Start up the minidriver manager.
   /**
@@ -66,13 +70,17 @@ DECLARE_INTERFACE_(IVIO_MiniDriverMgr, IUnknown)
 // by the Vehicle Interface Hardware's device driver.  This is implemented by
 // the vendor of the vehicle interface hardware for each device subclass that is 
 // implemented in the API.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * Use this interface to translate between the values that are expected by a specified IVIO_Device
  * subclass and the raw information returned by the vehicle interface hardware's device driver. This
  * interface is created by the vendor of the vehicle interface hardware for each device subclass
  * that is implemented in the API.
  */
+struct IVIO_MiniDriver : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_MiniDriver, IUnknown)
+#endif
 {
   // Get data - corresponds to as IVIO_Device->GetData()
   /**
@@ -160,10 +168,14 @@ DECLARE_INTERFACE_(IVIO_MiniDriver, IUnknown)
 // another, copied, and then released.  No assumptions should be made about the 
 // address of the data buffer remaining valid after the reference is released.
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * Use this interface to return data buffer information.
  */
+struct IVIO_MiniDriverData : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_MiniDriverData, IUnknown)
+#endif
 {
   // Get the address of the data buffer itself
   /**

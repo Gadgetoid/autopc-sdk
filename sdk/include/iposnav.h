@@ -21,6 +21,7 @@
     typedef LPVOID* LPLPVOID;
 #endif
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods required to utilize Auto PC related Global Positioning System
  * (GPS) capabilities.
@@ -29,7 +30,10 @@
  *
  * The only supported Positioning and Navigation device is the GPS device.
  */
+struct IPosNav : public IUnknown
+#else
 DECLARE_INTERFACE_(IPosNav, IUnknown)
+#endif
 {
     //IUnknown members.
     STDMETHOD(QueryInterface)   (THIS_ REFIID, LPLPVOID) PURE;

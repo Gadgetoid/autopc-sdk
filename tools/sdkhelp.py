@@ -11,7 +11,19 @@ hovers and completions.
 The blocks this writes start with a line holding only /**, which the SDK's own
 comments never do, so a second run replaces them rather than adding more.
 Interfaces and functions the headers only declare with an A or W suffix, such
-as IVoiceCmdW, get the page for the unsuffixed name."""
+as IVoiceCmdW, get the page for the unsuffixed name.
+
+clang doesn't attach comments to members of a class whose name comes from a
+macro argument, as DECLARE_INTERFACE_ gives it. So each documented interface
+gets, for C++ only, the struct line DECLARE_INTERFACE_ expands to:
+
+    #if defined(__cplusplus) && !defined(CINTERFACE)
+    struct IASLabel : public IASControl
+    #else
+    DECLARE_INTERFACE_(IASLabel, IASControl)
+    #endif
+
+A second run unwraps these too."""
 import argparse
 import html
 import os
@@ -210,6 +222,31 @@ def member_comment(indent, description):
     return [indent + "/**"] + [(indent + line).rstrip() for line in body] + [indent + " */"]
 
 
+CPLUSPLUS_ONLY = "#if defined(__cplusplus) && !defined(CINTERFACE)"
+INTERFACE = re.compile(r"(\s*)DECLARE_INTERFACE(_?)\s*\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)(.*)")
+
+
+def plain_struct(line):
+    match = INTERFACE.match(line)
+    indent, _, name, base, rest = match.groups()
+    return f"{indent}struct {name}" + (f" : public {base}" if base else "") + rest
+
+
+def unwrap_interfaces(lines):
+    kept = []
+    index = 0
+    while index < len(lines):
+        window = lines[index:index + 5]
+        if (len(window) == 5 and window[0] == CPLUSPLUS_ONLY and window[2] == "#else" and window[4] == "#endif"
+                and INTERFACE.match(window[3]) and window[1] == plain_struct(window[3])):
+            kept.append(window[3])
+            index += 5
+            continue
+        kept.append(lines[index])
+        index += 1
+    return kept
+
+
 def strip_generated(lines):
     kept = []
     index = 0
@@ -223,7 +260,7 @@ def strip_generated(lines):
                 continue
         kept.append(lines[index])
         index += 1
-    return kept
+    return unwrap_interfaces(kept)
 
 
 def indentation(line):
@@ -258,11 +295,15 @@ def annotate(lines, pages, used):
     in_block_comment = False
     struct_starts = []
     extern_blocks = 0
+    wrapped = set()
+    interface_index = None
 
     def add(index, block, title):
         if block and index not in insertions:
             insertions[index] = block
             used.add(title)
+            return True
+        return False
 
     for index, line in enumerate(lines):
         code = code_only(line)
@@ -282,16 +323,18 @@ def annotate(lines, pages, used):
         if match and not stripped.endswith(";"):
             interface = match.group(1)
             interface_depth = depth
+            interface_index = index
             page = find_page(pages, interface)
-            if page:
-                add(index, comment(indentation(line), page, include_parameters=False), page["title"])
+            if page and add(index, comment(indentation(line), page, include_parameters=False), page["title"]):
+                wrapped.add(index)
         elif interface:
             method = re.match(r"\s*STDMETHOD_?\s*\(\s*(?:[^,()]+,\s*)?(\w+)\s*\)", code)
             if method:
                 for owner in (interface, interface[:-1] if interface.endswith(("A", "W")) else None):
                     page = pages.get(f"{owner}::{method.group(1)}".lower()) if owner else None
                     if page:
-                        add(index, comment(indentation(line), page), page["title"])
+                        if add(index, comment(indentation(line), page), page["title"]):
+                            wrapped.add(interface_index)
                         break
 
         define = re.match(r"\s*#\s*define\s+(\w+)", line)
@@ -342,6 +385,9 @@ def annotate(lines, pages, used):
                         break
     output = []
     for index, line in enumerate(lines):
+        if index in wrapped and INTERFACE.match(line):
+            output += [CPLUSPLUS_ONLY] + insertions.get(index, []) + [plain_struct(line), "#else", line, "#endif"]
+            continue
         output += insertions.get(index, [])
         output.append(line)
     return output, len(insertions)

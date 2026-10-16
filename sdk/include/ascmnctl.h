@@ -339,13 +339,17 @@ DEFINE_GUID(IID_ASHTMLCONTROLNOTIFYSINK,
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods used to assign an image to an Auto PC simple (AS) label control.
  *
  * The IASLabel interface, which has a global unique identifier equal to IID ASLABEL, extends the
  * IASControl interface. The label control has a programmatic identifier equal to APC_Label.
  */
+struct IASLabel : public IASControl
+#else
 DECLARE_INTERFACE_(IASLabel, IASControl)
+#endif
 	{
     //
     // Use these to assign a user defined image to the label. However, some controls
@@ -652,6 +656,7 @@ DECLARE_INTERFACE_(IASMenu, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a menu that uses images rather than text strings to
  * display its options.
@@ -665,7 +670,10 @@ DECLARE_INTERFACE_(IASMenu, IASControl)
  * WM_COMMAND message is fired to the event sink. The high-order word of wParam contains
  * LBN_SELCHANGE, and the low-order word contains the control's identifier.
  */
+struct IASImageMenu : public IASControl
+#else
 DECLARE_INTERFACE_(IASImageMenu, IASControl)
+#endif
     {
 	/**
 	 * This method gets the number of items in the menu.
@@ -1101,6 +1109,7 @@ DECLARE_INTERFACE_(IASImageMenu, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage a shell menu object.
  *
@@ -1112,7 +1121,10 @@ DECLARE_INTERFACE_(IASImageMenu, IASControl)
  * the next, a WM_COMMAND message is fired to the event sink. LBN_SELCHANGE is in the high-order
  * word of wParam, and the control's identifier is in the low-order word.
  */
+struct IASShellMenu : public IASImageMenu
+#else
 DECLARE_INTERFACE_(IASShellMenu, IASImageMenu)
+#endif
     {
     /**
      * This method gets the hot key associated with a shell menu item.
@@ -1236,6 +1248,7 @@ DECLARE_INTERFACE_(IASShellMenu, IASImageMenu)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage a progress bar.
  *
@@ -1243,7 +1256,10 @@ DECLARE_INTERFACE_(IASShellMenu, IASImageMenu)
  * IID_ASPROGRESSBAR, extends the IASControl interface. The progress bar has a programmatic
  * identifier equal to APC_Progress.
  */
+struct IASProgressBar : public IASControl
+#else
 DECLARE_INTERFACE_(IASProgressBar, IASControl)
+#endif
     {
     /**
      * This method gets the current value associated with the progress bar.
@@ -1466,6 +1482,7 @@ DECLARE_INTERFACE_(IASProgressBar, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage Auto PC simple (AS) slider controls.
  *
@@ -1476,7 +1493,10 @@ DECLARE_INTERFACE_(IASProgressBar, IASControl)
  * command to the event sink. The WPARAM contains the control's identifier. The LPARAM contains the
  * slider value.
  */
+struct IASSlider : public IASProgressBar
+#else
 DECLARE_INTERFACE_(IASSlider, IASProgressBar)
+#endif
     {     
 	/**
 	 * This method gets the value in which to increment the slider.
@@ -1523,6 +1543,7 @@ DECLARE_INTERFACE_(IASSlider, IASProgressBar)
 #undef  INTERFACE
 
 #define INTERFACE
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a visual volume indicator (VVI) control.
  *
@@ -1530,7 +1551,10 @@ DECLARE_INTERFACE_(IASSlider, IASProgressBar)
  * IASProgressBar interface. The visual volume indicator control has a programmatic identifier equal
  * to APC_Vvi.
  */
+struct IASVVI : public IASProgressBar
+#else
 DECLARE_INTERFACE_(IASVVI, IASProgressBar)
+#endif
     {
     /**
      * This method retrieves whether or not the control is mirrored.
@@ -1585,6 +1609,7 @@ DECLARE_INTERFACE_(IASVVI, IASProgressBar)
 
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is used to manage a memory slider.
  *
@@ -1592,7 +1617,10 @@ DECLARE_INTERFACE_(IASVVI, IASProgressBar)
  * IID_ASMEMORYSLIDER, extends the IASSlider interface. The memory slider has a programmatic
  * identifier equal to APC_MemSlider.
  */
+struct IASMemorySlider : public IASSlider
+#else
 DECLARE_INTERFACE_(IASMemorySlider, IASSlider)
+#endif
     {
     /**
      * This method sets the amount of the object store currently being used.
@@ -1653,6 +1681,7 @@ DECLARE_INTERFACE_(IASTextInputRange, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage a character spinner control.
  *
@@ -1665,7 +1694,10 @@ DECLARE_INTERFACE_(IASTextInputRange, IASControl)
  * identifier. The high-order word of lParam contains zero if the character has been modified, and
  * contains one if not. The low-order word of lParam contains the form's identifier.
  */
+struct IASCharSpinner : public IASControl
+#else
 DECLARE_INTERFACE_(IASCharSpinner, IASControl)
+#endif
     {
     /**
      * This method gets the item height.
@@ -1792,6 +1824,7 @@ DECLARE_INTERFACE_(IASSIP, IASTextInputRange)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage an Auto PC simple edit box control.
  *
@@ -1817,7 +1850,10 @@ DECLARE_INTERFACE_(IASSIP, IASTextInputRange)
  * When using an edit control in a power list box, HIWORD(lParam) contains the power list box
  * identifier instead of the form's identifier.
  */
+struct IASEditBox : public IASCharSpinner
+#else
 DECLARE_INTERFACE_(IASEditBox, IASCharSpinner)
+#endif
     {
     /**
      * This method gets the width of an item.
@@ -2035,6 +2071,7 @@ DECLARE_INTERFACE_(IASEditBox, IASCharSpinner)
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This control interface allows direct graphical device interface (GDI) access to an area on the
  * faceplate.
@@ -2042,7 +2079,10 @@ DECLARE_INTERFACE_(IASEditBox, IASCharSpinner)
  * The IASCanvas interface, which has a global unique identifier equal to IID_ASCANVAS, extends the
  * IASControl interface. The canvas control has a programmatic identifier equal to APC_Canvas.
  */
+struct IASCanvas : public IASControl
+#else
 DECLARE_INTERFACE_(IASCanvas, IASControl)
+#endif
     {
     /**
      * This method gets a handle to the device context for a control, or creates a compatible off-screen
@@ -2161,6 +2201,7 @@ DECLARE_INTERFACE_(IASCanvas, IASControl)
 #undef	INTERFACE
 #define	INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to access the clock control.
  *
@@ -2173,7 +2214,10 @@ DECLARE_INTERFACE_(IASCanvas, IASControl)
  * the time in the label control attached by the put_ClockLabel0 method, and displays the date in
  * the label control attached by the put_ClockLabel method.
  */
+struct IASClock : public IASControl
+#else
 DECLARE_INTERFACE_(IASClock, IASControl)
+#endif
     {
     /**
      * This method gets the time and date format for the clock display.
@@ -2411,6 +2455,7 @@ DECLARE_INTERFACE_(IASClock, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * The IASTimer interface provides methods for timing.
  *
@@ -2419,7 +2464,10 @@ DECLARE_INTERFACE_(IASClock, IASControl)
  * fires a WM_TIMER message to the event sink. The control's identifier is contained in the
  * low-order word of wParam, the form's identifier in the high-order word.
  */
+struct IASTimer : public IASControl
+#else
 DECLARE_INTERFACE_(IASTimer, IASControl)
+#endif
     {
     /**
      * This method gets the interval at which the current timer is triggered.
@@ -2459,6 +2507,7 @@ DECLARE_INTERFACE_(IASTimer, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides the methods to manage a PlayList object.
  *
@@ -2466,7 +2515,10 @@ DECLARE_INTERFACE_(IASTimer, IASControl)
  * the IASControl interface. The play list object has a programmatic identifier equal to
  * APC_PlayList.
  */
+struct IASPlayList : public IASControl
+#else
 DECLARE_INTERFACE_(IASPlayList, IASControl)
+#endif
     {
     /**
      * This method gets the active track.
@@ -2726,6 +2778,7 @@ DECLARE_INTERFACE_(IASPlayList, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a crosshairs control.
  *
@@ -2744,7 +2797,10 @@ DECLARE_INTERFACE_(IASPlayList, IASControl)
  * The IASCrossHair interface, which has a global unique identifier (GUID) equal to
  * IID_ASCROSSHAIRS, inherits from IASControl.
  */
+struct IASCrossHairs : public IASControl
+#else
 DECLARE_INTERFACE_(IASCrossHairs, IASControl)
+#endif
     {
     /**
      * This method gets the current value of the x-axis.
@@ -2963,6 +3019,7 @@ DECLARE_INTERFACE_(IASCrossHairs, IASControl)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a tabber control.
  *
@@ -2970,7 +3027,10 @@ DECLARE_INTERFACE_(IASCrossHairs, IASControl)
  * extends the IASControl interface. The tabber control has a programmatic identifier equal to
  * APC_Tab.
  */
+struct IASTabber : public IASControl
+#else
 DECLARE_INTERFACE_(IASTabber, IASControl)
+#endif
 {
 	//
 	// basics
@@ -3350,13 +3410,17 @@ DECLARE_INTERFACE_(IASTabber, IASControl)
 //
 // PowerListBox Item
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is used to manage the items that have been added to a power list box.
  *
  * The IASPowerListBoxItem interface, which has a global unique identifier (GUID) equal to
  * IID_ASPOWERLISTBOXITEM, extends the IDispatch interface.
  */
+struct IASPowerListBoxItem : public IDispatch
+#else
 DECLARE_INTERFACE_(IASPowerListBoxItem, IDispatch)
+#endif
 {
 	/**
 	 * This method gets the data associated with the item.
@@ -3448,6 +3512,7 @@ DECLARE_INTERFACE_(IASPowerListBoxItem, IDispatch)
 //
 // PowerListBox command item
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is used to manage command items in a power list box.
  *
@@ -3455,20 +3520,27 @@ DECLARE_INTERFACE_(IASPowerListBoxItem, IDispatch)
  * IID_ASPOWERLISTBOXCOMMAND, extends the IASPowerListBoxItem interface. It has no methods of its
  * own, at present. It is managed with the methods inherited from the IASPowerListBoxItem interface.
  */
+struct IASPowerListBoxCommand : public IASPowerListBoxItem
+#else
 DECLARE_INTERFACE_(IASPowerListBoxCommand,IASPowerListBoxItem)
+#endif
 {
 };
 
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a power list box edit item.
  *
  * The IASPowerListBoxEdit interface, which has a global unique identifier (GUID) equal to
  * IID_ASPOWERLISTBOXEDIT, extends the IASControl interface.
  */
+struct IASPowerListBoxEdit : public IASPowerListBoxItem
+#else
 DECLARE_INTERFACE_(IASPowerListBoxEdit, IASPowerListBoxItem)
+#endif
 {
 	/**
 	 * This method retrieves the text in the edit control.
@@ -3526,13 +3598,17 @@ DECLARE_INTERFACE_(IASPowerListBoxEdit, IASPowerListBoxItem)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a string spinner item.
  *
  * The IASPowerListboxStringSpinner interface, which has a global unique identifier (GUID) equal to
  * IID_ASPOWERLISTBOXSTRINGSPINNER, extends the IASPowerListBox interface.
  */
+struct IASPowerListBoxStringSpinner : public IASPowerListBoxItem
+#else
 DECLARE_INTERFACE_(IASPowerListBoxStringSpinner, IASPowerListBoxItem)
+#endif
 {
 	/**
 	 * This method gets the strings used by the string spinner.
@@ -3618,13 +3694,17 @@ DECLARE_INTERFACE_(IASPowerListBoxStringSpinner, IASPowerListBoxItem)
 #undef  INTERFACE
 #define INTERFACE
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage an integer spinner item.
  *
  * The IASPowerListBoxIntSpinner interface, which has a global unique identifier equal to
  * IID_ASPOWERLISTBOXINTSPINNER, extends the IASPowerListBoxItem interface.
  */
+struct IASPowerListBoxIntSpinner : public IASPowerListBoxItem
+#else
 DECLARE_INTERFACE_(IASPowerListBoxIntSpinner, IASPowerListBoxItem)
+#endif
 {
 	/**
 	 * This method retrieves the integer spinner flags.
@@ -3797,6 +3877,7 @@ DECLARE_INTERFACE_(IASPowerListSpeakItemSink, IUnknown)
 //
 // The IASProvidePowerListBoxCommandData sink
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface defines a sink which can be implemented by the application. It allows a list box
  * to perform a callback to get the items to be displayed.
@@ -3809,7 +3890,10 @@ DECLARE_INTERFACE_(IASPowerListSpeakItemSink, IUnknown)
  * ProvidePowerListBoxCommandData property of the form. The power list box then invokes GetCaption
  * when drawing a command item that has a Null caption.
  */
+struct IASProvidePowerListBoxCommandData : public IUnknown
+#else
 DECLARE_INTERFACE_(IASProvidePowerListBoxCommandData, IUnknown)
+#endif
 {
 	STDMETHOD(get_Caption)(THIS_ long lIndex, long lItemId, long lItemData, BSTR *pbstrCaption) PURE;
 };
@@ -3821,6 +3905,7 @@ DECLARE_INTERFACE_(IASProvidePowerListBoxCommandData, IUnknown)
 //
 // The PowerListBox
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage a power list box control.
  *
@@ -3829,7 +3914,10 @@ DECLARE_INTERFACE_(IASProvidePowerListBoxCommandData, IUnknown)
  * through the IASPowerListBox interface. The power list box control has a programmatic identifier
  * equal to APC_PwrListBox.
  */
+struct IASPowerListBox : public IASControl
+#else
 DECLARE_INTERFACE_(IASPowerListBox, IASControl)
+#endif
 {
 	/**
 	 * This method gets the number of items in the power list box.
@@ -4489,6 +4577,7 @@ DECLARE_INTERFACE_(IASPowerListBox, IASControl)
 //
 // The HTMLControl
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods to manage an HTML control.
  *
@@ -4500,7 +4589,10 @@ DECLARE_INTERFACE_(IASPowerListBox, IASControl)
  * interface is defined and registered with the control, text-to-speech can be used to read the
  * document aloud.
  */
+struct IASHTMLControl : public IASControl
+#else
 DECLARE_INTERFACE_(IASHTMLControl, IASControl)
+#endif
 {
 	/**
 	 * This method retrieves the current HTML string.
@@ -4672,6 +4764,7 @@ DECLARE_INTERFACE_(IASHTMLControl, IASControl)
 //
 // The HTMLControl Notify Sink
 //
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface provides methods that are used to notify applications of HTML-related events.
  *
@@ -4680,7 +4773,10 @@ DECLARE_INTERFACE_(IASHTMLControl, IASControl)
  * applications must implement an event sink according to this definition, and register it with
  * IASHTMLControl by putting a pointer to the sink in the NotifySink property.
  */
+struct IASHTMLControlNotifySink : public IDispatch
+#else
 DECLARE_INTERFACE_(IASHTMLControlNotifySink, IDispatch)
+#endif
 {
 	/**
 	 * This method is invoked when a hot spot is encountered.

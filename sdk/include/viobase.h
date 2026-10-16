@@ -95,10 +95,14 @@ DECLARE_INTERFACE(IVIO_MiniDriver);
 // capacity, etc.)
 // Other attributes of this class are a collection of maintenance information
 // (oil change interval, tune-up interval, tire rotation, etc.)
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface exposes information about a vehicle.
  */
+struct IVIO_Vehicle : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_Vehicle, IUnknown)
+#endif
 {
   // Get an enumerator for the vehicle metrics
   /**
@@ -153,11 +157,15 @@ DECLARE_INTERFACE_(IVIO_Vehicle, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of all available
 // vehicle attributes.  It is returned by the IVIO_Vehicle interface by the 
 // get_Metrics() method.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * The IVIO_EnumMetrics interface is an enumeration interface that exposes information about a
  * vehicle.
  */
+struct IVIO_EnumMetrics : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumMetrics, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -312,11 +320,15 @@ DECLARE_INTERFACE_(IVIO_EnumMetrics, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of all available
 // vehicle maintenance items .  It is returned by the IVIO_Vehicle interface by 
 // the get_MaintenanceItems() method.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is an enumeration interface that exposes information about maintenance information
  * for a vehicle.
  */
+struct IVIO_EnumMaintenanceItems : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumMaintenanceItems, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -435,11 +447,15 @@ DECLARE_INTERFACE_(IVIO_EnumMaintenanceItems, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of the 
 // attributes of a maintenance entry.  It is returned by the 
 // IVIO_EnumMaintenanceItems interface's Next() method
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is an enumeration interface that exposes information about maintenance entry
  * information for a vehicle.
  */
+struct IVIO_EnumMaintenanceEntry : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumMaintenanceEntry, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -557,11 +573,15 @@ DECLARE_INTERFACE_(IVIO_EnumMaintenanceEntry, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of all available
 // components that expose the IVIO_Device interface.  It is returned by the 
 // IVIO_Vehicle interface using the get_Devices() method.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface enumerates the available components in the vehicle that expose the IVIO_Device
  * interface.
  */
+struct IVIO_EnumDevices : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumDevices, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -654,10 +674,14 @@ DECLARE_INTERFACE_(IVIO_EnumDevices, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of all available
 // diagnostic trouble codes from the CLSID_TROUBLE_CODES object's GetData() 
 // method as the object IUnknown interface.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface exposes information about diagnostic data from the vehicle.
  */
+struct IVIO_EnumDiagnosticItems : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumDiagnosticItems, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -726,10 +750,14 @@ DECLARE_INTERFACE_(IVIO_EnumDiagnosticItems, IUnknown)
 // This is an OLE enumeration interface that allows enumeration of the 
 // attributes of a diagnostic item.  An object that exposes this interface is
 // returned by the Next() method in the IVIO_EnumDiagnosticItems interface.
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface exposes information about vehicle diagnostic data entries.
  */
+struct IVIO_EnumDiagnosticEntry : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EnumDiagnosticEntry, IUnknown)
+#endif
 {
   // Reset the enumerator to the beginning of the enumeration list
   /**
@@ -838,10 +866,14 @@ DECLARE_INTERFACE_(IVIO_EnumDiagnosticEntry, IUnknown)
 // IVIO_EnumMetrics, IVIO_EnumMaintenanceItems, and IVIO_EnumMaintenanceEntry
 // interfaces to return data back to the requesting application.  See the VIO
 // API specification for details on the specific data values and their meanings
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * Use this interface to return data values from the enumeration interfaces to the application.
  */
+struct IVIO_DataValue : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_DataValue, IUnknown)
+#endif
 {
   // Get the data item's ID
   /**
@@ -891,10 +923,14 @@ DECLARE_INTERFACE_(IVIO_DataValue, IUnknown)
 // This is an abstract base class used to create notification
 // objects that are called from an IVIO_Device instance when the 
 // IVIO_Device->SetNotify() method is invoked
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is used by IVIO_Device interface to notify an application.
  */
+struct IVIO_EventSink : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_EventSink, IUnknown)
+#endif
 {
   // Method that is called from the IVIO_Device instance
   // Need to determine specific parameters that are needed
@@ -915,12 +951,16 @@ DECLARE_INTERFACE_(IVIO_EventSink, IUnknown)
 
 // IVIO_Device class declaration:
 // This is the base class that all vehicle information is derived from
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * Use this interface to access vehicle components. These components can be sensors that are
  * accessed by means of the vehicle's serial data bus, direct input from the vehicle's wiring
  * harness, vehicle electronic control units (ECU), or from the Auto PC device.
  */
+struct IVIO_Device : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_Device, IUnknown)
+#endif
 {
   //
   // Get Properties of a IVIO_Device instance
@@ -1062,10 +1102,14 @@ DECLARE_INTERFACE_(IVIO_Device, IUnknown)
 // Low-level, straight to the device driver type of interface
 // This facilitates applications sending device driver-specific commands
 // to the VIO device driver
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface enables applications to communicate directly with the VIO device driver.
  */
+struct IVIO_Ioctl : public IUnknown
+#else
 DECLARE_INTERFACE_(IVIO_Ioctl, IUnknown)
+#endif
 {
   // Similar to the standard DeviceIoControl API
   /**

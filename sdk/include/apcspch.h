@@ -137,10 +137,14 @@ DEFINE_GUID(IID_IAPCSPEECH,
 0xEBC930F0, 0xD912, 0x11D0, 0x90, 0xC2, 0x00, 0xaA, 0x00, 0xC0, 0x83, 0x7C);
 
 
+#if defined(__cplusplus) && !defined(CINTERFACE)
 /**
  * This interface is a high level Auto PC simple speech interface.
  */
+struct IAPCSpeech : public IUnknown
+#else
 DECLARE_INTERFACE_(IAPCSpeech,IUnknown)
+#endif
 {
     // IUnknown members
     /**
