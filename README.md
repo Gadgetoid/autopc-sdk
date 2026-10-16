@@ -19,6 +19,9 @@ CI builds a real SH3 `.exe` for the device - no Microsoft tools, no Wine.
   start a CD, leave the player (it keeps playing), open Visualiser. It reads
   the CD audio ring in the faceplate's memory; Esc exits. See
   [docs/apps.md](docs/apps.md#cd-audio).
+- `sdk/` - Microsoft's Auto PC SDK headers, and `autopc_add_sdk_executable` in
+  `CMakeLists.txt` to build programs against them as the SDK's samples were. See
+  [sdk/README.md](sdk/README.md).
 - `tools/splice.py` - wrap a built `.exe` into a `BurnOS.bin` to run it (below).
 
 ## Build
