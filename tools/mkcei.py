@@ -22,7 +22,21 @@ package does not collide with another built from the same template.
 Order --order to the package's registry tree, which puts the program in the
 shell's app menu after the install's restart. The built-in apps use orders 4
 (Radio) to 32 (Voice Memo); the default, 100, puts it last. NAME should be the
-program's string resource 1, its shortcut name."""
+program's string resource 1, its shortcut name.
+
+--machine sets the processor the package is for, sh3 (418) or x86 (332), in
+the header and the .CEU's MachineType. The installer refuses a package for
+another processor ("compiled for a different platform"). The Clarion Joyride's
+(x86) installer also refuses any nonzero processor in a header of format 7 or
+older, so for x86 such a header gets 0 ("any"); the .CEU keeps 332.
+
+Folder, file and registry value entries lose their checksums: the
+template's don't match its contents, which the Joyride's installer verifies
+("The installation file is corrupted") and the 310C's ignores. In a format 7
+folder or file entry the two numbers are dropped, as in CEIBuild 1999
+packages; otherwise they become 0, which also skips the check.
+
+With --machine the package is checked with checkcei.py before it's written."""
 import argparse
 import os
 import re
@@ -30,6 +44,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cei
+import checkcei
 
 
 def stamp_version(program, record):
@@ -41,12 +56,36 @@ def stamp_version(program, record):
     return program[:version] + major.to_bytes(2, "little") + minor.to_bytes(2, "little") + program[version + 4:]
 
 
+RECORD_SPACE = b"|B"
+MACHINES = {"sh3": 0x1A2, "x86": 0x14C}
+HEADER_FORMAT_FIELD = 2
+HEADER_MACHINE_FIELD = 9
+LAST_FORMAT_WITHOUT_X86 = 7
+
+
+def set_machine(header, items, machine):
+    fields = header.split(b" ")
+    if len(fields) <= HEADER_MACHINE_FIELD:
+        raise SystemExit("template header has no machine field")
+    header_machine = machine
+    if machine == MACHINES["x86"] and int(fields[HEADER_FORMAT_FIELD]) <= LAST_FORMAT_WITHOUT_X86:
+        header_machine = 0
+    fields[HEADER_MACHINE_FIELD] = str(header_machine).encode()
+    retyped = []
+    for it in items:
+        if it[0] == "blob" and it[1].lower().endswith(".ceu"):
+            retyped.append(("blob", it[1], re.sub(rb"MachineType +\d+", b"MachineType%5d" % machine, it[2])))
+        else:
+            retyped.append(it)
+    return b" ".join(fields), retyped
+
+
 def add_menu_entry(items, name, order):
     machine = [i for i, it in enumerate(items) if it[0] == "record" and it[1].split(b" ")[:2] == [b"6", b"HKEY_LOCAL_MACHINE"]]
     if len(machine) != 1:
         raise SystemExit("template has no HKEY_LOCAL_MACHINE registry node")
     suffix = items[machine[0]][1][len(b"6 HKEY_LOCAL_MACHINE"):]
-    keys = [b"SOFTWARE", b"FMAppConfiguration", name.encode()]
+    keys = [b"SOFTWARE", b"FMAppConfiguration", name.encode().replace(b" ", RECORD_SPACE)]
     records = [b"6 " + key + suffix for key in keys]
     records += [b"7 AppName" + suffix, b"1 0", name.encode(), b"7 Order" + suffix, b"4 0", str(order).encode()]
     records += [b""] * (2 * len(keys))
@@ -63,6 +102,7 @@ def main():
     parser.add_argument("--package", help="rename the package title, program folder, shell name and .CEU so it installs alongside others")
     parser.add_argument("--menu", help="add the program to the shell's app menu under this name")
     parser.add_argument("--order", type=int, default=100, help="its place in the menu: the built-in apps use 4 (Radio) to 32 (Voice Memo); default 100, the end")
+    parser.add_argument("--machine", choices=sorted(MACHINES), help="processor the package is for; default: the template's")
     arguments = parser.parse_args()
 
     header, items = cei.parse(open(arguments.template, "rb").read())
@@ -117,6 +157,8 @@ def main():
         rest = header.split(b" ", 1)[1] if b" " in header else b""
         header = stem.capitalize().encode() + b" " + rest
 
+    if arguments.package and " " in arguments.package:
+        raise SystemExit("--package can't contain spaces")
     if arguments.package:
         ceu = [it for it in keep if it[0] == "blob" and it[1].lower().endswith(".ceu")]
         if len(ceu) != 1:
@@ -138,7 +180,17 @@ def main():
     if arguments.menu:
         keep = add_menu_entry(keep, arguments.menu, arguments.order)
 
-    open(arguments.output, "wb").write(cei.build(header, keep))
+    if arguments.machine:
+        header, keep = set_machine(header, keep, MACHINES[arguments.machine])
+
+    keep = cei.clear_checksums(keep)
+
+    package = cei.build(header, keep)
+    if arguments.machine:
+        problems = checkcei.problems(package, arguments.machine)
+        if problems:
+            raise SystemExit("\n".join("mkcei: %s" % problem for problem in problems))
+    open(arguments.output, "wb").write(package)
     print(f"wrote {arguments.output}: program {exe_name} -> {len(program)} bytes")
 
 

@@ -19,6 +19,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake
 
+      - name: Test the package tools
+        run: python3 -m unittest discover -s tests -v
+
       - name: Download the SH3 LLVM
         run: |
           name=velo-llvm-$VELO_LLVM_RELEASE-linux-x86_64
@@ -39,4 +42,28 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: autopc-demos
+          path: build/**/*.exe
+
+  x86:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install LLVM and CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld llvm cmake
+
+      - name: Build the demos (Windows CE 2.x, x86, Clarion Joyride)
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=third_party/velo-toolchain/cmake/velo-ce.cmake \
+            -DVELO_CE_VERSION=2 -DVELO_ARCH=x86 -DVELO_LLVM_ROOT="$(llvm-config --prefix)"
+          cmake --build build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: autopc-demos-x86
           path: build/**/*.exe
