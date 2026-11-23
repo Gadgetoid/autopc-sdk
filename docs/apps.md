@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR command_line, 
 
 - `autopc_app_start(instance, on_key, context)` initialises COM and the Forms Manager, creates `IfmManage`, calls `RegisterStartedApplication(FC_MAINFACEPLATE, name)` with the program's string resource 1 (its shortcut name) and `MoveAppToForeground`, then creates a form (`CLSID_ASFORM`) with an event sink, starts it with `IfmManage::Start`, captions it and makes it visible.
 - `autopc_app_running()` dispatches the thread's messages (the Forms Manager calls the event sink from them) and returns FALSE once the app should exit.
-- Keys arrive at the event sink as `WM_REMOTE_KEYDOWN` (0xBD00) and `WM_REMOTE_KEYUP` (0xBD01) with the virtual key in wParam, and go to `on_key(context, key, down)`; return TRUE to take a key. Esc quits unless taken. `autopc_app_quit()` asks the app to exit.
+- Keys arrive at the event sink as `WM_REMOTE_KEYDOWN` (0xBD00) and `WM_REMOTE_KEYUP` (0xBD01) with the virtual key in wParam, and go to `on_key(context, key, down)`; return TRUE to take a key. Esc quits unless taken. `autopc_app_quit()` asks the app to exit. On the Joyride, in the emulator, digit and arrow keys never reached the event sink; only Back quit the app. It's untested on the 310C.
 - `autopc_app_begin_draw()` returns the form's device context from `IASForm::GetIFMDraw` and `IFMDraw::GetDC`; `autopc_app_end_draw(dc)` commits it to the faceplate. Don't open the `FACEPLT` display directly: the foreground app redraws over it.
 - `autopc_app_stop()` deregisters, closes the form and uninitialises; call it before exiting.
 
@@ -50,7 +50,7 @@ The keypad driver can also send every key straight to one thread (`KPD1:` IOCTL 
 
 ## Appearing in the shell menu
 
-Built-in apps have `HKLM\SOFTWARE\FMAppConfiguration\<name>` with `AppName` (string) and `Order` (DWORD), optionally `LaunchPhrase` and `AutoLaunch`, plus a shortcut in `\Windows\Shell Applications\`. A `.cei` without the registry key installs but only shows in the uninstaller. `tools/mkcei.py --menu NAME` adds the key to the package's registry tree (type 6 records are keys, type 7 values, followed by the value type, `1 0` for a string or `4 0` for a DWORD, and the data), so the program is in the menu after the install's restart. A newly installed app appears first in the menu whatever its `Order`.
+Built-in apps have `HKLM\SOFTWARE\FMAppConfiguration\<name>` with `AppName` (string) and `Order` (DWORD), optionally `LaunchPhrase` and `AutoLaunch`, plus a shortcut in `\Windows\Shell Applications\`. A `.cei` without the registry key installs but only shows in the uninstaller. A `ceipack` manifest's `[menu]` table adds the key (see [cei-format.md](cei-format.md)), so the program is in the menu after the install's restart. A newly installed app appears first in the menu whatever its `Order`.
 
 ## Shortcut resources and voice training
 
