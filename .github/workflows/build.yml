@@ -42,7 +42,9 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: autopc-demos
-          path: build/**/*.exe
+          path: |
+            build/**/*.exe
+            build/card/**
 
   x86:
     runs-on: ubuntu-latest
@@ -66,4 +68,6 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: autopc-demos-x86
-          path: build/**/*.exe
+          path: |
+            build/**/*.exe
+            build/card/**

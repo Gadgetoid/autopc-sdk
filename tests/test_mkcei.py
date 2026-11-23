@@ -176,7 +176,11 @@ class CheckceiTest(unittest.TestCase):
         self.assertEqual(checkcei.problems(self.with_header(b"Hello |Z 7 1 1 1 0 1 0 0 All All 0 131072 13050830"), "x86"), [])
 
     def test_seven_field_header(self):
-        self.assertEqual(checkcei.problems(self.with_header(b"Hello |Z 7 1 1 1 0"), "x86"), [])
+        self.assertTrue(checkcei.problems(self.with_header(b"Hello |Z 7 1 1 1 0"), "x86"))
+        self.assertEqual(checkcei.problems(self.with_header(b"Hello |Z 7 1 1 1 0"), "sh3"), [])
+
+    def test_sh3_refuses_format_8(self):
+        self.assertTrue(checkcei.problems(self.with_header(b"Hello |Z 8 1 1 1 0 1 0 418 All All 0 131072 13050830"), "sh3"))
 
     def test_format_out_of_range(self):
         self.assertTrue(checkcei.problems(self.with_header(b"Hello |Z 9 1 1 1 0"), "x86"))

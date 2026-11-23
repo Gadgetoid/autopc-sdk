@@ -61,16 +61,16 @@ cmake --build build-x86
 
 The Joyride's `asfc.dll` and `apcdll.dll` import lists are in `exports/x86`.
 
-With `-DAUTOPC_CEI_TEMPLATE=/path/to/musicplayer.cei` the build also packages
-`hello` and `stonks` for a card: `card/<name>/AUTORUN.INF` and
-`card/<name>/<name>.cei`, ready to copy to the root of a CompactFlash card.
+The build also packages programs for a card: `card/<name>/AUTORUN.INF` and
+`card/<name>/<name>.cei`, ready to copy to the root of a CompactFlash card, for
+the 310C from an SH3 build and for the Joyride from an x86 one.
 `autopc_add_package(target "Shell Name")` in `CMakeLists.txt` packages another
 program. `python3 -m unittest discover -s tests` tests the package tools.
 
 ## Installing on a device
 Put two files on the root of a CompactFlash card: `AUTORUN.INF` and
-`<app>.cei`. Insert the card; the AutoPC shell auto-runs the installer.
-`AUTORUN.INF` is:
+`<app>.cei`. Insert the card while the unit is on; the AutoPC shell runs the
+installer. `AUTORUN.INF` is:
 
 ```
 [AutoPC.shx]
@@ -82,34 +82,52 @@ Open1=myapp.cei
 The section names the processor: `[AutoPC.shx]` for the 310C, `[AutoPC.X86]`
 for the Joyride, which skips sections for other processors.
 
-A `.cei` is a custom AutoPC installer package: a header line, then
-NUL-separated ASCII records describing a folder/file tree with install hooks,
-then the files embedded as size-framed blobs. `tools/cei.py` parses and rebuilds
-a `.cei` byte-for-byte; `tools/mkcei.py` swaps your program into a template
-`.cei`. With `musicplayer.cei` as the template this is tested on a real unit:
+## Packages
+A `.cei` is the Auto PC's installer package, which Microsoft's CEIBuild made.
+[docs/cei-format.md](docs/cei-format.md) describes the format, from the
+310C's and Joyride's installers and both CEIBuild versions. `tools/ceipack.py`
+builds one from a TOML manifest, the way CEIBuild would:
 
-```sh
-python3 tools/mkcei.py musicplayer.cei build/hello.exe hello.cei \
-  --minimal --name hello.exe --package Hello --menu Hello --machine sh3
+```toml
+[package]
+name = "Hello"
+version = "1.0"
+target = "joyride"        # or "310c"
+
+[[file]]
+source = "hello.exe"      # installed in \Program Files\Hello
+shortcut = "Hello"
+
+[menu]
+name = "Hello"
 ```
 
-For the Joyride, `--machine x86`. Its installer refuses what the 310C's
-accepts: a processor other than 0 in this template's header ("compiled for a
-different platform"), and checksums that don't match an entry's contents ("The
-installation file is corrupted"). `--machine x86` writes 0, and `mkcei` writes
-checksums of the new contents. With `--machine`, `mkcei` checks the package with
-`tools/checkcei.py`, which also checks any `.cei`:
+```sh
+python3 tools/ceipack.py hello.toml hello.cei
+```
+
+The manifest can also add data files, folders, registry values, speech
+templates and database references; see the top of `tools/ceipack.py`. A
+`joyride` package is format 8 for x86, a `310c` one format 7 for SH3, and
+neither installs on the other unit. `ceipack` checks the result with
+`tools/checkcei.py`, which checks any `.cei` against what a unit's installer
+accepts:
 
 ```sh
 python3 tools/checkcei.py hello.cei --machine x86
 ```
 
-Packages have no certificate, so the Joyride says the program isn't certified
-and installs it anyway.
+`tools/ceiunpack.py package.cei folder` unpacks a package into a manifest and
+its files, which `ceipack` rebuilds byte for byte.
 
-`--menu` adds the program to the shell's app menu. The installer asks you to
-voice-train the program's name, its shell voice command (Esc skips it), then
-restarts the AutoPC. A program needs icon resource 1 and string resource 1 (its shell name)
-for its shortcut: see `assets/autopc.ico` and `examples/hello/hello.rc`.
+Packages have no certificate, so the installer says the program isn't
+certified and installs it anyway. A program in the menu needs icon resource 1
+and string resource 1 (its shell name) for its shortcut: see
+`assets/autopc.ico` and `examples/hello/hello.rc`. The installer asks you to
+voice-train the name, its shell voice command (Esc or Back skips it), then
+restarts the unit.
+
+`tools/mkcei.py` is the older route: it swaps a program into a template `.cei`
+such as MusicPlayer's.
 
 [velo-toolchain]: https://github.com/gadgetoid/velo-toolchain

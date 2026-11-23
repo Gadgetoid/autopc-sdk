@@ -5,12 +5,13 @@ r"""Check an AutoPC .cei package against what the device's installer accepts.
 The rules come from the installers, ApcLoad.exe, of the Clarion AutoPC 310C
 (sh3) and the Clarion Joyride (x86):
 
-- The header is name, title, format and at least four more numbers. Formats
-  6, 7 and 8 are accepted.
-- The 10th header field is the processor (PE machine). The 310C accepts its
-  own (418) or 0. The Joyride accepts 0, or 332 only in a format 8 header:
-  for format 7 or older any nonzero processor is "compiled for a different
-  platform".
+- The header is name, title, format and at least four more numbers. The
+  310C accepts formats 6 and 7 and reads only the first 7 fields. The Joyride
+  accepts 6, 7 and 8.
+- The 10th header field is the processor (PE machine). The 310C doesn't read
+  it. The Joyride accepts 0, or 332 only in a format 8 header: for format 7 or
+  older any nonzero processor is "compiled for a different platform". A 7-field
+  header has no processor, and the Joyride takes it as 332, so it refuses one.
 - The 13th header field is the length of a certificate block. Packages are
   built without one, so it must be 0.
 - On the Joyride, folder, file, registry value and speech template entries
@@ -30,7 +31,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cei
 
 MACHINES = {"sh3": 0x1A2, "x86": 0x14C}
-SUPPORTED_FORMATS = {6, 7, 8}
+SUPPORTED_FORMATS = {"sh3": {6, 7}, "x86": {6, 7, 8}}
 LAST_FORMAT_WITHOUT_X86 = 7
 HEADER_FORMAT_FIELD = 2
 HEADER_MACHINE_FIELD = 9
@@ -51,9 +52,11 @@ def header_problems(header, machine):
         return ["header has %d fields, the installer needs at least %d" % (len(fields), MINIMUM_HEADER_FIELDS)]
     found = []
     format_number = int(fields[HEADER_FORMAT_FIELD])
-    if format_number not in SUPPORTED_FORMATS:
-        found.append("header format %d, the installer accepts %s" % (format_number, sorted(SUPPORTED_FORMATS)))
-    if len(fields) > HEADER_MACHINE_FIELD:
+    if format_number not in SUPPORTED_FORMATS[machine]:
+        found.append("header format %d, the %s installer accepts %s" % (format_number, machine, sorted(SUPPORTED_FORMATS[machine])))
+    if machine == "x86" and len(fields) <= HEADER_MACHINE_FIELD:
+        found.append("header has no processor field, which the x86 installer takes as 332 and refuses in a format %d header" % format_number)
+    if machine == "x86" and len(fields) > HEADER_MACHINE_FIELD:
         header_machine = int(fields[HEADER_MACHINE_FIELD])
         allowed = allowed_machines(machine, format_number)
         if header_machine not in allowed:

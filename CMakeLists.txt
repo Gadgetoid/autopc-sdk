@@ -3,24 +3,28 @@ project(autopc_sdk C CXX)
 
 include(VeloCE)
 
-set(AUTOPC_CEI_TEMPLATE "" CACHE FILEPATH "Template .cei (Microsoft's musicplayer.cei) to package programs as card installers")
 if(VELO_ARCH STREQUAL "x86")
     set(AUTOPC_AUTORUN_SECTION X86)
+    set(AUTOPC_PACKAGE_TARGET joyride)
 else()
     set(AUTOPC_AUTORUN_SECTION shx)
+    set(AUTOPC_PACKAGE_TARGET 310c)
 endif()
 
+# Package a program as a card installer: card/<target>/AUTORUN.INF and <target>.cei.
 function(autopc_add_package target name)
-    if(NOT AUTOPC_CEI_TEMPLATE)
+    if(Python3_VERSION VERSION_LESS 3.11)
+        message(WARNING "Packaging ${target} needs Python 3.11 or later (tomllib)")
         return()
     endif()
-    string(REPLACE " " "" package "${name}")
     set(card "${CMAKE_BINARY_DIR}/card/${target}")
+    set(manifest "${CMAKE_BINARY_DIR}/packages/${target}.toml")
     file(GENERATE OUTPUT "${card}/AUTORUN.INF"
         CONTENT "[AutoPC.${AUTOPC_AUTORUN_SECTION}]\nTitle=${name} Install\nItem1=${name} 1.0\nOpen1=${target}.cei\n" NEWLINE_STYLE CRLF)
+    file(GENERATE OUTPUT "${manifest}"
+        CONTENT "[package]\nname = \"${name}\"\nversion = \"1.0\"\ntarget = \"${AUTOPC_PACKAGE_TARGET}\"\n\n[[file]]\nsource = '$<TARGET_FILE_DIR:${target}>/${target}.exe'\nshortcut = \"${name}\"\n\n[menu]\nname = \"${name}\"\n")
     add_custom_command(TARGET ${target} POST_BUILD
-        COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/mkcei.py" "${AUTOPC_CEI_TEMPLATE}" "$<TARGET_FILE_DIR:${target}>/${target}.exe"
-            "${card}/${target}.cei" --minimal --name ${target}.exe --package ${package} --menu "${name}" --machine ${VELO_ARCH}
+        COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/ceipack.py" "${manifest}" "${card}/${target}.cei"
         VERBATIM)
 endfunction()
 

@@ -6,8 +6,9 @@ A header, then NUL-terminated ASCII records. A record ending with
 raw bytes after its NUL terminator are the file's data. Records can be empty
 (consecutive NULs).
 
-Folder (1), file (2), registry value (7) and speech template (9) entries can
-carry two checksums after the name, then in format 8 headers one more number.
+Folder (1), file (2), database (5), registry value (7) and speech template (9)
+entries can carry two checksums after the name, then in format 8 headers one
+more number.
 The next record describes the entry; a file's data or a registry value follows
 it. The checksums are the byte count and byte sum of the entry as the installer
 holds it, each XORed with KEY. 0 0, or none, skips the check.
@@ -18,12 +19,12 @@ import re
 import struct
 
 FILE_RECORD = re.compile(rb"\\([^ \\]+) (\d+)$")
-ENTRY = re.compile(rb"^([1279]) (\S+)(?: (\d+) (\d+))?((?: \d+)?)$")
+ENTRY = re.compile(rb"^([12579]) (\S+)(?: (\d+) (\d+))?((?: \d+)?)$")
 KEY = 0x5F9A63CB
 ESCAPES = {"B": " ", "F": "\f", "N": "\n", "R": "\r", "T": "\t"}
 FILE_INFO_FIELDS = 35
-FOLDER, FILE, REGISTRY_VALUE, SPEECH_TEMPLATE = 1, 2, 7, 9
-REG_SZ, REG_DWORD = 1, 4
+FOLDER, FILE, DATABASE, REGISTRY_VALUE, SPEECH_TEMPLATE = 1, 2, 5, 7, 9
+REG_SZ, REG_BINARY, REG_DWORD, REG_MULTI_SZ = 1, 3, 4, 7
 
 
 def parse(data):
@@ -115,10 +116,15 @@ def registry_checksum(info, value):
         parts.append(packed_checksum(dwords(int(value))))
     elif value_type == REG_SZ:
         parts.append(text_checksum(value))
+    elif value_type in (REG_BINARY, REG_MULTI_SZ):
+        parts.append(packed_checksum(hex_bytes(value)))
     else:
         return None
     return parts
 
+
+def hex_bytes(value):
+    return bytes(int(token, 16) & 0xFF for token in value.split(b",") if token)
 
 
 def entry_checksum(kind, info, value):
@@ -127,6 +133,8 @@ def entry_checksum(kind, info, value):
             parts = file_checksum(kind, info, value)
         elif kind == REGISTRY_VALUE:
             parts = registry_checksum(info, value)
+        elif kind == DATABASE:
+            parts = [packed_checksum(dwords(*(int(field) for field in info.split(b" "))))]
         else:
             parts = [packed_checksum(dwords(int(info)))]
     except ValueError:
