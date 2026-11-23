@@ -19,6 +19,10 @@ SH3 and x86 `.exe`s for the devices.
   start a CD, leave the player (it keeps playing), open Visualiser. It reads
   the CD audio ring in the faceplate's memory; Esc exits. See
   [docs/apps.md](docs/apps.md#cd-audio).
+- `examples/pclink` - connects to a desktop computer over a Socket serial PC
+  Card: turns on direct connections, creates the `` `Serial Port @ 19200` ``
+  connection on the card if it's missing, and runs `repllog.exe`, which Auto
+  PC 1.0 never starts for a PC Card by itself. Esc leaves it connected.
 - `sdk/` - Microsoft's Auto PC SDK headers, and `autopc_add_sdk_executable` in
   `CMakeLists.txt` to build programs against them as the SDK's samples were. See
   [sdk/README.md](sdk/README.md).

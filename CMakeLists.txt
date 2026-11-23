@@ -35,6 +35,10 @@ velo_add_executable(stonks examples/stonks/stonks.c src/autopc.c src/autopc_app.
 target_include_directories(stonks PRIVATE include)
 autopc_add_package(stonks "Stonks")
 
+velo_add_executable(pclink examples/pclink/pclink.c src/autopc.c src/autopc_app.c
+    ICON assets/autopc.ico RESOURCES examples/pclink/pclink.rc)
+target_include_directories(pclink PRIVATE include)
+
 velo_add_executable(visualiser examples/visualiser/visualiser.c src/autopc.c src/autopc_app.c
     ICON assets/autopc.ico RESOURCES examples/visualiser/visualiser.rc)
 target_include_directories(visualiser PRIVATE include)
