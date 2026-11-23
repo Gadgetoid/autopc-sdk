@@ -48,6 +48,16 @@ if(VELO_ARCH STREQUAL "x86")
         ICON assets/autopc.ico RESOURCES examples/ctprobe/ctprobe.rc)
     target_include_directories(ctprobe PRIVATE include)
     autopc_add_package(ctprobe "CT Probe")
+
+    velo_add_executable(bigscreen examples/bigscreen/bigscreen.c src/autopc.c src/autopc_app.c
+        ICON assets/autopc.ico RESOURCES examples/bigscreen/bigscreen.rc)
+    target_include_directories(bigscreen PRIVATE include)
+    autopc_add_package(bigscreen "Big Screen")
+
+    velo_add_executable(bigvis examples/bigvis/bigvis.c src/autopc.c src/autopc_app.c
+        ICON assets/autopc.ico RESOURCES examples/bigvis/bigvis.rc)
+    target_include_directories(bigvis PRIVATE include)
+    autopc_add_package(bigvis "Big Visualiser")
 endif()
 
 # Import libraries for the Auto PC's own DLLs, named as the device exports them.

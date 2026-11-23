@@ -23,6 +23,14 @@ SH3 and x86 `.exe`s for the devices.
   Card: turns on direct connections, creates the `` `Serial Port @ 19200` ``
   connection on the card if it's missing, and runs `repllog.exe`, which Auto
   PC 1.0 never starts for a PC Card by itself. Esc leaves it connected.
+- `examples/ctprobe` - Joyride only: lists the PCI devices and dumps the Chips
+  & Technologies display controller's registers to `CTPROBE.TXT` on the card.
+- `examples/bigscreen` - Joyride only: drives the large screen from the
+  faceplate firmware (NK). It needs the large screen firmware's `ddi_ct.dll`,
+  rebuilt with relocations, on the card, and logs to `BIGSCRN.TXT`.
+- `examples/bigvis` - Joyride only: plays `MUSIC.WAV` from the card and draws a
+  spectrum, scope and fire effect on the large screen. It needs `ddi_ct.dll` as
+  `bigscreen` does.
 - `sdk/` - Microsoft's Auto PC SDK headers, and `autopc_add_sdk_executable` in
   `CMakeLists.txt` to build programs against them as the SDK's samples were. See
   [sdk/README.md](sdk/README.md).
