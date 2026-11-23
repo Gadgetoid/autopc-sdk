@@ -62,6 +62,12 @@ if(VELO_ARCH STREQUAL "x86")
         ICON assets/autopc.ico RESOURCES examples/bigvis/bigvis.rc)
     target_include_directories(bigvis PRIVATE include)
     autopc_add_package(bigvis "Big Visualiser")
+
+    velo_add_executable(msgtest examples/msgtest/msgtest.c src/autopc.c src/autopc_app.c
+        ICON assets/autopc.ico RESOURCES examples/msgtest/msgtest.rc)
+    target_include_directories(msgtest PRIVATE include)
+    target_link_libraries(msgtest PRIVATE velo::msgstore)
+    autopc_add_package(msgtest "Msg Test")
 endif()
 
 # Import libraries for the Auto PC's own DLLs, named as the device exports them.

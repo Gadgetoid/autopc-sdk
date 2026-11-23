@@ -31,6 +31,8 @@ SH3 and x86 `.exe`s for the devices.
 - `examples/bigvis` - Joyride only: plays `MUSIC.WAV` from the card and draws a
   spectrum, scope and fire effect on the large screen. It needs `ddi_ct.dll` as
   `bigscreen` does.
+- `examples/msgtest` - Joyride only: puts a test message in each of the
+  Messages app's Inbox, News and Traffic folders through `msgstore.dll`.
 - `sdk/` - Microsoft's Auto PC SDK headers, and `autopc_add_sdk_executable` in
   `CMakeLists.txt` to build programs against them as the SDK's samples were. See
   [sdk/README.md](sdk/README.md).
