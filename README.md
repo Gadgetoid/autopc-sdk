@@ -83,21 +83,13 @@ python3 tools/mkcei.py musicplayer.cei build/hello.exe hello.cei \
 
 For the Joyride, `--machine x86`. Its installer refuses what the 310C's
 accepts: a processor other than 0 in this template's header ("compiled for a
-different platform"), and the template's checksums once its program is
-replaced ("The installation file is corrupted"). `--machine x86` writes 0 and
-`mkcei` removes the checksums. With `--machine`, `mkcei` checks the package with
+different platform"), and checksums that don't match an entry's contents ("The
+installation file is corrupted"). `--machine x86` writes 0, and `mkcei` writes
+checksums of the new contents. With `--machine`, `mkcei` checks the package with
 `tools/checkcei.py`, which also checks any `.cei`:
 
 ```sh
 python3 tools/checkcei.py hello.cei --machine x86
-```
-
-Packages from Microsoft's AutoPC SDK packager (format 8 headers) carry
-checksums that don't match too. `tools/fixcei.py` clears them and copies
-everything else unchanged:
-
-```sh
-python3 tools/fixcei.py browser.cei fixed.cei --machine x86
 ```
 
 Packages have no certificate, so the Joyride says the program isn't certified

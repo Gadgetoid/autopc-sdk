@@ -13,12 +13,11 @@ The rules come from the installers, ApcLoad.exe, of the Clarion AutoPC 310C
   platform".
 - The 13th header field is the length of a certificate block. Packages are
   built without one, so it must be 0.
-- On the Joyride, folder, file and registry value entries (`1 name`,
-  `2 name`, `7 name`) carry two checksums after the name. Unless both are 0
-  the installer recomputes them from the entry and refuses a mismatch ("The
-  installation file is corrupted"). Packages built from a template, or by
-  Microsoft's SDK packager, carry ones that don't match, so they must be
-  cleared.
+- On the Joyride, folder, file, registry value and speech template entries
+  (`1 name`, `2 name`, `7 name`, `9 name`) can carry two checksums after the
+  name. Unless they're absent or 0 the installer recomputes them from the
+  entry and refuses a mismatch ("The installation file is corrupted"), as
+  happens when a file in a package is replaced. See cei.py.
 - Every file's data is as long as its record says, nothing follows the last
   file, and a .CEU's sections (`TargetInformation 67 ...`, then any
   `<name> <length> ...`) fill it exactly."""
@@ -85,16 +84,14 @@ def item_problems(items, machine):
     for index, item in enumerate(items):
         if item[0] == "tail" and item[1]:
             found.append("%d bytes after the last record" % len(item[1]))
-        elif item[0] == "record":
-            checksums = cei.entry_checksums(item[1])
-            if machine == "x86" and checksums and any(checksums):
-                found.append("entry %r keeps a checksum" % item[1].decode("latin-1"))
         elif item[0] == "blob":
             declared = int(cei.FILE_RECORD.search(items[index - 1][1]).group(2))
             if len(item[2]) != declared:
                 found.append("%s has %d bytes, its record says %d" % (item[1], len(item[2]), declared))
             if item[1].lower().endswith(".ceu"):
                 found += ceu_problems(item[1], item[2])
+    if machine == "x86":
+        found += cei.checksum_problems(items)
     return found
 
 

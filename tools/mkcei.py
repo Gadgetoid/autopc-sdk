@@ -30,11 +30,9 @@ another processor ("compiled for a different platform"). The Clarion Joyride's
 (x86) installer also refuses any nonzero processor in a header of format 7 or
 older, so for x86 such a header gets 0 ("any"); the .CEU keeps 332.
 
-Folder, file and registry value entries lose their checksums: the
-template's don't match its contents, which the Joyride's installer verifies
-("The installation file is corrupted") and the 310C's ignores. In a format 7
-folder or file entry the two numbers are dropped, as in CEIBuild 1999
-packages; otherwise they become 0, which also skips the check.
+Folder, file, registry value and speech template entries get checksums
+of their new contents, which the Joyride's installer verifies ("The
+installation file is corrupted") and the 310C's ignores.
 
 With --machine the package is checked with checkcei.py before it's written."""
 import argparse
@@ -183,7 +181,7 @@ def main():
     if arguments.machine:
         header, keep = set_machine(header, keep, MACHINES[arguments.machine])
 
-    keep = cei.clear_checksums(keep)
+    keep = cei.set_checksums(keep)
 
     package = cei.build(header, keep)
     if arguments.machine:

@@ -15,6 +15,7 @@ TEMPLATE_HEADER = b"Template |Z 7 1 1 1 0 1 0 418 All All 0 131072 13050830"
 TEMPLATE_CEU = b"TargetInformation 67 Platform All MinROMVersion    1    0 Language All MachineType  418 "
 TEMPLATE_EXE = b"MZ template program"
 FILE_TIMES = b"2000 1 0 9 15 7 49 703 2000 1 0 9 15 51 38 243 2000 1 0 9 15 12 1 596"
+FOLDER_INFO = b"0 " * 32 + b"- - 0"
 PE_OFFSET = 0x40
 PROGRAM_SIZE = 0x200
 
@@ -22,12 +23,15 @@ PROGRAM_SIZE = 0x200
 def template():
     items = [
         ("record", b"1 Program|BFiles 1603953561 1603953553"),
+        ("record", FOLDER_INFO),
         ("record", b"1 Template 1603953561 1603953553"),
+        ("record", FOLDER_INFO),
         ("record", b"2 template.exe 1603839911 1599242296"),
         ("record", b"1 0 " + FILE_TIMES + b" 0 1 1 0 0 1 Template .\\template.exe %d" % len(TEMPLATE_EXE)),
         ("blob", "template.exe", TEMPLATE_EXE),
         ("record", b""),
         ("record", b"1 Migrate 1603953561 1603953553"),
+        ("record", FOLDER_INFO),
         ("record", b"2 Template.CEU 1603953521 1603946140"),
         ("record", b"1 0 " + FILE_TIMES + b" 0 0 0 0 0 0 - .\\Template.CEU %d" % len(TEMPLATE_CEU)),
         ("blob", "Template.CEU", TEMPLATE_CEU),
@@ -38,7 +42,7 @@ def template():
         ("record", b""),
         ("tail", b""),
     ]
-    return cei.build(TEMPLATE_HEADER, items)
+    return cei.build(TEMPLATE_HEADER, cei.set_checksums(items))
 
 
 SDK_HEADER = b"Browser |Z 8 1 1 1 0 2 0 332 All All 0 131072 13050851 0 0"
@@ -102,8 +106,7 @@ class MkceiTest(unittest.TestCase):
 
     def test_template_is_refused_for_x86(self):
         found = checkcei.problems(template(), "x86")
-        self.assertIn("header processor 418 in a format 7 header, x86 needs one of [0]", found)
-        self.assertEqual(sum("keeps a checksum" in problem for problem in found), 5)
+        self.assertEqual(found, ["header processor 418 in a format 7 header, x86 needs one of [0]"])
 
     def test_template_passes_for_sh3(self):
         self.assertEqual(checkcei.problems(template(), "sh3"), [])
@@ -120,14 +123,14 @@ class MkceiTest(unittest.TestCase):
         self.assertEqual(self.blob(items, "Hello.CEU"), TEMPLATE_CEU)
         self.assertEqual(checkcei.problems(data, "sh3"), [])
 
-    def test_checksums_are_stripped(self):
-        _, _, items = self.build()
+    def test_checksums_are_written(self):
+        data, _, items = self.build("--machine", "x86")
         records = [item[1] for item in items if item[0] == "record"]
-        self.assertIn(b"1 Program|BFiles", records)
-        self.assertIn(b"2 hello.exe", records)
-        self.assertIn(b"2 Hello.CEU", records)
+        for name in (b"1 Program|BFiles", b"2 hello.exe", b"2 Hello.CEU", b"7 AppName", b"7 Order"):
+            self.assertTrue([record for record in records if re.match(re.escape(name) + rb" \d+ \d+$", record)], name)
+        self.assertIn(b"1 Program|BFiles 1603953561 1603953553", records)
         self.assertIn(b"6 Registry 0 0", records)
-        self.assertFalse([record for record in records if re.match(rb"^[12] \S+ \d+ \d+$", record)])
+        self.assertEqual(cei.checksum_problems(items), [])
 
     def test_program_replaces_the_template_one(self):
         _, _, items = self.build("--machine", "x86")
@@ -157,7 +160,8 @@ class MkceiTest(unittest.TestCase):
         _, _, items = self.build("--machine", "x86")
         records = [item[1] for item in items if item[0] == "record"]
         self.assertIn(b"6 FMAppConfiguration 0 0", records)
-        self.assertIn(b"7 AppName 0 0", records)
+        self.assertIn(b"Hello", records)
+        self.assertTrue([record for record in records if record.startswith(b"7 AppName ")])
 
 
 class CheckceiTest(unittest.TestCase):
@@ -194,33 +198,47 @@ class SdkPackageTest(unittest.TestCase):
 
     def test_checksums_are_reported(self):
         problems = checkcei.problems(sdk_package(), "x86")
-        self.assertEqual(len(problems), 5)
-        self.assertIn("entry '7 Order 1603953607 1603953571 0' keeps a checksum", problems)
+        self.assertEqual(len(problems), 2)
+        self.assertTrue(problems[0].startswith("entry '2 browser.exe 1603950444 1603590762 0' has checksums"))
 
     def test_ceu_sections(self):
         data = cei.build(*cei.parse(sdk_package()))
-        cleared = cei.build(cei.parse(data)[0], cei.clear_checksums(cei.parse(data)[1]))
-        self.assertEqual(checkcei.problems(cleared, "x86"), [])
-        broken = cleared.replace(b"BFiles 23 ", b"BFiles 24 ")
+        header, items = cei.parse(data)
+        fixed = cei.build(header, cei.set_checksums(items))
+        self.assertEqual(checkcei.problems(fixed, "x86"), [])
+        broken = fixed.replace(b"BFiles 23 ", b"BFiles 24 ")
         self.assertIn("Browser.CEU WCE|BDevice|BFiles says 24 bytes, has 23", checkcei.problems(broken, "x86"))
 
-    def test_fixcei(self):
-        with tempfile.TemporaryDirectory() as folder:
-            source = os.path.join(folder, "browser.cei")
-            output = os.path.join(folder, "fixed.cei")
-            pathlib.Path(source).write_bytes(sdk_package())
-            result = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "fixcei.py"), source, output, "--machine", "x86"],
-                                    capture_output=True, text=True)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            fixed = pathlib.Path(output).read_bytes()
-        _, items = cei.parse(fixed)
-        records = [item[1] for item in items if item[0] == "record"]
-        self.assertIn(b"1 Browser 0 0 1", records)
-        self.assertIn(b"2 browser.exe 0 0 0", records)
-        self.assertIn(b"7 Order 0 0 0", records)
-        self.assertEqual([item[2] for item in items if item[0] == "blob"], [TEMPLATE_EXE, SDK_CEU])
-        self.assertEqual(checkcei.problems(fixed, "x86"), [])
 
+class ChecksumTest(unittest.TestCase):
+    def checksums(self, *records):
+        items = [("record", record) for record in records]
+        return [checksums for _, _, checksums in cei.entries(items)]
+
+    def test_microsoft_values(self):
+        self.assertEqual(self.checksums(b"1 Temp 0 0", FOLDER_INFO), [(1603953561, 1603953553)])
+        self.assertEqual(self.checksums(b"7 Order 0 0 0", b"4 0", b"100"), [(1603953607, 1603953571)])
+        self.assertEqual(self.checksums(b"7 AppName 0 0 0", b"1 0", b"Browser"), [(1603953604, 1603953232)])
+        self.assertEqual(self.checksums(b"1 Uninstall|BDLL 0 0 0", b"0 " * 32 + b"|Z - 0"), [(1603953562, 1603953638)])
+        self.assertEqual(self.checksums(b"9 musicplayer.six 0 0", b"0"), [(1603953615, 1603953611)])
+
+    def test_only_half_of_text_counts(self):
+        _, first = self.checksums(b"7 Name 0 0", b"1 0", b"abcdXY")[0]
+        _, second = self.checksums(b"7 Name 0 0", b"1 0", b"abcZZZ")[0]
+        self.assertEqual(first, second)
+
+    def test_file_data_counts(self):
+        info = b"1 0 " + FILE_TIMES + b" 0 0 0 0 0 0 - .\\a.exe 2"
+        items = [("record", b"2 a.exe 0 0"), ("record", info), ("blob", "a.exe", b"MZ")]
+        checksummed = cei.set_checksums(items)
+        self.assertEqual(cei.checksum_problems(checksummed), [])
+        changed = checksummed[:2] + [("blob", "a.exe", b"MY")]
+        self.assertEqual(len(cei.checksum_problems(changed)), 1)
+
+    def test_absent_or_zero_checksums_are_not_checked(self):
+        info = b"1 0 " + FILE_TIMES + b" 0 0 0 0 0 0 - .\\a.exe 2"
+        for record in (b"2 a.exe", b"2 a.exe 0 0", b"2 a.exe 0 0 0"):
+            self.assertEqual(cei.checksum_problems([("record", record), ("record", info), ("blob", "a.exe", b"MZ")]), [])
 
 if __name__ == "__main__":
     unittest.main()
