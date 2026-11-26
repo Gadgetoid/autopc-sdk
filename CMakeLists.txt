@@ -68,6 +68,34 @@ if(VELO_ARCH STREQUAL "x86")
     target_include_directories(msgtest PRIVATE include)
     target_link_libraries(msgtest PRIVATE velo::msgstore)
     autopc_add_package(msgtest "Msg Test")
+
+    set(HELIX "${PROJECT_SOURCE_DIR}/third_party/libhelix-mp3-0a0e0673f82bc6804e5a3ddb15fb6efdcde747cd")
+    add_library(helix_mp3 STATIC EXCLUDE_FROM_ALL
+        "${HELIX}/mp3dec.c"
+        "${HELIX}/mp3tabs.c"
+        "${HELIX}/real/bitstream.c"
+        "${HELIX}/real/buffers.c"
+        "${HELIX}/real/dct32.c"
+        "${HELIX}/real/dequant.c"
+        "${HELIX}/real/dqchan.c"
+        "${HELIX}/real/huffman.c"
+        "${HELIX}/real/hufftabs.c"
+        "${HELIX}/real/imdct.c"
+        "${HELIX}/real/polyphase.c"
+        "${HELIX}/real/scalfact.c"
+        "${HELIX}/real/stproc.c"
+        "${HELIX}/real/subband.c"
+        "${HELIX}/real/trigtabs.c"
+        src/mp3_stream.c)
+    target_include_directories(helix_mp3 PUBLIC "${HELIX}/pub" include PRIVATE "${HELIX}/real")
+    target_compile_options(helix_mp3 PRIVATE -O2 -w -include "${PROJECT_SOURCE_DIR}/src/helix_c.h")
+    target_link_libraries(helix_mp3 PRIVATE velo::headers)
+
+    velo_add_executable(changerplay examples/changerplay/changerplay.c src/autopc.c src/autopc_app.c
+        ICON assets/autopc.ico RESOURCES examples/changerplay/changerplay.rc)
+    target_include_directories(changerplay PRIVATE include)
+    target_link_libraries(changerplay PRIVATE helix_mp3)
+    autopc_add_package(changerplay "Changer Play")
 endif()
 
 # Import libraries for the Auto PC's own DLLs, named as the device exports them.

@@ -90,3 +90,20 @@ The installer asks whether to back up, copies the files, asks the user to say th
 ## CD audio
 
 When the CD Player plays, `atapipci.dll` reads each 2352-byte sector (44.1 kHz, 16-bit stereo, little-endian) into a three-sector ring in the faceplate's memory, and keeps playing when another program is in front (seen in sh3-emu, not yet on a unit). Faceplate register 0x2030 holds the ring's offset in the memory window and 0x2034 its length less 4 (both long reads of BAR0). `examples/visualiser` reads the ring this way, 256 samples at a time, for a fixed-point FFT, and draws through its form.
+
+## Sound output on the Joyride
+
+The Joyride's wave driver (`wavedev.dll`) only opens PCM, mono or stereo, 8 or 16 bit, at 8000, 11025 or 22050 Hz. Anything else, 44.1 kHz included, fails with `WAVERR_BADFORMAT` (32). `changerplay` resamples to 22050 Hz stereo. `bigvis` asks for its WAV file's own rate, so a 44.1 kHz `MUSIC.WAV` gets no sound.
+
+## CD changer data discs
+
+The Joyride's changer driver (`atapiusb.dll`, `CDR2:`) mounts its discs at `\CD Changer` but only reads data discs in data mode, which its own software keeps for navigation discs. Its CD Player plays MP3s from the in-dash drive only, and says the changer is in use by Navigation while it's in data mode.
+
+| IOCTL | What |
+|---|---|
+| `0xCF20` | Get the usage mode: 0 free, 1 audio (the CD Player), 2 data |
+| `0xCF21` | Set the usage mode. The new mode is the input buffer size; the buffer can be NULL. |
+| `0xCF26` | Load a slot: a DWORD, 0 for slot 1. Fails if there's no changer or the slot is empty. |
+
+In data mode the driver reads with READ(10), 2048-byte sectors, at most 16 a command. A disc is data if bit 6 of its first track's TOC control byte is set. `changerplay` restores the mode it found when it exits.
+

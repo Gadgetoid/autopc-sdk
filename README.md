@@ -33,6 +33,12 @@ SH3 and x86 `.exe`s for the devices.
   `bigscreen` does.
 - `examples/msgtest` - Joyride only: puts a test message in each of the
   Messages app's Inbox, News and Traffic folders through `msgstore.dll`.
+- `examples/changerplay` - Joyride only: switches the USB CD changer to data
+  mode, loads disc 5 and plays the first MP3 on it, or the first on the card if
+  there's no changer. See [docs/apps.md](docs/apps.md#cd-changer-data-discs).
+  It decodes with RealNetworks' Helix MP3 decoder
+  (`third_party/libhelix-mp3-...`, under its RPSL/RCSL licences) through
+  `src/mp3_stream.c`.
 - `sdk/` - Microsoft's Auto PC SDK headers, and `autopc_add_sdk_executable` in
   `CMakeLists.txt` to build programs against them as the SDK's samples were. See
   [sdk/README.md](sdk/README.md).
